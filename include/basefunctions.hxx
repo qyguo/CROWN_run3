@@ -14,6 +14,23 @@ enum Channel { MT = 0, ET = 1, TT = 2, EM = 3 };
 
 namespace basefunctions {
 
+// vh extension
+/// Require events with its quantity to be "?" to the threshold
+/// "?" can be set to any comparison ">", "<=", "==" etc.
+///
+/// \param df The input dataframe
+/// \param quantity The quantity to cut on
+/// \param threshold The threshold to cut with [int float double]
+/// \param filtername The name of the filter, used in the Dataframe report
+///
+/// \returns a filtered dataframe
+inline ROOT::RDF::RNode FilterThreshold(ROOT::RDF::RNode df,
+                                           const std::string &quantity,
+                                           const double threshold, const std::string relation,
+                                           const std::string &filtername) {
+    return df.Filter( quantity + " " + relation + " " + std::to_string(threshold), filtername);
+}
+
 /**
  * @brief Function to filter events based on their run and luminosity block
  * values

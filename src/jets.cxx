@@ -15,6 +15,124 @@
 #include <typeinfo>
 
 namespace jet {
+
+/// write by mingtao
+///function to calculate the dijet mass and delta eta
+
+ROOT::RDF::RNode 
+Calculate_JetMass(ROOT::RDF::RNode df, const std::string &outputname,
+                                 const std::string &particle_pts,
+                                 const std::string &particle_etas,
+                                 const std::string &particle_phis,
+                                 const std::string &particle_masses,
+                                 const std::string &goodjets_index) {
+    auto mass_calculation = [](const ROOT::RVec<float> &particle_pts,
+                               const ROOT::RVec<float> &particle_etas,
+                               const ROOT::RVec<float> &particle_phis,
+                               const ROOT::RVec<float> &particle_masses,
+                               const ROOT::RVec<int> &goodjets_index) {
+                                 std::vector<ROOT::Math::PtEtaPhiMVector> p4;
+                                 for (unsigned int k = 0; k < 2; ++k) {
+                                    try {
+                                        p4.push_back(ROOT::Math::PtEtaPhiMVector(particle_pts.at(goodjets_index[k]), 
+                                                                         particle_etas.at(goodjets_index[k]),
+                                                                         particle_phis.at(goodjets_index[k]),
+                                                                         particle_masses.at(goodjets_index[k])));
+                                    } catch (const std::out_of_range &e) {
+                                        p4.push_back(ROOT::Math::PtEtaPhiMVector(default_float, default_float,default_float, default_float));
+                                    }
+                                 }
+                                 auto dijetsystem = p4[0] + p4[1];
+                                 return dijetsystem.mass();
+                             };
+    auto df1 = 
+        df.Define(outputname, mass_calculation, {particle_pts, particle_etas, particle_phis, particle_masses, goodjets_index});
+    return df1;
+}
+
+ROOT::RDF::RNode 
+Calculate_JetDeltaEta(ROOT::RDF::RNode df, const std::string &outputname,
+                                 const std::string &particle_pts,
+                                 const std::string &particle_etas,
+                                 const std::string &particle_phis,
+                                 const std::string &particle_masses,
+                                 const std::string &goodjets_index) {
+    auto delta_eta_calculation = [](const ROOT::RVec<float> &particle_pts,
+                               const ROOT::RVec<float> &particle_etas,
+                               const ROOT::RVec<float> &particle_phis,
+                               const ROOT::RVec<float> &particle_masses,
+                               const ROOT::RVec<int> &goodjets_index) {
+                                 std::vector<float> etas;
+                                 for (unsigned int k = 0; k < 2; ++k) {
+                                    try {
+                                        etas.push_back(particle_etas.at(goodjets_index[k]));
+                                    } catch (const std::out_of_range &e) {
+                                        etas.push_back(default_float);
+                                    }
+                                 }
+                                 auto delta_eta = abs(etas[0]-etas[1]);
+                                 return delta_eta;
+                             };
+    auto df1 = 
+        df.Define(outputname, delta_eta_calculation, {particle_pts, particle_etas, particle_phis, particle_masses, goodjets_index});
+    return df1;
+}
+
+///end write
+
+// vhmm extend to N particle overlap removal
+/// Function to veto jets overlapping with particle candidates
+///
+/// \param[in] df the input dataframe
+/// \param[out] output_col the name of the produced mask \param[in] jet_eta name
+/// of the jet etas \param[in] jet_phi name of the jet phis \param[in] p4_1 four
+/// vector of the first particle candidate \param[in] p4_2 four vector of the
+/// second particle candidate \param[in] deltaRmin minimum required distance in
+/// dR between jets and particle candidates
+///
+/// \return a dataframe containing the new mask
+ROOT::RDF::RNode
+VetoOverlappingJets(ROOT::RDF::RNode df, const std::string &output_col,
+                    const std::string &jet_eta, const std::string &jet_phi,
+                    const std::string &muon_eta, const std::string &muon_phi, const std::string &muon_mask,
+                    const float &deltaRmin) {
+    auto df1 = df.Define(
+        output_col,
+        [deltaRmin](const ROOT::RVec<float> &jet_eta,
+                    const ROOT::RVec<float> &jet_phi,
+                    const ROOT::RVec<float> &muon_eta,
+                    const ROOT::RVec<float> &muon_phi,
+                    const ROOT::RVec<int> &muon_mask) {
+            Logger::get("VetoOverlappingJets (N particles)")
+                ->debug("Checking jets");
+            ROOT::RVec<int> mask(jet_eta.size(), 1);
+            for (std::size_t idx = 0; idx < mask.size(); ++idx) {
+                ROOT::Math::RhoEtaPhiVectorF jet(0, jet_eta.at(idx),
+                                                 jet_phi.at(idx));
+                Logger::get("VetoOverlappingJets (N particles)")
+                    ->debug("Jet {}:  Eta: {} Phi: {} ", idx, jet.Eta(), jet.Phi());
+                int _mdx = 0;
+                for(std::size_t mdx = 0; mdx < muon_mask.size(); ++mdx){
+                    if( muon_mask[mdx] == 0 ) continue; // only check with the selected muons
+                    ROOT::Math::RhoEtaPhiVectorF muon(0, muon_eta.at(mdx), muon_phi.at(mdx));
+                    Logger::get("VetoOverlappingJets (N particles)")
+                        ->debug("Lepton {}:  Eta: {} Phi: {} ", _mdx, muon.Eta(), muon.Phi());
+                    auto deltaR = ROOT::Math::VectorUtil::DeltaR(jet, muon);
+                    Logger::get("VetoOverlappingJets (N particles)")
+                        ->debug("DeltaR {}", deltaR);
+                    mask[idx] = mask[idx]&&(deltaR > deltaRmin);
+                    ++_mdx;
+                }
+            }
+            Logger::get("VetoOverlappingJets (N particles)")
+                ->debug("vetomask due to overlap: {}", mask);
+            return mask;
+        },
+        {jet_eta, jet_phi, muon_eta, muon_phi, muon_mask});
+    return df1;
+}
+
+/////###$$$
 /// Function to veto jets overlapping with particle candidates
 ///
 /// \param[in] df the input dataframe

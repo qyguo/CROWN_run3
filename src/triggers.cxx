@@ -434,6 +434,373 @@ ROOT::RDF::RNode GenerateDoubleTriggerFlag(
     }
 }
 
+// vhmm extention
+/**
+ * @brief Function to generate a trigger flag based on an hlt path and trigger
+ * object matching for the given object. This relies on the
+ * trigger::matchParticle function which does the matching test. The
+ * implementation is similar to the trigger::GenerateSingleTriggerFlag function,
+ * but there three objects among which at least one should be matched for a passing flag.
+ *
+ * @param df The input dataframe
+ * @param triggerflag_name name of the output flag
+ * @param particle1_p4 `ROOT::Math::PtEtaPhiMVector` of the first object to be
+ * checked
+ * @param particle2_p4 `ROOT::Math::PtEtaPhiMVector` of the second object to be
+ * checked
+ * @param particle3_p4 `ROOT::Math::PtEtaPhiMVector` of the third object to be
+ * checked
+ * @param triggerobject_bits name of the trigger object bits column in the
+ * inputfile
+ * @param triggerobject_id name of the trigger object id column in the inputfile
+ * @param triggerobject_pt name of the trigger object pt column in the inputfile
+ * @param triggerobject_eta name of the trigger object eta column in the
+ * inputfile
+ * @param triggerobject_phi name of the trigger object phi column in the
+ * inputfile
+ * @param hltpath name of the hlt path to be checked, this can be a valid regex.
+ * If more than one matching HLT path is found, the function will throw an
+ * exception, if no matching HLT path is found, the function will return a
+ * dataframe with a flag of false for all entries
+ * @param p1_pt_cut minimal pt value for the triggerobject matching the first
+ * object
+ * @param p2_pt_cut minimal pt value for the triggerobject matching the second
+ * object
+ * @param p3_pt_cut minimal pt value for the triggerobject matching the third
+ * object
+ * @param p1_eta_cut maximal pt value for the triggerobject matching the first
+ * object
+ * @param p2_eta_cut maximal pt value for the triggerobject matching the second
+ * object
+ * @param p3_eta_cut maximal pt value for the triggerobject matching the third
+ * object
+ * @param p1_trigger_particle_id_cut trigger id value the triggerobject matching
+ * the first object has to match (details can be found in the documentation of
+ * trigger::matchParticle)
+ * @param p2_trigger_particle_id_cut trigger id value the triggerobject matching
+ * the second object has to match (details can be found in the documentation of
+ * trigger::matchParticle)
+ * @param p3_trigger_particle_id_cut trigger id value the triggerobject matching
+ * the third object has to match (details can be found in the documentation of
+ * trigger::matchParticle)
+ * @param p1_triggerbit_cut trigger bit value the triggerobject matching the
+ * first object has to match (details can be found in the documentation of
+ * trigger::matchParticle)
+ * @param p2_triggerbit_cut trigger bit value the triggerobject matching the
+ * second object has to match (details can be found in the documentation of
+ * trigger::matchParticle)
+ * @param p3_triggerbit_cut trigger bit value the triggerobject matching the
+ * third object has to match (details can be found in the documentation of
+ * trigger::matchParticle)
+ * @param DeltaR_threshold maximal value for the deltaR between the
+ * triggerobject and the input object to consider a match
+ * @return a new dataframe containing the trigger flag column
+ *
+ */
+
+ROOT::RDF::RNode GenerateTripleTriggerORFlag(
+    ROOT::RDF::RNode df, const std::string &triggerflag_name,
+    const std::string &particle1_p4, const std::string &particle2_p4, const std::string &particle3_p4,
+    const std::string &triggerobject_bits, const std::string &triggerobject_id,
+    const std::string &triggerobject_pt, const std::string &triggerobject_eta,
+    const std::string &triggerobject_phi, const std::string &hltpath,
+    const float &p1_pt_cut, const float &p2_pt_cut, const float &p3_pt_cut, const float &p1_eta_cut,
+    const float &p2_eta_cut, const float &p3_eta_cut, const int &p1_trigger_particle_id_cut,
+    const int &p2_trigger_particle_id_cut, const int &p3_trigger_particle_id_cut, const int &p1_triggerbit_cut,
+    const int &p2_triggerbit_cut, const int &p3_triggerbit_cut, const float &DeltaR_threshold) {
+
+    auto triggermatch = [DeltaR_threshold, p1_pt_cut, p2_pt_cut, p3_pt_cut, p1_eta_cut,
+                         p2_eta_cut, p3_eta_cut, p1_trigger_particle_id_cut,
+                         p2_trigger_particle_id_cut, p3_trigger_particle_id_cut, p1_triggerbit_cut,
+                         p2_triggerbit_cut, p3_triggerbit_cut](
+                            bool hltpath,
+                            const ROOT::Math::PtEtaPhiMVector &particle1_p4,
+                            const ROOT::Math::PtEtaPhiMVector &particle2_p4,
+                            const ROOT::Math::PtEtaPhiMVector &particle3_p4,
+                            ROOT::RVec<int> triggerobject_bits,
+                            ROOT::RVec<int> triggerobject_ids,
+                            ROOT::RVec<float> triggerobject_pts,
+                            ROOT::RVec<float> triggerobject_etas,
+                            ROOT::RVec<float> triggerobject_phis) {
+        Logger::get("GenerateTripleTriggerORFlag")->debug("Checking Trigger");
+        bool result = false;
+        bool match_result_p1 = false;
+        bool match_result_p2 = false;
+        bool match_result_p3 = false;
+        if (hltpath) {
+            Logger::get("GenerateTripleTriggerORFlag")
+                ->debug("Checking Triggerobject match with particles ....");
+            Logger::get("GenerateTripleTriggerORFlag")->debug("First particle");
+            match_result_p1 = matchParticle(
+                particle1_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p1_pt_cut, p1_eta_cut,
+                p1_trigger_particle_id_cut, p1_triggerbit_cut);
+            Logger::get("GenerateTripleTriggerORFlag")->debug("Second particle");
+            match_result_p2 = matchParticle(
+                particle2_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p2_pt_cut, p2_eta_cut,
+                p2_trigger_particle_id_cut, p2_triggerbit_cut);
+            Logger::get("GenerateTripleTriggerORFlag")->debug("Third particle");
+            match_result_p3 = matchParticle(
+                particle3_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p3_pt_cut, p3_eta_cut,
+                p3_trigger_particle_id_cut, p3_triggerbit_cut);
+        }
+        result = hltpath && ( match_result_p1 || match_result_p2 || match_result_p3 );
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->debug("---> HLT Match: {}", hltpath);
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->debug("---> Total Match P1: {}", match_result_p1);
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->debug("---> Total Match P2: {}", match_result_p2);
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->debug("---> Total Match P3: {}", match_result_p3);
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->debug("--->>>> result OR: {}", result);
+        return result;
+    };
+    auto available_trigger = df.GetColumnNames();
+    std::vector<std::string> matched_trigger_names;
+    std::regex hltpath_regex = std::regex(hltpath);
+    // loop over all available trigger names and check if the hltpath is
+    // matching any of them
+    for (auto &trigger : available_trigger) {
+        if (std::regex_match(trigger, hltpath_regex)) {
+            Logger::get("GenerateTripleTriggerORFlag")
+                ->debug("Found matching trigger: {}", trigger);
+            matched_trigger_names.push_back(trigger);
+        }
+    }
+    // if no matching trigger was found return the initial dataframe
+    if (matched_trigger_names.size() == 0) {
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->info("No matching trigger for {} found, returning false for "
+                   "trigger flag {}",
+                   hltpath, triggerflag_name);
+        auto df1 = df.Define(triggerflag_name, []() { return false; });
+        return df1;
+    } else if (matched_trigger_names.size() > 1) {
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->debug("More than one matching trigger found, not implemented yet");
+        throw std::invalid_argument(
+            "received too many matching trigger paths, not implemented yet");
+    } else {
+        Logger::get("GenerateTripleTriggerORFlag")
+            ->debug("Found matching trigger: {}", matched_trigger_names[0]);
+        auto df1 =
+            df.Define(triggerflag_name, triggermatch,
+                      {matched_trigger_names[0], particle1_p4, particle2_p4, particle3_p4,
+                       triggerobject_bits, triggerobject_id, triggerobject_pt,
+                       triggerobject_eta, triggerobject_phi});
+        return df1;
+    }
+}
+//// write by botao
+ROOT::RDF::RNode GenerateDoubleTriggerORFlag(
+    ROOT::RDF::RNode df, const std::string &triggerflag_name,
+    const std::string &particle1_p4, const std::string &particle2_p4,
+    const std::string &triggerobject_bits, const std::string &triggerobject_id,
+    const std::string &triggerobject_pt, const std::string &triggerobject_eta,
+    const std::string &triggerobject_phi, const std::string &hltpath,
+    const float &p1_pt_cut, const float &p2_pt_cut, const float &p1_eta_cut,
+    const float &p2_eta_cut, const int &p1_trigger_particle_id_cut,
+    const int &p2_trigger_particle_id_cut, const int &p1_triggerbit_cut,
+    const int &p2_triggerbit_cut, const float &DeltaR_threshold) {
+
+    auto triggermatch = [DeltaR_threshold, p1_pt_cut, p2_pt_cut, p1_eta_cut,
+                         p2_eta_cut, p1_trigger_particle_id_cut,
+                         p2_trigger_particle_id_cut, p1_triggerbit_cut,
+                         p2_triggerbit_cut](
+                            bool hltpath,
+                            const ROOT::Math::PtEtaPhiMVector &particle1_p4,
+                            const ROOT::Math::PtEtaPhiMVector &particle2_p4,
+                            ROOT::RVec<int> triggerobject_bits,
+                            ROOT::RVec<int> triggerobject_ids,
+                            ROOT::RVec<float> triggerobject_pts,
+                            ROOT::RVec<float> triggerobject_etas,
+                            ROOT::RVec<float> triggerobject_phis) {
+        Logger::get("GenerateDoubleTriggerORFlag")->debug("Checking Trigger");
+        bool result = false;
+        bool match_result_p1 = false;
+        bool match_result_p2 = false;
+        if (hltpath) {
+            Logger::get("GenerateDoubleTriggerORFlag")
+                ->debug("Checking Triggerobject match with particles ....");
+            Logger::get("GenerateDoubleTriggerORFlag")->debug("First particle");
+            match_result_p1 = matchParticle(
+                particle1_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p1_pt_cut, p1_eta_cut,
+                p1_trigger_particle_id_cut, p1_triggerbit_cut);
+            Logger::get("GenerateDoubleTriggerORFlag")->debug("Second particle");
+            match_result_p2 = matchParticle(
+                particle2_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p2_pt_cut, p2_eta_cut,
+                p2_trigger_particle_id_cut, p2_triggerbit_cut);
+        }
+        result = hltpath && ( match_result_p1 || match_result_p2);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("---> HLT Match: {}", hltpath);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("---> Total Match P1: {}", match_result_p1);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("---> Total Match P2: {}", match_result_p2);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("--->>>> result OR: {}", result);
+        return result;
+    };
+    auto available_trigger = df.GetColumnNames();
+    std::vector<std::string> matched_trigger_names;
+    std::regex hltpath_regex = std::regex(hltpath);
+    // loop over all available trigger names and check if the hltpath is
+    // matching any of them
+    for (auto &trigger : available_trigger) {
+        if (std::regex_match(trigger, hltpath_regex)) {
+            Logger::get("GenerateDoubleTriggerORFlag")
+                ->debug("Found matching trigger: {}", trigger);
+            matched_trigger_names.push_back(trigger);
+        }
+    }
+    // if no matching trigger was found return the initial dataframe
+    if (matched_trigger_names.size() == 0) {
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->info("No matching trigger for {} found, returning false for "
+                   "trigger flag {}",
+                   hltpath, triggerflag_name);
+        auto df1 = df.Define(triggerflag_name, []() { return false; });
+        return df1;
+    } else if (matched_trigger_names.size() > 1) {
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("More than one matching trigger found, not implemented yet");
+        throw std::invalid_argument(
+            "received too many matching trigger paths, not implemented yet");
+    } else {
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("Found matching trigger: {}", matched_trigger_names[0]);
+        auto df1 =
+            df.Define(triggerflag_name, triggermatch,
+                      {matched_trigger_names[0], particle1_p4, particle2_p4,
+                       triggerobject_bits, triggerobject_id, triggerobject_pt,
+                       triggerobject_eta, triggerobject_phi});
+        return df1;
+    }
+}
+////
+ROOT::RDF::RNode GenerateQuadTriggerORFlag(
+    ROOT::RDF::RNode df, const std::string &triggerflag_name,
+    const std::string &particle1_p4, const std::string &particle2_p4, const std::string &particle3_p4,
+    const std::string &particle4_p4, const std::string &triggerobject_bits, const std::string &triggerobject_id,
+    const std::string &triggerobject_pt, const std::string &triggerobject_eta,
+    const std::string &triggerobject_phi, const std::string &hltpath,
+    const float &p1_pt_cut, const float &p2_pt_cut, const float &p3_pt_cut, const float &p4_pt_cut,
+    const float &p1_eta_cut, const float &p2_eta_cut, const float &p3_eta_cut, const float &p4_eta_cut,
+    const int &p1_trigger_particle_id_cut, const int &p2_trigger_particle_id_cut, const int &p3_trigger_particle_id_cut, const int &p4_trigger_particle_id_cut,
+    const int &p1_triggerbit_cut, const int &p2_triggerbit_cut, const int &p3_triggerbit_cut, const int &p4_triggerbit_cut, const float &DeltaR_threshold) {
+
+    auto triggermatch = [DeltaR_threshold, p1_pt_cut, p2_pt_cut, p3_pt_cut, p4_pt_cut, p1_eta_cut,
+                         p2_eta_cut, p3_eta_cut, p4_eta_cut, p1_trigger_particle_id_cut,
+                         p2_trigger_particle_id_cut, p3_trigger_particle_id_cut, p4_trigger_particle_id_cut,
+                         p1_triggerbit_cut, p2_triggerbit_cut, p3_triggerbit_cut, p4_triggerbit_cut](
+                            bool hltpath,
+                            const ROOT::Math::PtEtaPhiMVector &particle1_p4,
+                            const ROOT::Math::PtEtaPhiMVector &particle2_p4,
+                            const ROOT::Math::PtEtaPhiMVector &particle3_p4,
+                            const ROOT::Math::PtEtaPhiMVector &particle4_p4,
+                            ROOT::RVec<int> triggerobject_bits,
+                            ROOT::RVec<int> triggerobject_ids,
+                            ROOT::RVec<float> triggerobject_pts,
+                            ROOT::RVec<float> triggerobject_etas,
+                            ROOT::RVec<float> triggerobject_phis) {
+        Logger::get("GenerateQuadTriggerORFlag")->debug("Checking Trigger");
+        bool result = false;
+        bool match_result_p1 = false;
+        bool match_result_p2 = false;
+        bool match_result_p3 = false;
+        bool match_result_p4 = false;
+        if (hltpath) {
+            Logger::get("GenerateQuadTriggerORFlag")
+                ->debug("Checking Triggerobject match with particles ....");
+            Logger::get("GenerateQuadTriggerORFlag")->debug("First particle");
+            match_result_p1 = matchParticle(
+                particle1_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p1_pt_cut, p1_eta_cut,
+                p1_trigger_particle_id_cut, p1_triggerbit_cut);
+            Logger::get("GenerateQuadTriggerORFlag")->debug("Second particle");
+            match_result_p2 = matchParticle(
+                particle2_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p2_pt_cut, p2_eta_cut,
+                p2_trigger_particle_id_cut, p2_triggerbit_cut);
+            Logger::get("GenerateQuadTriggerORFlag")->debug("Third particle");
+            match_result_p3 = matchParticle(
+                particle3_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p3_pt_cut, p3_eta_cut,
+                p3_trigger_particle_id_cut, p3_triggerbit_cut);
+            Logger::get("GenerateQuadTriggerORFlag")->debug("Fourth particle");
+            match_result_p4 = matchParticle(
+                particle4_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p4_pt_cut, p4_eta_cut,
+                p4_trigger_particle_id_cut, p4_triggerbit_cut);
+        }
+        result = hltpath && ( match_result_p1 || match_result_p2 || match_result_p3 || match_result_p4 );
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("---> HLT Match: {}", hltpath);
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("---> Total Match P1: {}", match_result_p1);
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("---> Total Match P2: {}", match_result_p2);
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("---> Total Match P3: {}", match_result_p3);
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("---> Total Match P4: {}", match_result_p4);
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("--->>>> result OR: {}", result);
+        return result;
+    };
+    auto available_trigger = df.GetColumnNames();
+    std::vector<std::string> matched_trigger_names;
+    std::regex hltpath_regex = std::regex(hltpath);
+    // loop over all available trigger names and check if the hltpath is
+    // matching any of them
+    for (auto &trigger : available_trigger) {
+        if (std::regex_match(trigger, hltpath_regex)) {
+            Logger::get("GenerateQuadTriggerORFlag")
+                ->debug("Found matching trigger: {}", trigger);
+            matched_trigger_names.push_back(trigger);
+        }
+    }
+    // if no matching trigger was found return the initial dataframe
+    if (matched_trigger_names.size() == 0) {
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->info("No matching trigger for {} found, returning false for "
+                   "trigger flag {}",
+                   hltpath, triggerflag_name);
+        auto df1 = df.Define(triggerflag_name, []() { return false; });
+        return df1;
+    } else if (matched_trigger_names.size() > 1) {
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("More than one matching trigger found, not implemented yet");
+        throw std::invalid_argument(
+            "received too many matching trigger paths, not implemented yet");
+    } else {
+        Logger::get("GenerateQuadTriggerORFlag")
+            ->debug("Found matching trigger: {}", matched_trigger_names[0]);
+        auto df1 =
+            df.Define(triggerflag_name, triggermatch,
+                      {matched_trigger_names[0], particle1_p4, particle2_p4, particle3_p4, particle4_p4,
+                       triggerobject_bits, triggerobject_id, triggerobject_pt,
+                       triggerobject_eta, triggerobject_phi});
+        return df1;
+    }
+}
+////////##########
 /**
  * @brief Function to generate a trigger flag based on a trigger
  * object matching for two given objects. This relies on the

@@ -16,6 +16,32 @@
 /// are needed for every event
 namespace quantities {
 
+/// funciton to calc mT contains MHT
+ROOT::RDF::RNode mT_MHT(ROOT::RDF::RNode df, const std::string &outputname,
+                    const std::string &particle_p4, const std::string &met) {
+    auto calculate_mt = [](ROOT::Math::PtEtaPhiMVector &particle_p4,
+                           ROOT::Math::PtEtaPhiMVector &met) {
+        float mt = (float)sqrt(2 * fabs(particle_p4.Pt()) * fabs(met.Pt()) *
+                       (1. - cos(particle_p4.Phi() - met.Phi())));
+        if ( !std::isnan(mt) && !std::isinf(mt) ) {
+            return mt;
+        } else {
+            return default_float;
+        }
+    };
+    return df.Define(outputname, calculate_mt, {particle_p4, met});
+}
+///
+//// function to calc the delta Eta
+ROOT::RDF::RNode deltaEta(ROOT::RDF::RNode df, const std::string &outputname,
+                        const std::string &p_1_p4, const std::string &p_2_p4) {
+    auto calculate_deltaEta = [](ROOT::Math::PtEtaPhiMVector &p_1_p4,
+                               ROOT::Math::PtEtaPhiMVector &p_2_p4) {
+        return (float)fabs(p_1_p4.eta() - p_2_p4.eta());
+    };
+    return df.Define(outputname, calculate_deltaEta, {p_1_p4, p_2_p4});
+}
+///
 /// Function to calculate the pt from a given lorentz vector and add it to the
 /// dataframe
 ///
@@ -700,6 +726,26 @@ ROOT::RDF::RNode pdgid(ROOT::RDF::RNode df, const std::string &outputname,
         },
         {pairname, pdgidcolumn});
 }
+
+// vhmm extend to number of objects, not only leptons
+/// Function to determine number of good objects
+///
+/// \param[in] df the input dataframe
+/// \param[out] outputname the name of the produced quantity
+/// \param[in] goodleptons name of the vector that contains a lepton mask of
+/// good leptons, its length of non-zero values constitutes the output quantity
+///
+/// \return a dataframe containing the number of good leptons in an event
+ROOT::RDF::RNode NumberOfGoodObjects(ROOT::RDF::RNode df,
+                                     const std::string &outputname,
+                                     const std::string &goodmask) {
+    return df.Define(outputname,
+                     [](const ROOT::RVec<int> &goodmask) {
+                         return (int)ROOT::VecOps::Nonzero(goodmask).size();
+                     },
+                     {goodmask});
+}
+
 /// Function to determine number of good leptons
 ///
 /// \param[in] df the input dataframe
