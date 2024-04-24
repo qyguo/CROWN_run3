@@ -158,6 +158,241 @@ PUweights = Producer(
     scopes=["global"],
 )
 
+##fsr
+#muon_fsrPhotonIdx_1 = Producer(
+#    name="muon_fsrPhotonIdx_1",
+#    call="basefunctions::getvar<int>({df}, {output}, 0, {input})",
+#    #input=[q.selectedLepton, nanoAOD.Muon_fsrPhotonIdx],
+#    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_fsrPhotonIdx],
+#    output=[q.fsrPhotonIdx_1],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhotonIdx_2 = Producer(
+#    name="muon_fsrPhotonIdx_2",
+#    call="basefunctions::getvar<int>({df}, {output}, 1, {input})",
+#    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_fsrPhotonIdx],
+#    output=[q.fsrPhotonIdx_2],
+#    scopes=["vbfhmm"],
+#)
+#
+#muon_fsrPhoton_pt_1 = Producer(
+#    name="muon_fsrPhoton_pt_1",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_1, nanoAOD.FsrPhoton_pt],
+#    output=[q.fsrPhoton_pt_1],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_eta_1 = Producer(
+#    name="muon_fsrPhoton_eta_1",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_1, nanoAOD.FsrPhoton_eta],
+#    output=[q.fsrPhoton_eta_1],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_phi_1 = Producer(
+#    name="muon_fsrPhoton_phi_1",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_1, nanoAOD.FsrPhoton_phi],
+#    output=[q.fsrPhoton_phi_1],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_dROverEt2_1 = Producer(
+#    name="muon_fsrPhoton_dROverEt2_1",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_1, nanoAOD.FsrPhoton_dROverEt2],
+#    output=[q.fsrPhoton_dROverEt2_1],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_relIso03_1 = Producer(
+#    name="muon_fsrPhoton_relIso03_1",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_1, nanoAOD.FsrPhoton_relIso03],
+#    output=[q.fsrPhoton_relIso03_1],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_pt_2 = Producer(
+#    name="muon_fsrPhoton_pt_2",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_2, nanoAOD.FsrPhoton_pt],
+#    output=[q.fsrPhoton_pt_2],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_eta_2 = Producer(
+#    name="muon_fsrPhoton_eta_2",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_2, nanoAOD.FsrPhoton_eta],
+#    output=[q.fsrPhoton_eta_2],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_phi_2 = Producer(
+#    name="muon_fsrPhoton_phi_2",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_2, nanoAOD.FsrPhoton_phi],
+#    output=[q.fsrPhoton_phi_2],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_dROverEt2_2 = Producer(
+#    name="muon_fsrPhoton_dROverEt2_2",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_2, nanoAOD.FsrPhoton_dROverEt2],
+#    output=[q.fsrPhoton_dROverEt2_2],
+#    scopes=["vbfhmm"],
+#)
+#muon_fsrPhoton_relIso03_2 = Producer(
+#    name="muon_fsrPhoton_relIso03_2",
+#    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+#    input=[q.fsrPhotonIdx_2, nanoAOD.FsrPhoton_relIso03],
+#    output=[q.fsrPhoton_relIso03_2],
+#    scopes=["vbfhmm"],
+#)
+###
+
+
+# Rochester correction
+ApplyRoccoRData_1 = Producer(
+    name="ApplyRoccoRData_1",
+    call='physicsobject::muon::applyRoccoRData({df}, {output}, "{muon_RoccoR_files}", 0, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_rc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRData_2 = Producer(
+    name="ApplyRoccoRData_2",
+    #call="physicsobject::muon::applyRoccoRData({df}, {output}, {muon_RoccoR_files}, 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})",
+    call='physicsobject::muon::applyRoccoRData({df}, {output}, "{muon_RoccoR_files}", 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_rc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRData = ProducerGroup(
+    name="ApplyRoccoRData",
+    call=None,
+    input=None,
+    output=None,
+    #scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    #scopes=["vbfhmm","mm","mmet"],
+    scopes=["vbfhmm"],
+    subproducers= {
+        "vbfhmm": [ApplyRoccoRData_1, ApplyRoccoRData_2],
+        #"mm": [ApplyRoccoRData_1, ApplyRoccoRData_2],
+        #"mmet": [ApplyRoccoRData_1],
+    }
+)
+
+MuonRoccoRRndm = Producer(
+    name="MuonRndm",
+    call="physicsobject::muon::GenerateRndmRVec({df}, {output}, {input}, {RoccoR_seed})",
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+    ],
+    output=[q.rndms],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+
+ApplyRoccoRMC_1 = Producer(
+    name="ApplyRoccoRMC_1",
+    #call="physicsobject::muon::applyRoccoRMC({df}, {output}, {muon_RoccoR_files}, 0, {input}, {RoccoR_error_set}, {RoccoR_error_member})",
+    call='physicsobject::muon::applyRoccoRMC({df}, {output}, "{muon_RoccoR_files}", 0, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        q.genmu1_fromH_pt,
+        nanoAOD.Muon_nTrackerLayers,
+        q.rndms
+    ],
+    output=[q.pt_rc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRMC_2 = Producer(
+    name="ApplyRoccoRMC_2",
+    #call="physicsobject::muon::applyRoccoRMC({df}, {output}, {muon_RoccoR_files}, 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})",
+    call='physicsobject::muon::applyRoccoRMC({df}, {output}, "{muon_RoccoR_files}", 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        q.genmu2_fromH_pt,
+        nanoAOD.Muon_nTrackerLayers,
+        q.rndms
+    ],
+    output=[q.pt_rc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRMC = ProducerGroup(
+    name="ApplyRoccoRMC",
+    call=None,
+    input=None,
+    output=None,
+    #scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    #scopes=["vbfhmm","mm","mmet"],
+    scopes=["vbfhmm"],
+    subproducers= {
+        "vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_1, ApplyRoccoRMC_2],
+        #"mm": [MuonRoccoRRndm, ApplyRoccoRMC_1, ApplyRoccoRMC_2],
+        #"mmet": [MuonRoccoRRndm, ApplyRoccoRMC_1],
+    }
+)
+
+#####################
+# Producer Groups
+#####################
+
+#DileptonQuantities = ProducerGroup(
+#    name="ApplyRoccoRMC",
+#    call=None,
+#    input=None,
+#    output=None,
+#    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+#    subproducers= {
+#        "mm": [MuonRoccoRRndm, ApplyRoccoRMC_1, ApplyRoccoRMC_2],
+#        "mmet": [MuonRoccoRRndm, ApplyRoccoRMC_1],
+#    }
+#)
+
+######
+
+#ApplyRoccoR = Producer(
+#    name="ApplyRoccoR",
+#    call='physicsobject::applyRoccoRData({df}, {output}, "{muon_RoccoR_files}", {input})',
+#    input=[
+#           nanoAOD.Muon_charge,
+#           nanoAOD.Muon_pt,
+#           nanoAOD.Muon_eta, 
+#           nanoAOD.Muon_phi, 
+#           nanoAOD.Muon_mass,
+#           q.good_muon_corrected_collection],
+#    output=[q.good_muon_corrected_collection], # index about the two selected muons may from Higgs
+#    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+#)
+##
+
 #veto ttH
 VetottHLooseB = Producer(
     name="VetottHLooseB",

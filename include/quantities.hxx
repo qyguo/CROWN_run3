@@ -27,6 +27,9 @@ ROOT::RDF::RNode dxy(ROOT::RDF::RNode df, const std::string &outputname,
 ROOT::RDF::RNode dz(ROOT::RDF::RNode df, const std::string &outputname,
                     const int &position, const std::string &pairname,
                     const std::string &dzcolumn);
+ROOT::RDF::RNode fsrIdx(ROOT::RDF::RNode df, const std::string &outputname,
+                    const int &position, const std::string &pairname,
+                    const std::string &fsrIdxcolumn);
 ROOT::RDF::RNode charge(ROOT::RDF::RNode df, const std::string &outputname,
                         const int &position, const std::string &pairname,
                         const std::string &chargecolumn);
@@ -85,6 +88,9 @@ ROOT::RDF::RNode jet_hemisphere(ROOT::RDF::RNode df,
 ROOT::RDF::RNode mt_tot(ROOT::RDF::RNode df, const std::string &outputname,
                         const std::string &p_1_p4, const std::string &p_2_p4,
                         const std::string &met);
+ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &ptErrcolumn);
 ROOT::RDF::RNode isolation(ROOT::RDF::RNode df, const std::string &outputname,
                            const int &position, const std::string &pairname,
                            const std::string &isolationcolumn);

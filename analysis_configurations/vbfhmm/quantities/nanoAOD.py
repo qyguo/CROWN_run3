@@ -23,6 +23,8 @@ Tau_ID_vsEle = NanoAODQuantity("Tau_idDeepTau2017v2p1VSe")
 Tau_ID_vsMu = NanoAODQuantity("Tau_idDeepTau2017v2p1VSmu")
 
 Muon_pt = NanoAODQuantity("Muon_pt")
+Muon_mediumId = NanoAODQuantity("Muon_mediumId")
+Muon_ptErr = NanoAODQuantity("Muon_ptErr")
 Muon_eta = NanoAODQuantity("Muon_eta")
 Muon_phi = NanoAODQuantity("Muon_phi")
 Muon_mass = NanoAODQuantity("Muon_mass")
@@ -33,7 +35,16 @@ Muon_genMatch = NanoAODQuantity("Muon_genPartFlav")
 Muon_indexToGen = NanoAODQuantity("Muon_genPartIdx")
 Muon_sip3d = NanoAODQuantity("Muon_sip3d") # vh
 Muon_pfRelIso04_all = NanoAODQuantity("Muon_pfRelIso04_all") # vh
+Muon_miniPFRelIso_all = NanoAODQuantity("Muon_miniPFRelIso_all")
 Muon_mvaTTH = NanoAODQuantity("Muon_mvaTTH")
+Muon_nTrackerLayers = NanoAODQuantity("Muon_nTrackerLayers")
+#fsr
+Muon_fsrPhotonIdx = NanoAODQuantity("Muon_fsrPhotonIdx")
+FsrPhoton_pt = NanoAODQuantity("FsrPhoton_pt")
+FsrPhoton_eta = NanoAODQuantity("FsrPhoton_eta")
+FsrPhoton_phi = NanoAODQuantity("FsrPhoton_phi")
+FsrPhoton_dROverEt2 = NanoAODQuantity("FsrPhoton_dROverEt2")
+FsrPhoton_relIso03 = NanoAODQuantity("FsrPhoton_relIso03")
 
 Electron_pt = NanoAODQuantity("Electron_pt")
 Electron_eta = NanoAODQuantity("Electron_eta")
@@ -41,7 +52,9 @@ Electron_dxy = NanoAODQuantity("Electron_dxy")
 Electron_dz = NanoAODQuantity("Electron_dz")
 Electron_phi = NanoAODQuantity("Electron_phi")
 Electron_mass = NanoAODQuantity("Electron_mass")
-Electron_iso = NanoAODQuantity("Electron_pfRelIso03_all")
+#Electron_iso = NanoAODQuantity("Electron_pfRelIso03_all")
+Electron_miniPFRelIso_all = NanoAODQuantity("Electron_miniPFRelIso_all")
+Electron_pfRelIso03_all = NanoAODQuantity("Electron_pfRelIso03_all")
 Electron_charge = NanoAODQuantity("Electron_charge")
 Electron_indexToGen = NanoAODQuantity("Electron_genPartIdx")
 # write by botao
@@ -69,7 +82,8 @@ Jet_ID = NanoAODQuantity("Jet_jetId")
 Jet_PUID = NanoAODQuantity("Jet_puId")
 Jet_associatedGenJet = NanoAODQuantity("Jet_genJetIdx")
 #BJet_discriminator = NanoAODQuantity("Jet_btagDeepFlavB") # DeepFlavour
-BJet_discriminator = NanoAODQuantity("Jet_btagDeepB") # vh DeepCSV
+#BJet_discriminator = NanoAODQuantity("Jet_btagDeepB") # vh DeepCSV
+BJet_discriminator = NanoAODQuantity("Jet_btagPNetB")
 
 Pileup_nTrueInt = NanoAODQuantity("Pileup_nTrueInt")
 rho = NanoAODQuantity("Pileup_pudensity")

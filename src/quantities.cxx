@@ -157,6 +157,21 @@ ROOT::RDF::RNode dz(ROOT::RDF::RNode df, const std::string &outputname,
         },
         {pairname, dzcolumn});
 }
+
+/// Function to writeout the fsrIdx impact parameter from a particle. The particle
+ROOT::RDF::RNode fsrIdx(ROOT::RDF::RNode df, const std::string &outputname,
+                    const int &position, const std::string &pairname,
+                    const std::string &fsrIdxcolumn) {
+    return df.Define(
+        outputname,
+        [position](const ROOT::RVec<int> &pair, const ROOT::RVec<int> &fsrIdx) {
+            const int index = pair.at(position);
+            return fsrIdx.at(index, default_int);
+        },
+        {pairname, fsrIdxcolumn});
+}
+//ahhh
+
 /// Function to writeout the charge of a particle. The particle is identified
 /// via the index stored in the pair vector
 ///
@@ -680,6 +695,30 @@ ROOT::RDF::RNode mt_tot(ROOT::RDF::RNode df, const std::string &outputname,
     };
     return df.Define(outputname, calculate_mt_tot, {p_1_p4, p_2_p4, met});
 }
+
+/// Function to writeout the ptErr of a particle. The particle is
+/// identified via the index stored in the pair vector
+///
+/// \param df the dataframe to add the quantity to
+/// \param outputname name of the new column containing the ptErr value
+/// \param position index of the position in the pair vector
+/// \param pairname name of the column containing the pair vector
+/// \param ptErrcolumn name of the column containing the ptErr values
+///
+/// \returns a dataframe with the new column
+
+ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &ptErrcolumn) {
+    return df.Define(outputname,
+                     [position](const ROOT::RVec<int> &pair,
+                                const ROOT::RVec<float> &ptErr) {
+                         const int index = pair.at(position);
+                         return ptErr.at(index, default_float);
+                     },
+                     {pairname, ptErrcolumn});
+}
+/////
 
 /// Function to writeout the isolation of a particle. The particle is
 /// identified via the index stored in the pair vector

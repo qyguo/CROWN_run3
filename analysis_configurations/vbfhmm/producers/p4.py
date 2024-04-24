@@ -406,7 +406,7 @@ genmu1_fromH_pt = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_pt],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 genmu1_fromH_eta = Producer(
     name="genmu1_fromH_eta",
@@ -415,7 +415,7 @@ genmu1_fromH_eta = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_eta],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 genmu1_fromH_phi = Producer(
     name="genmu1_fromH_phi",
@@ -424,7 +424,7 @@ genmu1_fromH_phi = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_phi],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 genmu1_fromH_mass = Producer(
     name="genmu1_fromH_mass",
@@ -433,7 +433,7 @@ genmu1_fromH_mass = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_mass],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 
 genmu2_fromH_pt = Producer(
@@ -443,7 +443,7 @@ genmu2_fromH_pt = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_pt],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 genmu2_fromH_eta = Producer(
     name="genmu2_fromH_eta",
@@ -452,7 +452,7 @@ genmu2_fromH_eta = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_eta],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 genmu2_fromH_phi = Producer(
     name="genmu2_fromH_phi",
@@ -461,7 +461,7 @@ genmu2_fromH_phi = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_phi],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 genmu2_fromH_mass = Producer(
     name="genmu2_fromH_mass",
@@ -470,7 +470,7 @@ genmu2_fromH_mass = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_mass],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
 )
 ## for fatjet + mm channel
 fatjet_pt = Producer(

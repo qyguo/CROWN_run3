@@ -6,6 +6,22 @@ from code_generation.producer import Producer, ProducerGroup
 # Set of producers used for loosest selection of muons
 ####################
 
+Muon_pTErr_1 = Producer(
+    name="Muon_pTErr_1",
+    call="quantities::ptErr({df}, {output}, 0, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_ptErr],
+    output=[q.mu1_fromH_ptErr],
+    scopes=["vbfhmm"],
+)
+
+Muon_pTErr_2 = Producer(
+    name="Muon_pTErr_2",
+    call="quantities::ptErr({df}, {output}, 1, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_ptErr],
+    output=[q.mu2_fromH_ptErr],
+    scopes=["vbfhmm"],
+)
+
 MuonPtCut = Producer(
     name="MuonPtCut",
     call="physicsobject::CutPt({df}, {input}, {output}, {min_muon_pt})",
@@ -52,6 +68,7 @@ Muon_mvaTTH_Cut = Producer(
 MuonIDCut = Producer(
     name="MuonIDCut",
     call='physicsobject::muon::CutID({df}, {output}, "{muon_id}")',
+    #input=[nanoAOD.Muon_mediumId],
     input=[],
     output=[],
     scopes=["global","gghmm","vbfhmm"],
@@ -60,6 +77,7 @@ MuonIsoCut = Producer(
     name="MuonIsoCut",
     call="physicsobject::muon::CutIsolation({df}, {output}, {input}, {muon_iso_cut})",
     input=[nanoAOD.Muon_pfRelIso04_all], # vh
+    #input=[nanoAOD.Muon_miniPFRelIso_all],
     output=[],
     scopes=["global","gghmm","vbfhmm"],
 )
@@ -77,7 +95,7 @@ BaseMuons = ProducerGroup(
         #MuonSIP3DCut,
         # TODO vh add LepMVA
         #Muon_mvaTTH_Cut,
-       # MuonIDCut,
+        MuonIDCut,
         MuonIsoCut,
     ],
 )
@@ -103,10 +121,21 @@ GoodMuonEtaCut = Producer(
     output=[],
     scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
+GoodMuonIDCut = Producer(
+    name="GoodMuonIDCut",
+    call='physicsobject::muon::CutID({df}, {output}, "{muon_id}")',
+    #input=[nanoAOD.Muon_mediumId],
+    input=[],
+    output=[],
+    scopes=["global","gghmm","vbfhmm"],
+)
+###
 GoodMuonIsoCut = Producer(
     name="GoodMuonIsoCut",
-    call="physicsobject::electron::CutIsolation({df}, {output}, {input}, {muon_iso_cut})",
+    #call="physicsobject::electron::CutIsolation({df}, {output}, {input}, {muon_iso_cut})",
+    call="physicsobject::muon::CutIsolation({df}, {output}, {input}, {muon_iso_cut})",
     input=[nanoAOD.Muon_pfRelIso04_all],
+    #input=[nanoAOD.Muon_miniPFRelIso_all],
     output=[],
     scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
@@ -119,6 +148,7 @@ GoodMuons = ProducerGroup(
     subproducers=[
         GoodMuonPtCut,
         GoodMuonEtaCut,
+        GoodMuonIDCut,
         GoodMuonIsoCut,
     ],
 )

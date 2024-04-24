@@ -124,6 +124,29 @@ ROOT::RDF::RNode getvar(ROOT::RDF::RNode df, const std::string &outputname,
         {vecname, column});
 }
 
+///
+//template <typename T>
+//ROOT::RDF::RNode getvar_try(ROOT::RDF::RNode df, const std::string &outputname,
+//                        const std::string &vecname,
+//                        const std::string &column) {
+//    return df.Define(
+//        outputname,
+//        [](const int &pos, const ROOT::RVec<T> &col) {
+//            T out = default_value<T>();
+//
+//            try {
+//                const int index = pos;
+//                out = col.at(index, default_value<T>());
+//            } catch (const std::out_of_range &e) {
+//                Logger::get("getvar")->debug(
+//                    "Index not found, retuning dummy value !");
+//            }
+//
+//            return out;
+//        },
+//        {vecname, column});
+//}
+
 /// Function to writeout a variable from a RVec index to a NanoAOD column.
 ///
 /// \param df the dataframe to add the quantity to

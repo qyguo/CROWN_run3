@@ -307,14 +307,36 @@ Z_H_cosThStar = Quantity("Z_H_cosThStar")
 Flag_MetCut = Quantity("Flag_MetCut")
 
 mu1_fromH_pt = Quantity("mu1_fromH_pt")
+rndms = Quantity("rndms")
+pt_rc_1 = Quantity("pt_rc_1")
+mu1_fromH_ptErr = Quantity("mu1_fromH_ptErr")
 mu1_fromH_eta = Quantity("mu1_fromH_eta")
 mu1_fromH_phi = Quantity("mu1_fromH_phi")
 mu1_fromH_mass = Quantity("mu1_fromH_mass")
 
 mu2_fromH_pt = Quantity("mu2_fromH_pt")
+pt_rc_2 = Quantity("pt_rc_2")
+mu2_fromH_ptErr = Quantity("mu2_fromH_ptErr")
 mu2_fromH_eta = Quantity("mu2_fromH_eta")
 mu2_fromH_phi = Quantity("mu2_fromH_phi")
 mu2_fromH_mass = Quantity("mu2_fromH_mass")
+
+#fsr
+fsrPhotonIdx_1 = Quantity("fsrPhotonIdx_1")
+fsrPhotonIdx_2 = Quantity("fsrPhotonIdx_2")
+
+fsrPhoton_pt_1 = Quantity("fsrPhoton_pt_1")
+fsrPhoton_eta_1 = Quantity("fsrPhoton_eta_1")
+fsrPhoton_phi_1 = Quantity("fsrPhoton_phi_1")
+fsrPhoton_dROverEt2_1 = Quantity("fsrPhoton_dROverEt2_1")
+fsrPhoton_relIso03_1 = Quantity("fsrPhoton_relIso03_1")
+fsrPhoton_pt_2 = Quantity("fsrPhoton_pt_2")
+fsrPhoton_eta_2 = Quantity("fsrPhoton_eta_2")
+fsrPhoton_phi_2 = Quantity("fsrPhoton_phi_2")
+fsrPhoton_dROverEt2_2 = Quantity("fsrPhoton_dROverEt2_2")
+fsrPhoton_relIso03_2 = Quantity("fsrPhoton_relIso03_2")
+##
+
 
 H_pt = Quantity("H_pt")
 H_eta = Quantity("H_eta")

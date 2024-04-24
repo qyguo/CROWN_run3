@@ -121,6 +121,35 @@ ROOT::RDF::RNode id(ROOT::RDF::RNode df, const std::string &pt,
         {pt, eta});
     return df1;
 }
+ROOT::RDF::RNode id(ROOT::RDF::RNode df, const std::string &pt,
+                    const std::string &eta, //const std::string &year_id,
+                    const std::string &variation, const std::string &id_output,
+                    const std::string &sf_file,
+                    const std::string &idAlgorithm) {
+
+    Logger::get("muonIdSF")->debug("Setting up functions for muon id sf");
+    Logger::get("muonIdSF")->debug("ID - Name {}", idAlgorithm);
+    auto evaluator =
+        correction::CorrectionSet::from_file(sf_file)->at(idAlgorithm);
+    auto df1 = df.Define(
+        id_output,
+        //[evaluator, year_id, variation](const float &pt, const float &eta) {
+        [evaluator, variation](const float &pt, const float &eta) {
+            Logger::get("muonIdSF")->debug("ID - pt {}, eta {}", pt, eta);
+            double sf = 1.;
+            // preventing muons with default values due to tau energy correction
+            // shifts below good tau pt selection
+            if (pt >= 0.0 && std::abs(eta) >= 0.0) {
+                sf = evaluator->evaluate(
+                    //{year_id, std::abs(eta), pt, variation});
+                    {std::abs(eta), pt, variation});
+            }
+            return sf;
+        },
+        {pt, eta});
+    return df1;
+}
+///ahhh
 /**
  * @brief Function used to evaluate iso scale factors from muons with
  * correctionlib. Configurations:
@@ -170,6 +199,35 @@ ROOT::RDF::RNode iso(ROOT::RDF::RNode df, const std::string &pt,
         {pt, eta});
     return df1;
 }
+ROOT::RDF::RNode iso(ROOT::RDF::RNode df, const std::string &pt,
+                     const std::string &eta, //const std::string &year_id,
+                     const std::string &variation,
+                     const std::string &iso_output, const std::string &sf_file,
+                     const std::string &idAlgorithm) {
+
+    Logger::get("muonIsoSF")->debug("Setting up functions for muon iso sf");
+    Logger::get("muonIsoSF")->debug("ISO - Name {}", idAlgorithm);
+    auto evaluator =
+        correction::CorrectionSet::from_file(sf_file)->at(idAlgorithm);
+    auto df1 = df.Define(
+        iso_output,
+        //[evaluator, year_id, variation](const float &pt, const float &eta) {
+        [evaluator, variation](const float &pt, const float &eta) {
+            Logger::get("muonIsoSF")->debug("ISO - pt {}, eta {}", pt, eta);
+            double sf = 1.;
+            // preventing muons with default values due to tau energy correction
+            // shifts below good tau pt selection
+            if (pt >= 0.0 && std::abs(eta) >= 0.0) {
+                sf = evaluator->evaluate(
+                    //{year_id, std::abs(eta), pt, variation});
+                    {std::abs(eta), pt, variation});
+            }
+            return sf;
+        },
+        {pt, eta});
+    return df1;
+}
+///ahhhh
 } // namespace muon
 namespace tau {
 /**

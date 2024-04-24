@@ -344,7 +344,8 @@ ROOT::RDF::RNode HiggsCandDiMuonPairCollection(ROOT::RDF::RNode df, const std::s
                                              continue;
                                          }
                                          /// Add dimuon mass window
-                                         if ( (p4_1[i] + p4_2[j]).mass() < 110 || (p4_1[i] + p4_2[j]).mass() > 150 ) {
+                                         //if ( (p4_1[i] + p4_2[j]).mass() < 110 || (p4_1[i] + p4_2[j]).mass() > 150 ) {
+                                         if ( (p4_1[i] + p4_2[j]).mass() < 70 || (p4_1[i] + p4_2[j]).mass() > 150 ) {
                                              continue;
                                          }
                                          if ( p4_1[i].pt() + p4_2[j].pt() > ptsum) {
