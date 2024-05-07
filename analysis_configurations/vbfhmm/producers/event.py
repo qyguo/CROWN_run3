@@ -320,7 +320,7 @@ ApplyRoccoRMC_1 = Producer(
         nanoAOD.Muon_phi,
         q.genmu1_fromH_pt,
         nanoAOD.Muon_nTrackerLayers,
-        q.rndms
+        q.rndms,
     ],
     output=[q.pt_rc_1],
     scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
@@ -339,7 +339,7 @@ ApplyRoccoRMC_2 = Producer(
         nanoAOD.Muon_phi,
         q.genmu2_fromH_pt,
         nanoAOD.Muon_nTrackerLayers,
-        q.rndms
+        q.rndms,
     ],
     output=[q.pt_rc_2],
     scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
@@ -355,10 +355,56 @@ ApplyRoccoRMC = ProducerGroup(
     scopes=["vbfhmm"],
     subproducers= {
         "vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_1, ApplyRoccoRMC_2],
-        #"mm": [MuonRoccoRRndm, ApplyRoccoRMC_1, ApplyRoccoRMC_2],
-        #"mmet": [MuonRoccoRRndm, ApplyRoccoRMC_1],
     }
 )
+
+ApplyRoccoRMC_2022_1 = Producer(
+    name="ApplyRoccoRMC_1",
+    call='physicsobject::muon::applyRoccoRMC_2022({df}, {output}, "{muon_RoccoR_files}", 0, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        q.genmu1_fromH_pt,
+        nanoAOD.Muon_nTrackerLayers,
+        q.rndms,
+    ],
+    output=[q.pt_rc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRMC_2022_2 = Producer(
+    name="ApplyRoccoRMC_2",
+    call='physicsobject::muon::applyRoccoRMC_2022({df}, {output}, "{muon_RoccoR_files}", 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        q.genmu2_fromH_pt,
+        nanoAOD.Muon_nTrackerLayers,
+        q.rndms,
+    ],
+    output=[q.pt_rc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRMC_2022 = ProducerGroup(
+    name="ApplyRoccoRMC_2022",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["vbfhmm"],
+    subproducers= {
+        "vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_2022_1, ApplyRoccoRMC_2022_2],
+    }
+)
+###ahhh
 
 #####################
 # Producer Groups
@@ -419,7 +465,7 @@ VetoVHMuon = Producer(
 )
 VetoVHElectron = Producer(
     name="VetoVHElectron",
-    call='basefunctions::FilterThreshold({df}, {input}, {vetoVH_max_nelectrons}, "<=", "Veto ttH <= 0 electrons")',
+    call='basefunctions::FilterThreshold({df}, {input}, {vetoVH_max_nelectrons}, "<=", "Veto VH <= 0 electrons")',
     input=[q.nelectrons],
     output=None,
     scopes=["gghmm","vbfhmm"],

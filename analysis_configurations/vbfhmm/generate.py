@@ -21,7 +21,7 @@ def run(args):
         "wjets",
         "diboson",
     ]
-    available_eras = ["2016preVFP","2016postVFP","2017","2018","2022"]
+    available_eras = ["2016preVFP","2016postVFP","2017","2018","2022","2022EE"]
     available_scopes = ["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"]
 
     ## setup variables

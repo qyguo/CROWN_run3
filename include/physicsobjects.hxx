@@ -306,6 +306,14 @@ applyRoccoRMC(ROOT::RDF::RNode df, const std::string &outputname,
               const std::string &phiColumn, const std::string &genPtColumn,
               const std::string &nTrackerLayersColumn,
               const std::string &rndmColumn, int error_set, int error_member);
+ROOT::RDF::RNode
+applyRoccoRMC_2022(ROOT::RDF::RNode df, const std::string &outputname,
+              const std::string &filename, const int &position,
+              const std::string &objCollection, const std::string &chargColumn,
+              const std::string &ptColumn, const std::string &etaColumn,
+              const std::string &phiColumn, const std::string &genPtColumn,
+              const std::string &nTrackerLayersColumn,
+              const std::string &rndmColumn, int error_set, int error_member);
 } // namespace muon
 namespace tau {
 ROOT::RDF::RNode CutDecayModes(ROOT::RDF::RNode df, const std::string &maskname,

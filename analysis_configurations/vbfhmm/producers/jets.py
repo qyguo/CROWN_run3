@@ -27,6 +27,24 @@ JetPtCorrection = Producer(
     output=[q.Jet_pt_corrected],
     scopes=["global"],
 )
+JetPtCorrection_2022 = Producer(
+    name="JetPtCorrection_2022",
+    call="physicsobject::jet::JetPtCorrection_2022({df}, {output}, {input}, {jet_reapplyJES}, {jet_jes_sources}, {jet_jes_shift}, {jet_jer_shift}, {jet_jec_file}, {jet_jer_tag}, {jet_jes_tag}, {jet_jec_algo})",
+    input=[
+        nanoAOD.Jet_pt,
+        nanoAOD.Jet_eta,
+        nanoAOD.Jet_phi,
+        nanoAOD.Jet_area,
+        nanoAOD.Jet_rawFactor,
+        nanoAOD.Jet_ID,
+        nanoAOD.GenJet_pt,
+        nanoAOD.GenJet_eta,
+        nanoAOD.GenJet_phi,
+        nanoAOD.rho,
+    ],
+    output=[q.Jet_pt_corrected],
+    scopes=["global"],
+)
 JetMassCorrection = Producer(
     name="JetMassCorrection",
     call="physicsobject::ObjectMassCorrectionWithPt({df}, {output}, {input})",
@@ -45,6 +63,14 @@ JetEnergyCorrection = ProducerGroup(
     output=None,
     scopes=["global"],
     subproducers=[JetPtCorrection, JetMassCorrection],
+)
+JetEnergyCorrection_2022 = ProducerGroup(
+    name="JetEnergyCorrection_2022",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global"],
+    subproducers=[JetPtCorrection_2022, JetMassCorrection],
 )
 # in data and embdedded sample, we simply rename the nanoAOD jets to the jet_pt_corrected column
 RenameJetPt = Producer(

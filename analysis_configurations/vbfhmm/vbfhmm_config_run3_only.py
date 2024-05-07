@@ -670,15 +670,16 @@ def build_config(
         [
             event.SampleFlags,
             event.PUweights,
-            event.PrefireWeight,
+            #event.PrefireWeight,
             event.Lumi,
             event.MetFilter,
             muons.BaseMuons, # vh
             # vbfhmm muon Rochester corr, FSR recovery added 
             # GeoFit? TODO
             electrons.BaseElectrons,
-            jets.JetEnergyCorrection, # include pt corr and mass corr and 2022 modify the JR sf adding pt
-            jets.GoodJets, # vh overlap removal with ?base? muons done [need validation]
+            jets.JetEnergyCorrection_2022, # include pt corr and mass corr and 2022 modify the JR sf adding pt
+            #jets.GoodJets, # vh overlap removal with ?base? muons done [need validation]
+            jets.GoodJets_2022, # vh overlap removal with ?base? muons done [need validation]
             jets.GoodBJetsLoose, 
             jets.GoodBJetsMedium, 
             ####
@@ -776,7 +777,7 @@ def build_config(
             p4.genmet_phi,
 
             scalefactors.btagging_SF,
-            scalefactors.MuonIDIso_SF_vbfhmm, #2 mu from H
+            scalefactors.MuonIDIso_SF_vbfhmm_noYear, #2 mu from H
             fsrPhoton.muon_fsrPhotonIdx_1,
             fsrPhoton.muon_fsrPhotonIdx_2,
 
@@ -827,7 +828,7 @@ def build_config(
             q.lumi,
             nanoAOD.event,
             q.puweight,
-            q.prefireweight,
+            #q.prefireweight,
             #
             q.nmuons,
             #q.MHT_p4,
@@ -875,7 +876,7 @@ def build_config(
 
             q.dijet_mass,
             q.dijet_eta,
-            q.btag_weight,
+            #q.btag_weight,
             
             q.mumuH_dR,
 
@@ -916,18 +917,17 @@ def build_config(
             #q.iso_wgt_mu_3,
         ],
     )
-    #
+    ##
     if sample != "data":
         configuration.add_modification_rule(
             "vbfhmm",
             AppendProducer(
-                producers=[event.ApplyRoccoRMC,],
+                producers=[event.ApplyRoccoRMC_2022,],
                 samples=sample,
                 update_output=False,
             ),
         )
-    elif sample == "data":
-    #if sample == "data":
+    if sample == "data":
         configuration.add_modification_rule(
             "vbfhmm",
             AppendProducer(
@@ -950,7 +950,8 @@ def build_config(
         "global",
         RemoveProducer(
             #producers=[event.PUweights, event.PrefireWeight, jets.JetEnergyCorrection, fatjets.FatJetEnergyCorrection, met.BuildGenMetVector,],
-            producers=[event.PUweights, event.PrefireWeight, jets.JetEnergyCorrection, met.BuildGenMetVector,],
+            #producers=[event.PUweights, event.PrefireWeight, jets.JetEnergyCorrection, met.BuildGenMetVector,],
+            producers=[event.PUweights, jets.JetEnergyCorrection_2022, met.BuildGenMetVector,],
             samples=["data"],
         ),
     )
@@ -979,41 +980,33 @@ def build_config(
     ##
 
     # As now 2022 data has no Jet_puID, so no possible to do JetPUIDCut
-    if era == "2022" or era == "2022EE":
-        # 2022 data
-        configuration.add_modification_rule(
-            "global",
-            RemoveProducer(
-                producers=[jets.GoodJets,],
-                samples=["data"],
-            ),
-        )
-        # 2022 MC
-        if sample != "data":
-            configuration.add_modification_rule(
-                "global",
-                RemoveProducer(
-                    producers=[jets.GoodJets, jets.JetEnergyCorrection, event.PrefireWeight,],
-                    samples=sample,
-                ),
-            )
-            configuration.add_modification_rule(
-                "global",
-                AppendProducer(
-                    producers=[jets.JetEnergyCorrection_2022,],
-                    samples=sample,
-                    update_output=False,
-                ),
-            )
+    #if era == "2022" or era == "2022EE":
+        ## 2022 MC
+        #if sample != "data":
+        #    configuration.add_modification_rule(
+        #        "global",
+        #        RemoveProducer(
+        #            producers=[jets.GoodJets, event.PrefireWeight,],
+        #            samples=sample,
+        #        ),
+        #    )
+        #    configuration.add_modification_rule(
+        #        "global",
+        #        AppendProducer(
+        #            producers=[jets.JetEnergyCorrection_2022,],
+        #            samples=sample,
+        #            update_output=False,
+        #        ),
+        #    )
         # 2022 data and mc
-        configuration.add_modification_rule(
-            "global",
-            AppendProducer(
-                producers=[jets.GoodJets_2022,],
-                samples=sample,
-                update_output=False,
-            ),
-        )
+        #configuration.add_modification_rule(
+        #    "global",
+        #    AppendProducer(
+        #        producers=[jets.GoodJets_2022,],
+        #        samples=sample,
+        #        update_output=False,
+        #    ),
+        #)
         ###ahhhh
 
     # all data vbfhmm
@@ -1032,30 +1025,30 @@ def build_config(
                 p4.genmu2_fromH_eta,
                 p4.genmu2_fromH_phi,
                 p4.genmu2_fromH_mass,
-                scalefactors.MuonIDIso_SF_vbfhmm,
+                scalefactors.MuonIDIso_SF_vbfhmm_noYear,
                 scalefactors.btagging_SF,
             ],
             samples=["data"],
         ),
     )
-    if sample != "data":
-        if era == "2022" or era == "2022EE":
-            configuration.add_modification_rule(
-                "vbfhmm",
-                RemoveProducer(
-                    producers=[scalefactors.MuonIDIso_SF_vbfhmm,],
-                    samples=sample,
-                    update_output=False,
-                ),
-            )
-            configuration.add_modification_rule(
-                "vbfhmm",
-                AppendProducer(
-                    producers=[scalefactors.MuonIDIso_SF_vbfhmm_noYear,],
-                    samples=sample,
-                    update_output=False,
-                ),
-            )
+    #if sample != "data":
+    #    if era == "2022" or era == "2022EE":
+    #        configuration.add_modification_rule(
+    #            "vbfhmm",
+    #            RemoveProducer(
+    #                producers=[scalefactors.MuonIDIso_SF_vbfhmm,],
+    #                samples=sample,
+    #                update_output=False,
+    #            ),
+    #        )
+    #        configuration.add_modification_rule(
+    #            "vbfhmm",
+    #            AppendProducer(
+    #                producers=[scalefactors.MuonIDIso_SF_vbfhmm_noYear,],
+    #                samples=sample,
+    #                update_output=False,
+    #            ),
+    #        )
 
 
     configuration.add_shift(

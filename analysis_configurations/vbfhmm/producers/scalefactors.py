@@ -1,4 +1,5 @@
 from ..quantities import output as q
+from ..quantities import nanoAOD as nanoAOD
 from code_generation.producer import Producer, ProducerGroup
 from code_generation.producer import ExtendedVectorProducer
 
@@ -380,4 +381,23 @@ EleID_SF = ProducerGroup(
             Ele_2_IDWP80_SF,
         ],
     },
+)
+
+#########################
+# b-tagging SF
+#########################
+btagging_SF = Producer(
+    name="btagging_SF",
+    call='scalefactor::jet::btagSF({df}, {input}, "{btag_sf_variation}", {output}, "{btag_sf_file}", "{btag_corr_algo}")',
+    input=[
+        q.Jet_pt_corrected,
+        nanoAOD.Jet_eta,
+        nanoAOD.BJet_discriminator,
+        nanoAOD.Jet_flavor,
+        q.good_jets_mask,
+        q.good_bjets_mask_loose,
+        q.jet_overlap_veto_mask,
+    ],
+    output=[q.btag_weight],
+    scopes=["vbfhmm"],
 )

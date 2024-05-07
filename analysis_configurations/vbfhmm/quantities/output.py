@@ -111,6 +111,7 @@ bpt_2 = Quantity("bpt_2")
 beta_2 = Quantity("beta_2")
 bphi_2 = Quantity("bphi_2")
 btag_value_2 = Quantity("btag_value_2")
+btag_weight = Quantity("btag_weight")
 
 dielectron_veto = Quantity("dielectron_veto")
 dimuon_veto = Quantity("dimuon_veto")

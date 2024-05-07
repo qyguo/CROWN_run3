@@ -2033,6 +2033,56 @@ applyRoccoRMC(ROOT::RDF::RNode df, const std::string &outputname,
                       phiColumn, genPtColumn, nTrackerLayersColumn,
                       rndmColumn});
 }
+/// Function to create a column of Rochester correction applied transverse
+// 2022 nTrackerLayers is unit8 
+// https://github.com/cms-sw/cmssw/blob/43944b8074465f15907d5f89d6d24e2cb1f6bc86/PhysicsTools/NanoAOD/python/muons_cff.py#L169C9-L169C159
+ROOT::RDF::RNode
+applyRoccoRMC_2022(ROOT::RDF::RNode df, const std::string &outputname,
+              const std::string &filename, const int &position,
+              const std::string &objCollection, const std::string &chargColumn,
+              const std::string &ptColumn, const std::string &etaColumn,
+              const std::string &phiColumn, const std::string &genPtColumn,
+              const std::string &nTrackerLayersColumn,
+              const std::string &rndmColumn, int error_set, int error_member) {
+    RoccoR rc(filename);
+    auto lambda = [rc, position, error_set, error_member](
+                      const ROOT::RVec<int> &objects,
+                      const ROOT::RVec<int> &chargCol,
+                      const ROOT::RVec<float> &ptCol,
+                      const ROOT::RVec<float> &etaCol,
+                      const ROOT::RVec<float> &phiCol, const float &genPt,
+                      const ROOT::RVec<UChar_t> &nTrackerLayersCol,
+                      const ROOT::RVec<float> &rndmCol) {
+        double pt_rc = default_float;
+        const int index = objects.at(position);
+        //int n_lay = static_cast<int>(nTrackerLayersCol.at(index));
+        if (genPt > 0.) {
+            pt_rc = ptCol.at(index) *
+                    rc.kSpreadMC(chargCol.at(index), ptCol.at(index),
+                                 etaCol.at(index), phiCol.at(index), genPt,
+                                 error_set, error_member);
+        } else {
+            pt_rc = ptCol.at(index) *
+                    rc.kSmearMC(chargCol.at(index), ptCol.at(index),
+                                etaCol.at(index), phiCol.at(index),
+                                nTrackerLayersCol.at(index),
+                                rndmCol.at(position), error_set, error_member);
+        }
+
+        return pt_rc;
+    };
+
+    return df.Define(outputname, lambda,
+                     {objCollection, chargColumn, ptColumn, etaColumn,
+                      phiColumn, genPtColumn, nTrackerLayersColumn,
+                      rndmColumn});
+}
+////ahhhh
+} // end namespace muon
+/// Tau specific functions
+namespace tau {
+/// Function to cut on taus based on the tau decay mode
+////ahhhh
 } // end namespace muon
 /// Tau specific functions
 namespace tau {

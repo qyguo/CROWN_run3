@@ -60,6 +60,8 @@ int main(int argc, char *argv[]) {
     }
     std::vector<std::string> input_files;
     int nevents = 0;
+    int sumw_num = 0;
+    Double_t sumofgenweight = 0;
     Logger::get("main")->info("Checking input files");
     std::string basetree = "Events";
     for (int i = 2; i < argc; i++) {
@@ -79,8 +81,18 @@ int main(int argc, char *argv[]) {
         if (list->FindObject("Events")) {
             TTree *t1 = (TTree *)f1->Get("Events");
             nevents += t1->GetEntries();
+            TTree *t2 = (TTree *)f1->Get("Runs");
+            Double_t variable;
+            t2->SetBranchAddress("genEventSumw", &variable);
+            sumw_num = t2->GetEntries();
+            for (int i = 0; i < sumw_num; i++) {
+                t2->GetEntry(i);
+                sumofgenweight += variable;
+            }
             Logger::get("main")->info("NanoAOD input_file {}: {} - {} Events",
                                       i - 1, argv[i], t1->GetEntries());
+            Logger::get("main")->info("input_file {}: {} - SumOfGenWeight: {} ", i - 1,
+                                  argv[i], sumofgenweight);
         } else if (list->FindObject("ntuple")) {
             TTree *t1 = (TTree *)f1->Get("ntuple");
             nevents += t1->GetEntries();
@@ -133,6 +145,7 @@ int main(int argc, char *argv[]) {
     const std::string era = {ERATAG};
     const std::string sample = {SAMPLETAG};
     const std::string commit_hash = {COMMITHASH};
+    const std::string genEventSumw = "genEventSumw";
     bool setup_clean = {CROWN_IS_CLEAN};
     const std::string analysis_commit_hash = {ANALYSIS_COMMITHASH};
     bool analysis_setup_clean = {ANALYSIS_IS_CLEAN};
@@ -156,6 +169,8 @@ int main(int argc, char *argv[]) {
         conditions_meta.Branch(config.c_str(), &setup_clean);
         conditions_meta.Branch(era.c_str(), &setup_clean);
         conditions_meta.Branch(sample.c_str(), &setup_clean);
+        conditions_meta.Branch(genEventSumw.c_str(), &sumofgenweight);
+        conditions_meta.Fill();
         conditions_meta.Write();
         TTree commit_meta = TTree("commit", "commit");
         commit_meta.Branch(commit_hash.c_str(), &setup_clean);
