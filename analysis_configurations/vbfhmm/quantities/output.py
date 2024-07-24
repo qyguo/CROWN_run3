@@ -338,6 +338,9 @@ fsrPhoton_dROverEt2_2 = Quantity("fsrPhoton_dROverEt2_2")
 fsrPhoton_relIso03_2 = Quantity("fsrPhoton_relIso03_2")
 ##
 
+NSoftjets5 = Quantity("NSoftjets5")
+jet1_btagDeepFlavQG = Quantity("jet1_btagDeepFlavQG")
+jet2_btagDeepFlavQG = Quantity("jet2_btagDeepFlavQG")
 
 H_pt = Quantity("H_pt")
 H_eta = Quantity("H_eta")
@@ -348,11 +351,15 @@ jet1_pt = Quantity("jet1_pt")
 jet1_eta = Quantity("jet1_eta")
 jet1_phi = Quantity("jet1_phi")
 jet1_mass = Quantity("jet1_mass")
+jet1_rawpT = Quantity("jet1_rawpT")
+jet1_rawMass = Quantity("jet1_rawMass")
 
 jet2_pt = Quantity("jet2_pt")
 jet2_eta = Quantity("jet2_eta")
 jet2_phi = Quantity("jet2_phi")
 jet2_mass = Quantity("jet2_mass")
+jet2_rawpT = Quantity("jet2_rawpT")
+jet2_rawMass = Quantity("jet2_rawMass")
 
 dijet_mass = Quantity("dijet_mass")
 dijet_eta = Quantity("dijet_eta")

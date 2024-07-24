@@ -598,6 +598,106 @@ ROOT::RDF::RNode GenerateTripleTriggerORFlag(
         return df1;
     }
 }
+///
+ROOT::RDF::RNode GenerateDoubleTriggerORFlag_2022(
+    ROOT::RDF::RNode df, const std::string &triggerflag_name,
+    const std::string &particle1_p4, const std::string &particle2_p4,
+    const std::string &triggerobject_bits, const std::string &triggerobject_id,
+    const std::string &triggerobject_pt, const std::string &triggerobject_eta,
+    const std::string &triggerobject_phi, const std::string &hltpath,
+    const float &p1_pt_cut, const float &p2_pt_cut, const float &p1_eta_cut,
+    const float &p2_eta_cut, const int &p1_trigger_particle_id_cut,
+    const int &p2_trigger_particle_id_cut, const int &p1_triggerbit_cut,
+    const int &p2_triggerbit_cut, const float &DeltaR_threshold) {
+
+    auto triggermatch = [DeltaR_threshold, p1_pt_cut, p2_pt_cut, p1_eta_cut,
+                         p2_eta_cut, p1_trigger_particle_id_cut,
+                         p2_trigger_particle_id_cut, p1_triggerbit_cut,
+                         p2_triggerbit_cut](
+                            bool hltpath,
+                            const ROOT::Math::PtEtaPhiMVector &particle1_p4,
+                            const ROOT::Math::PtEtaPhiMVector &particle2_p4,
+                            ROOT::RVec<int> triggerobject_bits,
+                            ROOT::RVec<UShort_t> triggerobject_ids_,
+                            ROOT::RVec<float> triggerobject_pts,
+                            ROOT::RVec<float> triggerobject_etas,
+                            ROOT::RVec<float> triggerobject_phis) {
+        Logger::get("GenerateDoubleTriggerORFlag")->debug("Checking Trigger");
+        ROOT::RVec<int> triggerobject_ids;
+        triggerobject_ids.reserve(triggerobject_ids_.size());
+
+        for (auto id : triggerobject_ids_) {
+            //triggerobject_ids.push_back(static_cast<int>(id));
+            triggerobject_ids.push_back(id);
+        }
+
+        bool result = false;
+        bool match_result_p1 = false;
+        bool match_result_p2 = false;
+        if (hltpath) {
+            Logger::get("GenerateDoubleTriggerORFlag")
+                ->debug("Checking Triggerobject match with particles ....");
+            Logger::get("GenerateDoubleTriggerORFlag")->debug("First particle");
+            match_result_p1 = matchParticle(
+                particle1_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p1_pt_cut, p1_eta_cut,
+                p1_trigger_particle_id_cut, p1_triggerbit_cut);
+            Logger::get("GenerateDoubleTriggerORFlag")->debug("Second particle");
+            match_result_p2 = matchParticle(
+                particle2_p4, triggerobject_pts, triggerobject_etas,
+                triggerobject_phis, triggerobject_bits, triggerobject_ids,
+                DeltaR_threshold, p2_pt_cut, p2_eta_cut,
+                p2_trigger_particle_id_cut, p2_triggerbit_cut);
+        }
+        result = hltpath && ( match_result_p1 || match_result_p2);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("---> HLT Match: {}", hltpath);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("---> Total Match P1: {}", match_result_p1);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("---> Total Match P2: {}", match_result_p2);
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("--->>>> result OR: {}", result);
+        return result;
+    };
+    auto available_trigger = df.GetColumnNames();
+    std::vector<std::string> matched_trigger_names;
+    std::regex hltpath_regex = std::regex(hltpath);
+    // loop over all available trigger names and check if the hltpath is
+    // matching any of them
+    for (auto &trigger : available_trigger) {
+        if (std::regex_match(trigger, hltpath_regex)) {
+            Logger::get("GenerateDoubleTriggerORFlag")
+                ->debug("Found matching trigger: {}", trigger);
+            matched_trigger_names.push_back(trigger);
+        }
+    }
+    // if no matching trigger was found return the initial dataframe
+    if (matched_trigger_names.size() == 0) {
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->info("No matching trigger for {} found, returning false for "
+                   "trigger flag {}",
+                   hltpath, triggerflag_name);
+        auto df1 = df.Define(triggerflag_name, []() { return false; });
+        return df1;
+    } else if (matched_trigger_names.size() > 1) {
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("More than one matching trigger found, not implemented yet");
+        throw std::invalid_argument(
+            "received too many matching trigger paths, not implemented yet");
+    } else {
+        Logger::get("GenerateDoubleTriggerORFlag")
+            ->debug("Found matching trigger: {}", matched_trigger_names[0]);
+        auto df1 =
+            df.Define(triggerflag_name, triggermatch,
+                      {matched_trigger_names[0], particle1_p4, particle2_p4,
+                       triggerobject_bits, triggerobject_id, triggerobject_pt,
+                       triggerobject_eta, triggerobject_phi});
+        return df1;
+    }
+}
+////ahh
 //// write by botao
 ROOT::RDF::RNode GenerateDoubleTriggerORFlag(
     ROOT::RDF::RNode df, const std::string &triggerflag_name,

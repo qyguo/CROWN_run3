@@ -244,6 +244,35 @@ JetCollection = Producer(
     output=[q.good_jet_collection],
     scopes=["global"],
 )
+##raw jet
+Jet1_rawpT = Producer(
+    name="Jet1_rawpT",
+    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+    input=[q.good_jet_collection, nanoAOD.Jet_pt],
+    output=[q.jet1_rawpT],
+    scopes=["vbfhmm"],
+)
+Jet2_rawpT = Producer(
+    name="Jet2_rawpT",
+    call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
+    input=[q.good_jet_collection, nanoAOD.Jet_pt],
+    output=[q.jet2_rawpT],
+    scopes=["vbfhmm"],
+)
+Jet1_rawMass = Producer(
+    name="Jet1_rawMass",
+    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+    input=[q.good_jet_collection, nanoAOD.Jet_mass],
+    output=[q.jet1_rawMass],
+    scopes=["vbfhmm"],
+)
+Jet2_rawMass = Producer(
+    name="Jet2_rawMass",
+    call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
+    input=[q.good_jet_collection, nanoAOD.Jet_mass],
+    output=[q.jet2_rawMass],
+    scopes=["vbfhmm"],
+)
 LVJet1 = Producer(
     name="LVJet1",
     call="lorentzvectors::build({df}, {input_vec}, 0, {output})",

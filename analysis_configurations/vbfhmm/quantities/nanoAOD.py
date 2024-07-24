@@ -84,6 +84,8 @@ Jet_associatedGenJet = NanoAODQuantity("Jet_genJetIdx")
 #BJet_discriminator = NanoAODQuantity("Jet_btagDeepFlavB") # DeepFlavour
 #BJet_discriminator = NanoAODQuantity("Jet_btagDeepB") # vh DeepCSV
 BJet_discriminator = NanoAODQuantity("Jet_btagPNetB")
+Jet_QGdiscriminator = NanoAODQuantity("Jet_btagDeepFlavQG")
+nSoftJet5 = NanoAODQuantity("SoftActivityJetNjets5")
 
 Pileup_nTrueInt = NanoAODQuantity("Pileup_nTrueInt")
 rho = NanoAODQuantity("Pileup_pudensity")

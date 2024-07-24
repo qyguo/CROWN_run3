@@ -150,13 +150,22 @@ Lumi = Producer(
     scopes=["global"],
 )
 
+#PUweights = Producer(
+#    name="PUweights",
+#    call='reweighting::puweights({df}, {output}, {input}, "{PU_reweighting_file_hist}", "{PU_reweighting_hist}")',
+#    input=[nanoAOD.Pileup_nTrueInt],
+#    output=[q.puweight],
+#    scopes=["global"],
+#)
+
 PUweights = Producer(
     name="PUweights",
-    call='reweighting::puweights({df}, {output}, {input}, "{PU_reweighting_file}", "{PU_reweighting_hist}")',
+    call='reweighting::puweights({df}, {output}, {input}, "{PU_reweighting_file}", "{PU_reweighting_era}", "{PU_reweighting_variation}")',
     input=[nanoAOD.Pileup_nTrueInt],
     output=[q.puweight],
     scopes=["global"],
 )
+#ahh
 
 ##fsr
 #muon_fsrPhotonIdx_1 = Producer(
@@ -552,6 +561,14 @@ DimuonMinMassCut = Producer(
 FilterNMuons = Producer(
     name="FilterNMuons",
     call='basefunctions::FilterThreshold({df}, {input}, {vbf_nmuons}, "==", "Number of muons 2")',
+    input=[q.nmuons],
+    output=None,
+    scopes=["vbfhmm"],
+)
+
+FilterNMuons_OverE2 = Producer(
+    name="FilterNMuons_OverE2",
+    call='basefunctions::FilterThreshold({df}, {input}, {vbf_nmuons}, ">=", "Number of muons 2")',
     input=[q.nmuons],
     output=None,
     scopes=["vbfhmm"],
