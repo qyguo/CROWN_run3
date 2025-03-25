@@ -714,6 +714,7 @@ ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
                      [position](const ROOT::RVec<int> &pair,
                                 const ROOT::RVec<float> &ptErr) {
                          const int index = pair.at(position);
+                         //const int index = pair.at(position, -1);
                          return ptErr.at(index, default_float);
                      },
                      {pairname, ptErrcolumn});
