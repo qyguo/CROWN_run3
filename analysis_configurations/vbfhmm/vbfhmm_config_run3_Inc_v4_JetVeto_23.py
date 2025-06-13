@@ -198,6 +198,7 @@ def build_config(
                         "Flag_hfNoisyHitsFilter",
                     ],
                     #https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2
+                    #https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#Run_3_2022_and_2023_data_and_MC
                 }
             ),
         },
