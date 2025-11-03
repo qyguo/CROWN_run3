@@ -30,6 +30,9 @@ ROOT::RDF::RNode dz(ROOT::RDF::RNode df, const std::string &outputname,
 ROOT::RDF::RNode fsrIdx(ROOT::RDF::RNode df, const std::string &outputname,
                     const int &position, const std::string &pairname,
                     const std::string &fsrIdxcolumn);
+ROOT::RDF::RNode fsrIdx_2022(ROOT::RDF::RNode df, const std::string &outputname,
+                        const int &position, const std::string &pairname,
+                        const std::string &fsrIdxcolumn);
 ROOT::RDF::RNode charge(ROOT::RDF::RNode df, const std::string &outputname,
                         const int &position, const std::string &pairname,
                         const std::string &chargecolumn);

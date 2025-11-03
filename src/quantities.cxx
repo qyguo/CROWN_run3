@@ -170,6 +170,20 @@ ROOT::RDF::RNode fsrIdx(ROOT::RDF::RNode df, const std::string &outputname,
         },
         {pairname, fsrIdxcolumn});
 }
+
+ROOT::RDF::RNode fsrIdx_2022(ROOT::RDF::RNode df, const std::string &outputname,
+                        const int &position, const std::string &pairname,
+                        const std::string &fsrIdxcolumn) {
+    return df.Define(
+        outputname,
+        [position](const ROOT::RVec<int> &pair, const ROOT::RVec<Short_t> &fsrIdx) {
+            const int index = pair.at(position);
+            if (index < 0 || index >= static_cast<int>(fsrIdx.size()))
+                return -1;  // or your default_int if you have one defined
+            return static_cast<int>(fsrIdx.at(index));
+        },
+        {pairname, fsrIdxcolumn});
+}
 //ahhh
 
 /// Function to writeout the charge of a particle. The particle is identified

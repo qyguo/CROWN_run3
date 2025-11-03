@@ -143,6 +143,24 @@ met_phi = Producer(
     output=[q.met_phi],
     scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
+#pfmet_pt = Producer(
+#    name="pfmet_pt",
+#    call='quantities::pt({df}, {output}, {input})',
+#    input=[
+#      q.pfmet_p4,
+#    ],
+#    output=[q.met_pt],
+#    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+#)
+#pfmet_phi = Producer(
+#    name="pfmet_phi",
+#    call='quantities::phi({df}, {output}, {input})',
+#    input=[
+#      q.pfmet_p4,
+#    ],
+#    output=[q.met_phi],
+#    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+#)
 
 ##### for gen met pt and phi
 #####

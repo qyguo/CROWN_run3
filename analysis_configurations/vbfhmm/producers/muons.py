@@ -22,6 +22,55 @@ Muon_pTErr_2 = Producer(
     scopes=["vbfhmm"],
 )
 
+Muon_bsConstrainedChi2_1 = Producer(
+    name="Muon_bsConstrainedChi2_1",
+    call="quantities::ptErr({df}, {output}, 0, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedChi2],
+    output=[q.mu1_fromH_bsConstrainedChi2],
+    scopes=["vbfhmm"],
+)
+
+Muon_bsConstrainedChi2_2 = Producer(
+    name="Muon_bsConstrainedChi2_2",
+    call="quantities::ptErr({df}, {output}, 1, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedChi2],
+    output=[q.mu2_fromH_bsConstrainedChi2],
+    scopes=["vbfhmm"],
+)
+
+Muon_bsConstrainedPt_1 = Producer(
+    name="Muon_bsConstrainedPt_1",
+    call="quantities::ptErr({df}, {output}, 0, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPt],
+    output=[q.mu1_fromH_bsConstrainedPt],
+    scopes=["vbfhmm"],
+)
+
+Muon_bsConstrainedPt_2 = Producer(
+    name="Muon_bsConstrainedPt_2",
+    call="quantities::ptErr({df}, {output}, 1, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPt],
+    output=[q.mu2_fromH_bsConstrainedPt],
+    scopes=["vbfhmm"],
+)
+
+Muon_bsConstrainedPtErr_1 = Producer(
+    name="Muon_bsConstrainedPtErr_1",
+    call="quantities::ptErr({df}, {output}, 0, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPtErr],
+    output=[q.mu1_fromH_bsConstrainedPtErr],
+    scopes=["vbfhmm"],
+)
+
+Muon_bsConstrainedPtErr_2 = Producer(
+    name="Muon_bsConstrainedPtErr_2",
+    call="quantities::ptErr({df}, {output}, 1, {input})",
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPtErr],
+    output=[q.mu2_fromH_bsConstrainedPtErr],
+    scopes=["vbfhmm"],
+)
+
+###
 MuonPtCut = Producer(
     name="MuonPtCut",
     call="physicsobject::CutPt({df}, {input}, {output}, {min_muon_pt})",

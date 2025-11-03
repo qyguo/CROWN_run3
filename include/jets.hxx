@@ -58,6 +58,16 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
                                        const std::string &jet_neEmEF,
                                        const std::string &jet_muEF,
                                        const std::string &jet_chEmEF);
+ROOT::RDF::RNode JetIdTightLepVeto_Cut_v15(ROOT::RDF::RNode df,
+                                          const std::string &output_col,
+                                          const std::string &jet_eta,
+                                          const std::string &jet_neHEF,
+                                          const std::string &jet_neEmEF,
+                                          const std::string &jet_chMultiplicity,
+                                          const std::string &jet_neMultiplicity,
+                                          const std::string &jet_chHEF,
+                                          const std::string &jet_muEF,
+                                          const std::string &jet_chEmEF);
 ROOT::RDF::RNode CutPUID(ROOT::RDF::RNode df, const std::string &maskname,
                          const std::string &nameID, const std::string &jet_pt,
                          const int &idxID, const float &jet_pt_cut);
@@ -99,6 +109,20 @@ JetPtCorrection_2022(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
                 const std::string &jes_tag, const std::string &jec_algo, 
                 const std::string &jet_veto_map, const std::string &jet_veto_tag);
 ROOT::RDF::RNode
+JetPtCorrection_2022_v15(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
+                const std::string &jet_pt, const std::string &jet_eta,
+                const std::string &jet_phi, const std::string &jet_area,
+                const std::string &jet_rawFactor, const std::string &jet_ID,
+                const std::string &jet_neEmEF, const std::string &jet_chEmEF,
+                const std::string &gen_jet_pt, const std::string &gen_jet_eta,
+                const std::string &gen_jet_phi, const std::string &rho,
+                bool reapplyJES,
+                const std::vector<std::string> &jes_shift_sources,
+                const int &jes_shift, const std::string &jer_shift,
+                const std::string &jec_file, const std::string &jer_tag,
+                const std::string &jes_tag, const std::string &jec_algo,
+                const std::string &jet_veto_map, const std::string &jet_veto_tag);
+ROOT::RDF::RNode
 JetPtCorrection_2022_GenMatch(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
                 const std::string &jet_pt, const std::string &jet_eta,
                 const std::string &jet_phi, const std::string &jet_area,
@@ -124,6 +148,15 @@ JetPtCorrection_data_2022(ROOT::RDF::RNode df, const std::string &corrected_jet_
                      const std::string &jet_rawFactor, //const std::string &rho,
                      const std::string &jec_file, const std::string &jes_tag,
                      const std::string &jec_algo, 
+                     const std::string &jet_veto_map, const std::string &jet_veto_tag);
+ROOT::RDF::RNode
+JetPtCorrection_data_2022(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
+                     const std::string &jet_pt, const std::string &jet_eta, const std::string &jet_phi,
+                     const std::string &jet_area,
+                     const std::string &jet_rawFactor, const std::string &jet_ID, //const std::string &rho,
+                     const std::string &jet_neEmEF, const std::string &jet_chEmEF,
+                     const std::string &jec_file, const std::string &jes_tag,
+                     const std::string &jec_algo,
                      const std::string &jet_veto_map, const std::string &jet_veto_tag);
 ROOT::RDF::RNode
 JetPtCorrection_data(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,

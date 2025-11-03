@@ -16,15 +16,15 @@ from code_generation.producer import Producer, ProducerGroup
 
 muon_fsrPhotonIdx_1 = Producer(
     name="muon_fsrPhotonIdx_1",
-    call="quantities::fsrIdx({df}, {output}, 0, {input})",
+    call="quantities::fsrIdx_2022({df}, {output}, 0, {input})",
     #input=[q.selectedLepton, nanoAOD.Muon_fsrPhotonIdx],
-    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_fsrPhotonIdx],
+    input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_fsrPhotonIdx], ##Muon_fsrPhotonIdx changed to be Short_t
     output=[q.fsrPhotonIdx_1],
     scopes=["vbfhmm"],
 )
 muon_fsrPhotonIdx_2 = Producer(
     name="muon_fsrPhotonIdx_2",
-    call="quantities::fsrIdx({df}, {output}, 1, {input})",
+    call="quantities::fsrIdx_2022({df}, {output}, 1, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_fsrPhotonIdx],
     output=[q.fsrPhotonIdx_2],
     scopes=["vbfhmm"],
