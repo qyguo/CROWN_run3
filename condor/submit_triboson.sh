@@ -1,0 +1,4 @@
+condor_submit Job_WWW_4F-amcatnlo_20UL18.sub
+condor_submit Job_WWZ_4F-amcatnlo_20UL18.sub
+condor_submit Job_WZZ-amcatnlo_20UL18.sub
+condor_submit Job_ZZZ-amcatnlo_20UL18.sub

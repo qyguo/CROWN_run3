@@ -1,0 +1,52 @@
+universe = vanilla
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023/Job_test_data.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023/Job_test_data.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_2022/bin/vbfhmm_config_run3_vbf_test_data_2023, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_2022/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_2023_inc/Muon1_UL23C-24Jan2024_v3-v1
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023/Jobs/Muon1_UL23C-24Jan2024_v3-v1_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023/Jobs/Muon1_UL23C-24Jan2024_v3-v1_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023/Jobs/Muon1_UL23C-24Jan2024_v3-v1_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/28110000/cd7242a5-691c-4ef8-a75c-7d47a7eb0c5f.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/7bd6f656-c8f6-4cd5-be7e-62a29dbb9b08.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/ecf6e966-aa8f-4fcf-88bf-31a41e8f7074.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/7a368302-d559-4d42-bc60-b97165938720.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2810000/1b1a1f07-a400-4c76-ad4e-08b46a2cbd15.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/923a6e51-1e74-4513-ab90-8383c54a5957.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/d9ba6f1a-6e10-4956-844c-bf61ddb8e1c9.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/3abc592a-ea69-416d-9415-feafcff57116.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/0379d2cf-a4a7-4edc-b583-d128c9138045.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/0e05d579-2def-45a5-b9c4-21793b7a021a.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/d4b7dd56-6042-40a6-9d58-23ddb91abd02.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/77eb1957-269e-4f93-8870-57c1ba99d94d.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/879c7416-5240-467d-af72-4ee8930dc6f4.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/d8894009-4547-4b04-8eb3-8dff2f4cd772.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/ff9e2c1b-55c8-4968-85e5-cadd10115c27.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/e9fc61e5-e41a-43db-8c4f-67ca01af36ab.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/e37ffb7e-0825-40ac-a4af-b08accc3b274.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/76ba9769-7c3e-4631-a8c1-7fd7442dbe3e.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/66ffa106-603a-4c46-b924-d931c7facf51.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/data/Run2023C/Muon1/NANOAOD/24Jan2024_v3-v1/2820000/f2222a59-2d94-4c32-b0b1-ca2466e1f51d.root
+Queue

@@ -1,0 +1,64 @@
+Starting job on \n
+Running on: Linux b9p13p2541.cern.ch 5.14.0-570.42.2.el9_6.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Sep 8 12:15:13 EDT 2025 x86_64 x86_64 x86_64 GNU/Linux\n
+System software: Red Hat Enterprise Linux release 9.6 (Plow)\n
+Setting up CROWN for RedHatEnterprise Version 9.6
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen/CN=2045128514
+issuer    : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen
+identity  : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen
+type      : RFC compliant proxy
+strength  : 2048 bits
+path      : /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+timeleft  : 199:18:38
+key usage : Digital Signature, Key Encipherment
+=== VO cms extension information ===
+VO        : cms
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen
+issuer    : /DC=ch/DC=cern/OU=computers/CN=cms-auth.cern.ch
+attribute : /cms/Role=NULL/Capability=NULL
+timeleft  : 191:18:37
+uri       : voms-cms-auth.cern.ch:15000
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen/CN=2045128514
+issuer    : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen
+identity  : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen
+type      : RFC compliant proxy
+strength  : 2048 bits
+path      : /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+timeleft  : 199:18:38
+key usage : Digital Signature, Key Encipherment
+=== VO cms extension information ===
+VO        : cms
+subject   : /DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=jiahua/CN=851532/CN=Jiahua Chen
+issuer    : /DC=ch/DC=cern/OU=computers/CN=cms-auth.cern.ch
+attribute : /cms/Role=NULL/Capability=NULL
+timeleft  : 191:18:37
+uri       : voms-cms-auth.cern.ch:15000
+/eos/user/j/jiahua/MC_2023BPix_inc/MC_2023BPix_vbf/ZZto2L2Nu_powheg_23BPix/b0bc83a1-7b71-48e4-9239-81c942fa2ee5.root
+[2025-11-20 03:30:05.705] [main] [info] Checking input files
+[2025-11-20 03:30:08.086] [main] [info] NanoAOD input_file 1: root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/ZZto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v3/2820000/b0bc83a1-7b71-48e4-9239-81c942fa2ee5.root - 30000 Events
+[2025-11-20 03:30:08.086] [main] [info] input_file 1: root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/ZZto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v3/2820000/b0bc83a1-7b71-48e4-9239-81c942fa2ee5.root - SumOfGenWeight: 30924.51606000001 
+[2025-11-20 03:30:08.086] [main] [info] Output directory: /eos/user/j/jiahua/MC_2023BPix_inc/MC_2023BPix_vbf/ZZto2L2Nu_powheg_23BPix/b0bc83a1-7b71-48e4-9239-81c942fa2ee5.root
+[2025-11-20 03:30:08.087] [main] [info] Starting Setup of Dataframe with 30000 events
+[2025-11-20 03:31:35.700] [main] [info] Finished Setup
+[2025-11-20 03:31:35.700] [main] [info] Runtime for setup (real time: 87.61, CPU time: 81.58)
+[2025-11-20 03:31:35.700] [main] [info] Starting Evaluation
+[2025-11-20 03:32:26.149] [main] [info] 10000 / 30000 (33.33 %) Events processed ...
+[2025-11-20 03:32:50.736] [main] [info] 20000 / 30000 (66.67 %) Events processed ...
+[2025-11-20 03:33:09.278] [main] [info] 30000 / 30000 (100.00 %) Events processed ...
+[2025-11-20 03:33:09.468] [main] [info] vbfhmm:
+GoodJetsCollection: pass=20148      all=30000      -- eff=67.16 % cumulative eff=67.16 %
+Flag_goodVertices: pass=20148      all=20148      -- eff=100.00 % cumulative eff=67.16 %
+Flag_globalSuperTightHalo2016Filter: pass=20144      all=20148      -- eff=99.98 % cumulative eff=67.15 %
+Flag_EcalDeadCellTriggerPrimitiveFilter: pass=20144      all=20144      -- eff=100.00 % cumulative eff=67.15 %
+Flag_BadPFMuonFilter: pass=20141      all=20144      -- eff=99.99 % cumulative eff=67.14 %
+Flag_BadPFMuonDzFilter: pass=20141      all=20141      -- eff=100.00 % cumulative eff=67.14 %
+Flag_eeBadScFilter: pass=20141      all=20141      -- eff=100.00 % cumulative eff=67.14 %
+Flag_ecalBadCalibFilter: pass=20136      all=20141      -- eff=99.98 % cumulative eff=67.12 %
+Flag_hfNoisyHitsFilter: pass=20136      all=20136      -- eff=100.00 % cumulative eff=67.12 %
+Number of muons 2: pass=1356       all=20136      -- eff=6.73 % cumulative eff=4.52 %
+Veto VH <= 0 electrons: pass=1355       all=1356       -- eff=99.93 % cumulative eff=4.52 %
+DiMuon From Higgs: pass=1272       all=1355       -- eff=93.87 % cumulative eff=4.24 %
+LeptonChargeSum: pass=1272       all=1272       -- eff=100.00 % cumulative eff=4.24 %
+Hmass>=110: pass=61         all=1272       -- eff=4.80 % cumulative eff=0.20 %
+[2025-11-20 03:33:09.611] [main] [info] Writing quantities map to /eos/user/j/jiahua/MC_2023BPix_inc/MC_2023BPix_vbf/ZZto2L2Nu_powheg_23BPix/b0bc83a1-7b71-48e4-9239-81c942fa2ee5_vbfhmm.root
+[2025-11-20 03:33:09.664] [main] [info] Finished Evaluation
+[2025-11-20 03:33:09.664] [main] [info] Overall runtime (real time: 181.58, CPU time: 171.24)

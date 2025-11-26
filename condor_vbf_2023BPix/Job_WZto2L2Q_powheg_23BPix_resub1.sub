@@ -1,0 +1,16 @@
+universe = vanilla
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Job_test_1.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Job_test_1.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_vbf/bin/vbfhmm_config_run3_vbf_HornVeto_top_2023BPix, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_vbf/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_2023BPix_inc/MC_2023BPix_vbf/WZto2L2Q_powheg_23BPix
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Jobs/WZto2L2Q_powheg_23BPix_resub1_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Jobs/WZto2L2Q_powheg_23BPix_resub1_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Jobs/WZto2L2Q_powheg_23BPix_resub1_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZto2L2Q_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2560000/42f325b2-12ed-4dc1-bd47-f10448cc1f0d.root 
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZto2L2Q_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2560000/d0943611-fcc9-4e90-8d20-b83cd922c764.root 
+Queue

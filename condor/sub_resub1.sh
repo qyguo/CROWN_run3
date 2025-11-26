@@ -1,0 +1,8 @@
+condor_submit Job_DYJetsToLL_M-50-amcatnloFXFX_UL20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v2_resub1.sub
+condor_submit Job_DYto2L-2Jets_MLL-50_amcatnloFXFX_23_resub1.sub
+condor_submit Job_TbarWplusto2L2Nu_powheg_23_resub1.sub
+condor_submit Job_VBFHto2Mu_M-125_powheg_23_resub1.sub
+condor_submit Job_VBFHto2Mu_M-125_powheg_23_resub1.sub
+condor_submit Job_VBFHto2Mu_M-125_powheg_23_resub1.sub
+condor_submit Job_WWto2L2Nu_powheg_23_resub1.sub
+condor_submit Job_ZZto2L2Nu_powheg_23_resub1.sub

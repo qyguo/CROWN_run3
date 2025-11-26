@@ -43,8 +43,25 @@ ROOT::RDF::RNode buildparticle(ROOT::RDF::RNode df,
             ROOT::Math::PtEtaPhiMVector p4;
             Logger::get("lorentzvectors")
                 ->debug("starting to build 4vector {}!", outputname);
+            if (position < 0 || static_cast<size_t>(position) >= pair.size()) {
+                Logger::get("lorentzvectors")
+                    ->debug("Position {} out of range (pair size: {}), returning dummy vector",
+                            position, pair.size());
+                p4 = ROOT::Math::PtEtaPhiMVector(default_float, default_float,
+                                                 default_float, default_float);
+                return p4;
+            }
             try {
-                const int index = pair.at(position);
+                const int index = pair[position];
+
+                if (index < 0 || static_cast<size_t>(index) >= pts.size()) {
+                    Logger::get("lorentzvectors")
+                        ->debug("Index {} out of range, returning dummy vector!", index);
+                    p4 = ROOT::Math::PtEtaPhiMVector(default_float, default_float,
+                                                     default_float, default_float);
+                    return p4;
+                }
+
                 Logger::get("lorentzvectors")->debug("pair {}", pair);
                 Logger::get("lorentzvectors")->debug("pts {}", pts);
                 Logger::get("lorentzvectors")->debug("etas {}", etas);

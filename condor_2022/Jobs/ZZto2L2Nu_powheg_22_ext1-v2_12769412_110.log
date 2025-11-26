@@ -1,0 +1,47 @@
+000 (12769412.110.000) 11/08 09:45:25 Job submitted from host: <188.185.121.235:9618?addrs=188.185.121.235-9618+[2001-1458-d00-49--100-36e]-9618&alias=bigbird22.cern.ch&noUDP&sock=schedd_232129_c3ca>
+...
+040 (12769412.110.000) 11/08 09:53:19 Started transferring input files
+	Transferring to host: <188.185.212.228:9618?addrs=188.185.212.228-9618+[2001-1458-303-19--100-60]-9618&alias=b9p26p0967.cern.ch&noUDP&sock=slot1_4_3091_a397_50831>
+...
+040 (12769412.110.000) 11/08 09:53:19 Finished transferring input files
+...
+001 (12769412.110.000) 11/08 09:53:20 Job executing on host: <188.185.212.228:9618?addrs=188.185.212.228-9618+[2001-1458-303-19--100-60]-9618&alias=b9p26p0967.cern.ch&noUDP&sock=startd_2625_1c32>
+	SlotName: slot1_4@b9p26p0967.cern.ch
+	CondorScratchDir = "/pool/condor/dir_226358"
+	Cpus = 1
+	Disk = 16012
+	GPUs = 0
+	Memory = 3000
+...
+006 (12769412.110.000) 11/08 09:53:34 Image size of job updated: 99260
+	97  -  MemoryUsage of job (MB)
+	99260  -  ResidentSetSize of job (KB)
+...
+006 (12769412.110.000) 11/08 09:54:01 Image size of job updated: 101148
+	97  -  MemoryUsage of job (MB)
+	99260  -  ResidentSetSize of job (KB)
+...
+040 (12769412.110.000) 11/08 09:54:01 Started transferring output files
+...
+040 (12769412.110.000) 11/08 09:54:01 Finished transferring output files
+...
+005 (12769412.110.000) 11/08 09:54:01 Job terminated.
+	(1) Normal termination (return value 1)
+		Usr 0 00:00:03, Sys 0 00:00:01  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:03, Sys 0 00:00:01  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2335  -  Run Bytes Sent By Job
+	11220236  -  Run Bytes Received By Job
+	2335  -  Total Bytes Sent By Job
+	11220236  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :    10986    12500     16012 
+	   GPUs                 :                           0 
+	   Memory (MB)          :       97     3000      3000 
+	   TimeExecute (s)      :       41                    
+	   TimeSlotBusy (s)     :       43                    
+
+	Job terminated of its own accord at 2025-11-08T08:54:01Z with exit-code 1.
+...

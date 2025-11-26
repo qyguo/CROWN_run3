@@ -1,0 +1,120 @@
+universe = vanilla
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2022/Job_test_1.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2022/Job_test_1.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/bin/vbfhmm_config_run3_Inc_v4_JetVeto_top_2022, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_2022_inc/TTH_Hto2Mu_M-125_powheg_22
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2022/Jobs/TTH_Hto2Mu_M-125_powheg_22_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2022/Jobs/TTH_Hto2Mu_M-125_powheg_22_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2022/Jobs/TTH_Hto2Mu_M-125_powheg_22_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch/Python path configuration:
+Queue
+input_name = root://cms-xrd-global.cern.ch/  PYTHONHOME = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  PYTHONPATH = (not set)
+Queue
+input_name = root://cms-xrd-global.cern.ch/  program name = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  isolated = 0
+Queue
+input_name = root://cms-xrd-global.cern.ch/  environment = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  user site = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  import site = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys._base_executable = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.base_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.base_exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.platlibdir = 'lib64'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.executable = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.path = [
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python39.zip',
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9',
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9/lib-dynload',
+Queue
+input_name = root://cms-xrd-global.cern.ch/  ]
+Queue
+input_name = root://cms-xrd-global.cern.ch/Fatal Python error: init_fs_encoding: failed to get the Python codec of the filesystem encoding
+Queue
+input_name = root://cms-xrd-global.cern.ch/Python runtime state: core initialized
+Queue
+input_name = root://cms-xrd-global.cern.ch/ModuleNotFoundError: No module named 'encodings'
+Queue
+input_name = root://cms-xrd-global.cern.ch/
+Queue
+input_name = root://cms-xrd-global.cern.ch/Current thread 0x00007ff1c8691740 (most recent call first):
+Queue
+input_name = root://cms-xrd-global.cern.ch/<no Python frame>
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/98ec16f3-3120-4228-80d5-04a6ec1147a0.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/24d8d514-1952-4c3b-8759-7741d3684536.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/fa4c3330-e1d5-4997-8594-fad9a7f2dee9.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/f154ca6f-4805-4144-99b3-eb52393d3dc3.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/e47c8d77-d1b6-4d3b-8f15-f9b072fda77d.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/ebd2c560-8fe5-4900-8b4a-63304afd6f08.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/af464236-8464-4795-a862-35252a63f1d7.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/a9f20299-f367-4a69-ad1b-fe0b979705cf.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/954193ea-d334-4f76-a473-1e3304c304c7.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/fedbdd00-43d3-48e0-8eb7-455a40379278.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/84f4b277-7dea-45bb-bc54-f5032671ddd2.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/0c3b5089-9099-4dff-9b03-a70929e54308.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/59c7df0b-117f-410e-93c9-aff001795b65.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/2f66bde0-f591-4ee6-ae1b-d4eced7bee4b.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/60f3bd72-e8a1-48f6-8e94-e117256f3917.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/51a39732-a0bf-4111-807b-316f09a45f48.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/f35142c4-e2ca-4ba6-8038-9593639fff3f.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/15e74b9d-9a59-4973-997c-7a3e039e6244.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/badc4044-a42e-4088-ade4-66dfd243de32.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/fc7e71ea-f26b-46d1-b550-78259fbd0a78.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/3d35453c-f4ea-42a4-ab3b-a163291070fe.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/caf7a73d-720e-48ee-9d10-906cf361a699.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/92aacdf4-8b3a-4a05-bb33-d3d42f80d09b.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/679fb57e-a538-4bea-90e0-cf9dab5bc1d5.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/c842e17c-ca6f-46cd-9b04-534e195a6146.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/841e80c8-0e82-4379-a163-9863544937e1.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/0a4fe81f-99f5-4f0f-b1d9-a3c1a741391d.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5-v3/2540000/3b35d722-e48f-4761-9f62-0ed2c8985c7c.root
+Queue

@@ -1,0 +1,31 @@
+Starting job on \n
+Running on: Linux b9p24p1762.cern.ch 5.14.0-570.18.1.el9_6.x86_64 #1 SMP PREEMPT_DYNAMIC Tue May 20 07:50:24 EDT 2025 x86_64 x86_64 x86_64 GNU/Linux\n
+System software: Red Hat Enterprise Linux release 9.6 (Plow)\n
+Setting up CROWN for RedHatEnterprise Version 9.6
+/eos/user/j/jiahua/MC_2023_inc/WWto2L2Nu_powheg_23/2ebb2215-4cfa-4eb6-834f-521edac42b17.root
+[2025-07-20 18:12:47.478] [main] [info] Checking input files
+[2025-07-20 18:12:52.083] [main] [info] NanoAOD input_file 1: root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WWto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v4/40000/2ebb2215-4cfa-4eb6-834f-521edac42b17.root - 36000 Events
+[2025-07-20 18:12:52.083] [main] [info] input_file 1: root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WWto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v4/40000/2ebb2215-4cfa-4eb6-834f-521edac42b17.root - SumOfGenWeight: 424399.668 
+[2025-07-20 18:12:52.083] [main] [info] Output directory: /eos/user/j/jiahua/MC_2023_inc/WWto2L2Nu_powheg_23/2ebb2215-4cfa-4eb6-834f-521edac42b17.root
+[2025-07-20 18:12:52.084] [main] [info] Starting Setup of Dataframe with 36000 events
+[2025-07-20 18:13:05.743] [main] [info] Finished Setup
+[2025-07-20 18:13:05.744] [main] [info] Runtime for setup (real time: 13.66, CPU time: 4.68)
+[2025-07-20 18:13:05.744] [main] [info] Starting Evaluation
+[2025-07-20 18:13:17.756] [main] [info] 10000 / 36000 (27.78 %) Events processed ...
+[2025-07-20 18:13:18.156] [main] [info] 20000 / 36000 (55.56 %) Events processed ...
+[2025-07-20 18:13:18.565] [main] [info] 30000 / 36000 (83.33 %) Events processed ...
+[2025-07-20 18:13:19.240] [main] [info] vbfhmm:
+Flag_goodVertices: pass=36000      all=36000      -- eff=100.00 % cumulative eff=100.00 %
+Flag_globalSuperTightHalo2016Filter: pass=35999      all=36000      -- eff=100.00 % cumulative eff=100.00 %
+Flag_EcalDeadCellTriggerPrimitiveFilter: pass=35996      all=35999      -- eff=99.99 % cumulative eff=99.99 %
+Flag_BadPFMuonFilter: pass=35989      all=35996      -- eff=99.98 % cumulative eff=99.97 %
+Flag_BadPFMuonDzFilter: pass=35989      all=35989      -- eff=100.00 % cumulative eff=99.97 %
+Flag_eeBadScFilter: pass=35989      all=35989      -- eff=100.00 % cumulative eff=99.97 %
+Flag_ecalBadCalibFilter: pass=35983      all=35989      -- eff=99.98 % cumulative eff=99.95 %
+Flag_hfNoisyHitsFilter: pass=35982      all=35983      -- eff=100.00 % cumulative eff=99.95 %
+Number of muons 2: pass=1928       all=35982      -- eff=5.36 % cumulative eff=5.36 %
+DiMuon From Higgs: pass=911        all=1928       -- eff=47.25 % cumulative eff=2.53 %
+LeptonChargeSum: pass=911        all=911        -- eff=100.00 % cumulative eff=2.53 %
+[2025-07-20 18:13:19.343] [main] [info] Writing quantities map to /eos/user/j/jiahua/MC_2023_inc/WWto2L2Nu_powheg_23/2ebb2215-4cfa-4eb6-834f-521edac42b17_vbfhmm.root
+[2025-07-20 18:13:19.411] [main] [info] Finished Evaluation
+[2025-07-20 18:13:19.411] [main] [info] Overall runtime (real time: 27.33, CPU time: 13.16)

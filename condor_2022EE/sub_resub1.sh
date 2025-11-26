@@ -1,0 +1,4 @@
+condor_submit Job_Muon_UL22F-19Dec2023-v1_resub1.sub
+condor_submit Job_Muon_UL22F-19Dec2023-v1_resub1.sub
+condor_submit Job_WminusH_Hto2Mu_WtoAll_M-125_powheg_22EE_resub1.sub
+condor_submit Job_WplusH_Hto2Mu_WtoAll_M-125_powheg_22EE_resub1.sub

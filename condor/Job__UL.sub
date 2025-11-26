@@ -1,0 +1,15 @@
+universe = vanilla
+MY.WantOS = "el7"
+Executable = /afs/cern.ch/user/j/jiahua/CROWN/condor/Job_test_.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN/condor/Job_test_.sh, /afs/cern.ch/user/j/jiahua/CROWN/build/bin/vbfhmm_config_all_resubv7_v2__2018, /afs/cern.ch/user/j/jiahua/CROWN/build/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_UL18_inc/_UL
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN/condor/Jobs/_UL_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN/condor/Jobs/_UL_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN/condor/Jobs/_UL_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch/2025/02/18 10:07:11 ERROR failed to parse X509 proxy: Certificate is expired
+Queue

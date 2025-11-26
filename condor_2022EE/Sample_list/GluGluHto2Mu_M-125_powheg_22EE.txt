@@ -1,0 +1,27 @@
+Python path configuration:
+  PYTHONHOME = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+  PYTHONPATH = (not set)
+  program name = '/usr/bin/python3'
+  isolated = 0
+  environment = 1
+  user site = 1
+  import site = 1
+  sys._base_executable = '/usr/bin/python3'
+  sys.base_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+  sys.base_exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+  sys.platlibdir = 'lib64'
+  sys.executable = '/usr/bin/python3'
+  sys.prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+  sys.exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+  sys.path = [
+    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python39.zip',
+    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9',
+    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9/lib-dynload',
+  ]
+Fatal Python error: init_fs_encoding: failed to get the Python codec of the filesystem encoding
+Python runtime state: core initialized
+ModuleNotFoundError: No module named 'encodings'
+
+Current thread 0x00007f898ec3e740 (most recent call first):
+<no Python frame>
+/store/mc/Run3Summer22EENanoAODv12/GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_postEE_v6-v1/2550000/e9c1ef60-2c46-4933-a1b8-a082cb28074c.root

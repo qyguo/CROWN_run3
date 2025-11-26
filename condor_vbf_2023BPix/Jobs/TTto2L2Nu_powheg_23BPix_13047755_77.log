@@ -1,0 +1,9 @@
+000 (13047755.077.000) 11/20 09:17:02 Job submitted from host: <188.185.121.235:9618?addrs=188.185.121.235-9618+[2001-1458-d00-49--100-36e]-9618&alias=bigbird22.cern.ch&noUDP&sock=schedd_232129_c3ca>
+...
+012 (13047755.077.000) 11/20 10:04:46 Job was held.
+	Job held by SYSTEM_PERIODIC_HOLD due to trying to start too many times, unsuccessfully. Please remove and resubmit.
+	Code 26 Subcode 0
+...
+009 (13047755.077.000) 11/21 10:05:02 Job was aborted.
+	The system macro SYSTEM_PERIODIC_REMOVE expression '(JobUniverse == 5 && JobStatus == 2 && (MaxRuntime =!= undefined) && (BenchmarkJob =!= true) && (TransferringInput =!= true) && ((time() - JobCurrentStartExecutingDate) > MaxRuntime)) || (JobUniverse == 5 && JobStatus == 1 && (time() - EnteredCurrentStatus > 86400 * 10)) || (JobStatus == 5 && time() - EnteredCurrentStatus > 3600 * 24) || (NumJobStarts > 10) || (DiskUsage > (37500000 * RequestCpus)) || (HoldReasonCode =?= 33)' evaluated to TRUE
+...

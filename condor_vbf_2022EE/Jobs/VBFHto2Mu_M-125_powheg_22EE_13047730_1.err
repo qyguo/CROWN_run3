@@ -1,0 +1,154 @@
+/pool/condor/dir_75511/Job_test_1.sh: line 2: data: command not found
+
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+
+Thread 15 (Thread 0x15091be92640 (LWP 469) "vbfhmm_config_r"):
+#0  0x000015093d28837a in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#1  0x000015093d293328 in __new_sem_wait_slow64.constprop.0 () from /lib64/libc.so.6
+#2  0x000015091dba26b6 in XrdSysSemaphore::Wait (this=0x438e840) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.hh:509
+#3  XrdCl::SyncQueue<XrdCl::JobManager::JobHelper>::Get (this=0x3dd7fa8) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClSyncQueue.hh:66
+#4  XrdCl::JobManager::RunJobs (this=0x3dd7f90) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClJobManager.cc:151
+#5  0x000015091dba2759 in RunRunnerThread (arg=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClJobManager.cc:34
+#6  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#7  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 14 (Thread 0x15091c093640 (LWP 468) "vbfhmm_config_r"):
+#0  0x000015093d28837a in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#1  0x000015093d293328 in __new_sem_wait_slow64.constprop.0 () from /lib64/libc.so.6
+#2  0x000015091dba26b6 in XrdSysSemaphore::Wait (this=0x438e840) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.hh:509
+#3  XrdCl::SyncQueue<XrdCl::JobManager::JobHelper>::Get (this=0x3dd7fa8) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClSyncQueue.hh:66
+#4  XrdCl::JobManager::RunJobs (this=0x3dd7f90) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClJobManager.cc:151
+#5  0x000015091dba2759 in RunRunnerThread (arg=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClJobManager.cc:34
+#6  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#7  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 13 (Thread 0x15091c294640 (LWP 467) "vbfhmm_config_r"):
+#0  0x000015093d28837a in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#1  0x000015093d293328 in __new_sem_wait_slow64.constprop.0 () from /lib64/libc.so.6
+#2  0x000015091dba26b6 in XrdSysSemaphore::Wait (this=0x438e840) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.hh:509
+#3  XrdCl::SyncQueue<XrdCl::JobManager::JobHelper>::Get (this=0x3dd7fa8) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClSyncQueue.hh:66
+#4  XrdCl::JobManager::RunJobs (this=0x3dd7f90) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClJobManager.cc:151
+#5  0x000015091dba2759 in RunRunnerThread (arg=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClJobManager.cc:34
+#6  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#7  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 12 (Thread 0x15091c495640 (LWP 466) "vbfhmm_config_r"):
+#0  0x000015093d2d5795 in clock_nanosleep
+GLIBC_2.2.5 () from /lib64/libc.so.6
+#1  0x000015093d2da247 in nanosleep () from /lib64/libc.so.6
+#2  0x000015093bf35f18 in XrdSysTimer::Wait (mills=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysTimer.cc:239
+#3  0x000015091db21820 in XrdCl::TaskManager::RunTasks (this=0x434d3e0) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClTaskManager.cc:246
+#4  0x000015091db21909 in RunRunnerThread (arg=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdCl/XrdClTaskManager.cc:38
+#5  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#6  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 11 (Thread 0x15091c696640 (LWP 465) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x3998850, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x42c2f20) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 10 (Thread 0x15091c897640 (LWP 464) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x39984e0, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x42f4ee0) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 9 (Thread 0x15091ca98640 (LWP 463) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x4319100, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x438e570) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 8 (Thread 0x15091cc99640 (LWP 462) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x42fbe20, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x42f97d0) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 7 (Thread 0x15091ce9a640 (LWP 461) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x42f5d20, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x42fea20) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 6 (Thread 0x15091d09b640 (LWP 460) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x437c680, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x42f0ed0) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 5 (Thread 0x15091d29c640 (LWP 459) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x3de1570, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x39c6ba0) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 4 (Thread 0x15091d49d640 (LWP 458) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x43446c0, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x3bad080) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 3 (Thread 0x15091d69e640 (LWP 457) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x42c2c20, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x3f43ca0) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 2 (Thread 0x15091d89f640 (LWP 456) "vbfhmm_config_r"):
+#0  0x000015093d30f9fe in epoll_wait () from /lib64/libc.so.6
+#1  0x000015093bf305f2 in XrdSys::IOEvents::PollE::Begin (this=0x3fa88c0, syncsem=<optimized out>, retcode=<optimized out>, eTxt=<optimized out>) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEventsPollE.icc:212
+#2  0x000015093bf2d03d in XrdSys::IOEvents::BootStrap::Start (parg=0x7fff5d542110) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysIOEvents.cc:149
+#3  0x000015093bf35618 in XrdSysThread_Xeq (myargs=0x439d5e0) at /build/jenkins/workspace/lcg_release_pipeline/build/externals/xrootd-5.6.3/src/xrootd/5.6.3/src/XrdSys/XrdSysPthread.cc:86
+#4  0x000015093d28b2ea in start_thread () from /lib64/libc.so.6
+#5  0x000015093d3103c0 in clone3 () from /lib64/libc.so.6
+
+Thread 1 (Thread 0x15093fe78c00 (LWP 441) "vbfhmm_config_r"):
+#0  0x000015093d2d9fff in wait4 () from /lib64/libc.so.6
+#1  0x000015093d24f483 in do_system () from /lib64/libc.so.6
+#2  0x00001509406fb47c in TUnixSystem::StackTrace() () from /cvmfs/sft.cern.ch/lcg/views/LCG_105/x86_64-el9-gcc11-opt/lib/libCore.so
+#3  0x00001509406f8b95 in TUnixSystem::DispatchSignals(ESignals) () from /cvmfs/sft.cern.ch/lcg/views/LCG_105/x86_64-el9-gcc11-opt/lib/libCore.so
+#4  <signal handler called>
+#5  0x000000000046f0da in main ()
+===========================================================
+
+
+The lines below might hint at the cause of the crash. If you see question
+marks as part of the stack trace, try to recompile with debugging information
+enabled and export CLING_DEBUG=1 environment variable before running.
+You may get help by asking at the ROOT forum https://root.cern/forum
+preferably using the command (.forum bug) in the ROOT prompt.
+Only if you are really convinced it is a bug in ROOT then please submit a
+report at https://root.cern/bugs or (preferably) using the command (.gh bug) in
+the ROOT prompt. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#5  0x000000000046f0da in main ()
+===========================================================
+
+

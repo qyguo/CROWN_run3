@@ -130,7 +130,7 @@ ROOT::RDF::RNode dxy(ROOT::RDF::RNode df, const std::string &outputname,
     return df.Define(
         outputname,
         [position](const ROOT::RVec<int> &pair, const ROOT::RVec<float> &dxy) {
-            const int index = pair.at(position);
+            const int index = pair.at(position, -1);
             return dxy.at(index, default_float);
         },
         {pairname, dxycolumn});
@@ -152,7 +152,7 @@ ROOT::RDF::RNode dz(ROOT::RDF::RNode df, const std::string &outputname,
     return df.Define(
         outputname,
         [position](const ROOT::RVec<int> &pair, const ROOT::RVec<float> &dz) {
-            const int index = pair.at(position);
+            const int index = pair.at(position, -1);
             return dz.at(index, default_float);
         },
         {pairname, dzcolumn});
@@ -164,9 +164,10 @@ ROOT::RDF::RNode fsrIdx(ROOT::RDF::RNode df, const std::string &outputname,
                     const std::string &fsrIdxcolumn) {
     return df.Define(
         outputname,
-        [position](const ROOT::RVec<int> &pair, const ROOT::RVec<int> &fsrIdx) {
-            const int index = pair.at(position);
-            return fsrIdx.at(index, default_int);
+        [position](const ROOT::RVec<int> &pair, const ROOT::RVec<short> &fsrIdx) {
+            const int index = pair.at(position, -1);
+            const short raw_val = fsrIdx.at(index, static_cast<short>(default_int));
+            return static_cast<int>(raw_val);
         },
         {pairname, fsrIdxcolumn});
 }
@@ -189,7 +190,7 @@ ROOT::RDF::RNode charge(ROOT::RDF::RNode df, const std::string &outputname,
     return df.Define(
         outputname,
         [position](const ROOT::RVec<int> &pair, const ROOT::RVec<int> &charge) {
-            const int index = pair.at(position);
+            const int index = pair.at(position, -1);
             return charge.at(index, default_int);
         },
         {pairname, chargecolumn});
@@ -713,12 +714,150 @@ ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
     return df.Define(outputname,
                      [position](const ROOT::RVec<int> &pair,
                                 const ROOT::RVec<float> &ptErr) {
-                         const int index = pair.at(position);
-                         //const int index = pair.at(position, -1);
+                        //  const int index = pair.at(position);
+                         const int index = pair.at(position, -1);
                          return ptErr.at(index, default_float);
                      },
                      {pairname, ptErrcolumn});
 }
+/////
+
+/// Function to writeout the BSC_Chi2 of a particle. The particle is
+/// identified via the index stored in the pair vector
+///
+/// \param df the dataframe to add the quantity to
+/// \param outputname name of the new column containing the BSC_Chi2 value
+/// \param position index of the position in the pair vector
+/// \param pairname name of the column containing the pair vector
+/// \param BSC_Chi2column name of the column containing the BSC_Chi2 values
+///
+/// \returns a dataframe with the new column
+
+ROOT::RDF::RNode BSC_Chi2(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &BSC_Chi2column) {
+    return df.Define(outputname,
+                     [position](const ROOT::RVec<int> &pair,
+                                const ROOT::RVec<float> &BSC_Chi2) {
+                         const int index = pair.at(position);
+                        //  const int index = pair.at(position, -1);
+                         return BSC_Chi2.at(index, default_float);
+                     },
+                     {pairname, BSC_Chi2column});
+}
+/////
+
+/// Function to writeout the BSC_pt of a particle. The particle is
+/// identified via the index stored in the pair vector
+///
+/// \param df the dataframe to add the quantity to
+/// \param outputname name of the new column containing the BSC_pt value
+/// \param position index of the position in the pair vector
+/// \param pairname name of the column containing the pair vector
+/// \param BSC_ptcolumn name of the column containing the BSC_pt values
+///
+/// \returns a dataframe with the new column
+
+ROOT::RDF::RNode BSC_pt(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &BSC_ptcolumn) {
+    return df.Define(outputname,
+                     [position](const ROOT::RVec<int> &pair,
+                                const ROOT::RVec<float> &BSC_pt) {
+                         const int index = pair.at(position);
+                        //  const int index = pair.at(position, -1);
+                         return BSC_pt.at(index, default_float);
+                     },
+                     {pairname, BSC_ptcolumn});
+}
+/////
+
+/// Function to writeout the BSC_ptErr of a particle. The particle is
+/// identified via the index stored in the pair vector
+///
+/// \param df the dataframe to add the quantity to
+/// \param outputname name of the new column containing the BSC_ptErr value
+/// \param position index of the position in the pair vector
+/// \param pairname name of the column containing the pair vector
+/// \param BSC_ptErrcolumn name of the column containing the BSC_ptErr values
+///
+/// \returns a dataframe with the new column
+
+ROOT::RDF::RNode BSC_ptErr(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &BSC_ptErrcolumn) {
+    return df.Define(outputname,
+                     [position](const ROOT::RVec<int> &pair,
+                                const ROOT::RVec<float> &BSC_ptErr) {
+                         const int index = pair.at(position);
+                         //const int index = pair.at(position, -1);
+                         return BSC_ptErr.at(index, default_float);
+                     },
+                     {pairname, BSC_ptErrcolumn});
+}
+/////
+
+/// Function to writeout the BSC_dxy of a particle. The particle is
+/// identified via the index stored in the pair vector
+///
+/// \param df the dataframe to add the quantity to
+/// \param outputname name of the new column containing the BSC_dxy value
+/// \param position index of the position in the pair vector
+/// \param pairname name of the column containing the pair vector
+/// \param BSC_dxycolumn name of the column containing the BSC_dxy values
+///
+/// \returns a dataframe with the new column
+
+ROOT::RDF::RNode BSC_dxy(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &BSC_dxycolumn) {
+    return df.Define(outputname,
+                     [position](const ROOT::RVec<int> &pair,
+                                const ROOT::RVec<float> &BSC_dxy) {
+                         const int index = pair.at(position);
+                         //const int index = pair.at(position, -1);
+                         return BSC_dxy.at(index, default_float);
+                     },
+                     {pairname, BSC_dxycolumn});
+}
+/////
+
+/// Function to writeout the BSC_dxy of a particle. The particle is
+/// identified via the index stored in the pair vector
+///
+/// \param df the dataframe to add the quantity to
+/// \param outputname name of the new column containing the BSC_dxy value
+/// \param position index of the position in the pair vector
+/// \param pairname name of the column containing the pair vector
+/// \param nTrackerLayers_column name of the column containing the BSC_dxy values
+///
+/// \returns a dataframe with the new column
+
+// ROOT::RDF::RNode nTrackerLayers(ROOT::RDF::RNode df, const std::string &outputname,
+//                            const int &position, const std::string &pairname,
+//                            const std::string &nTrackerLayers_column) {
+//     return df.Define(outputname,
+//                      [position](const ROOT::RVec<int> &pair,
+//                                 const ROOT::RVec<UChar_t> &nTrackerLayers) {
+//                          const int index = pair.at(position);
+//                          //const int index = pair.at(position, -1);
+//                          return nTrackerLayers.at(index, default_float);
+//                      },
+//                      {pairname, nTrackerLayers_column});
+// }
+ROOT::RDF::RNode nTrackerLayers(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &nTrackerLayers_column) {
+    return df.Define(outputname,
+                     [position](const ROOT::RVec<int> &pair,
+                                const ROOT::RVec<UChar_t> &nTrackerLayers) {
+                         if (position >= (int)pair.size()) return -1;
+                         int index = pair[position];
+                         if (index < 0 || index >= (int)nTrackerLayers.size()) return -1;
+                         return (int)nTrackerLayers[index];  // 返回 int 兼容性好
+                     },
+                     {pairname, nTrackerLayers_column});
+}//change by jiahua for nanoaod v12
 /////
 
 /// Function to writeout the isolation of a particle. The particle is

@@ -1,0 +1,69 @@
+universe = vanilla
+MY.WantOS = "el7"
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Job_test_1.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Job_test_1.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/bin/vbfhmm_config_dyjets_2018, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833/eos/user/j/jiahua/MC_2023BPix_inc/WWW_4F_amcatnlo-madspin_23BPix
+output_path = 
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Jobs/WWW_4F_amcatnlo-madspin_23BPix_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Jobs/WWW_4F_amcatnlo-madspin_23BPix_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Jobs/hello_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch/Python path configuration:
+Queue
+input_name = root://cms-xrd-global.cern.ch/  PYTHONHOME = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  PYTHONPATH = (not set)
+Queue
+input_name = root://cms-xrd-global.cern.ch/  program name = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  isolated = 0
+Queue
+input_name = root://cms-xrd-global.cern.ch/  environment = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  user site = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  import site = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys._base_executable = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.base_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.base_exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.platlibdir = 'lib64'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.executable = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.path = [
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python39.zip',
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9',
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9/lib-dynload',
+Queue
+input_name = root://cms-xrd-global.cern.ch/  ]
+Queue
+input_name = root://cms-xrd-global.cern.ch/Fatal Python error: init_fs_encoding: failed to get the Python codec of the filesystem encoding
+Queue
+input_name = root://cms-xrd-global.cern.ch/Python runtime state: core initialized
+Queue
+input_name = root://cms-xrd-global.cern.ch/ModuleNotFoundError: No module named 'encodings'
+Queue
+input_name = root://cms-xrd-global.cern.ch/
+Queue
+input_name = root://cms-xrd-global.cern.ch/Current thread 0x00007f5519a30740 (most recent call first):
+Queue
+input_name = root://cms-xrd-global.cern.ch/<no Python frame>
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WWW_4F_TuneCP5_13p6TeV_amcatnlo-madspin-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/30000/a68965b4-92ce-4333-8598-b3490058c6fc.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WWW_4F_TuneCP5_13p6TeV_amcatnlo-madspin-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/30000/3d8d268d-dd12-40cf-aac6-1dc4e54b842b.root
+Queue

@@ -1,0 +1,28 @@
+universe = vanilla
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023BPix/Job_test_1.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023BPix/Job_test_1.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/bin/vbfhmm_config_run3_Inc_v4_JetVeto_top_2023BPix, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_2023BPix_inc/WplusH_Hto2Mu_WtoAll_M-125_powheg-minlo_23BPix
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023BPix/Jobs/WplusH_Hto2Mu_WtoAll_M-125_powheg-minlo_23BPix_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023BPix/Jobs/WplusH_Hto2Mu_WtoAll_M-125_powheg-minlo_23BPix_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_2023BPix/Jobs/WplusH_Hto2Mu_WtoAll_M-125_powheg-minlo_23BPix_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/2820000/66c3c6b9-368f-4a27-9b9e-0919ca7b8a77.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/2820000/323243da-097e-4b5e-978b-a36d9e3c5f7e.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/2820000/4e98d8a7-b016-4abd-933e-4863be54d7c8.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/2820000/696acbee-c16d-400e-89ff-fe258efa4de5.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/2820000/8676e9e0-5715-4e3d-a0e8-267b5fab7c28.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/130000/ef3c9835-a030-4030-9b67-31924dfee6b3.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/1310000/dc870669-b4b7-4fac-a27d-ebcba2594cfa.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v6-v2/2820000/22ff864d-edd3-4960-8f77-c3e3bcb6ffdb.root
+Queue

@@ -91,6 +91,21 @@ ROOT::RDF::RNode mt_tot(ROOT::RDF::RNode df, const std::string &outputname,
 ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
                            const int &position, const std::string &pairname,
                            const std::string &ptErrcolumn);
+ROOT::RDF::RNode BSC_Chi2(ROOT::RDF::RNode df, const std::string &outputname,
+                           const int &position, const std::string &pairname,
+                           const std::string &BSC_Chi2column);
+ROOT::RDF::RNode BSC_pt(ROOT::RDF::RNode df, const std::string &outputname,
+                            const int &position, const std::string &pairname,
+                            const std::string &BSC_ptcolumn);
+ROOT::RDF::RNode BSC_ptErr(ROOT::RDF::RNode df, const std::string &outputname,
+                            const int &position, const std::string &pairname,
+                            const std::string &BSC_ptErrcolumn);
+ROOT::RDF::RNode BSC_dxy(ROOT::RDF::RNode df, const std::string &outputname,
+                            const int &position, const std::string &pairname,
+                            const std::string &BSC_dxycolumn);
+ROOT::RDF::RNode nTrackerLayers(ROOT::RDF::RNode df, const std::string &outputname,
+                            const int &position, const std::string &pairname,
+                            const std::string &nTrackerLayers_column);
 ROOT::RDF::RNode isolation(ROOT::RDF::RNode df, const std::string &outputname,
                            const int &position, const std::string &pairname,
                            const std::string &isolationcolumn);

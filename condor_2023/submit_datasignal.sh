@@ -1,0 +1,9 @@
+condor_submit Job_SingleMuon_UL18A.sub
+condor_submit Job_SingleMuon_UL18B.sub
+condor_submit Job_SingleMuon_UL18C.sub
+condor_submit Job_SingleMuon_UL18D.sub
+# condor_submit Job_DoubleMuon_UL18A.sub
+# condor_submit Job_DoubleMuon_UL18B.sub
+# condor_submit Job_DoubleMuon_UL18C.sub
+condor_submit Job_GluGluHToMuMu_M125-powheg_UL20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1.sub 
+condor_submit Job_VBFHToMuMu_M125-powheg_20UL18.sub

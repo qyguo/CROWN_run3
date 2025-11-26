@@ -1,0 +1,18 @@
+universe = vanilla
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Job_test_data.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Job_test_data.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/bin/vbfhmm_config_run3_Inc_v4_JetVeto_data_2023, /afs/cern.ch/user/j/jiahua/CROWN_run3/build/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_2023_inc/VBFHto2Mu_M-125_powheg_23
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Jobs/VBFHto2Mu_M-125_powheg_23_resub1_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Jobs/VBFHto2Mu_M-125_powheg_23_resub1_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor/Jobs/VBFHto2Mu_M-125_powheg_23_resub1_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/VBFHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v15-v2/2820000/7e9f0df9-ff6e-494b-b13a-d771550cb92d.root 
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/VBFHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v15-v2/2820000/43671526-53af-4c3a-a809-3c1f1625f599.root 
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/VBFHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v15-v2/2820000/ac9b9c56-95f2-4561-a66a-d6455c5fa94a.root 
+Queue

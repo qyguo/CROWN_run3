@@ -1,0 +1,12 @@
+universe = vanilla
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2022/Job_test_1.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2022/Job_test_1.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_vbf/bin/vbfhmm_config_run3_vbf_uncertainty_top_2022, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_vbf/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_2022_inc/MC_2022_VBF/TTto2L2Nu_powheg_22_ext1-v2/eos/user/j/jiahua/MC_2022_inc/MC_2022_VBF/**13203983*.out
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2022/Jobs/TTto2L2Nu_powheg_22_ext1-v2_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2022/Jobs/TTto2L2Nu_powheg_22_ext1-v2_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2022/Jobs/TTto2L2Nu_powheg_22_ext1-v2_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"

@@ -1,0 +1,82 @@
+universe = vanilla
+Executable = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Job_test_1.sh
+should_transfer_files = YES
+Transfer_Input_Files = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Job_test_1.sh, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_vbf/bin/vbfhmm_config_run3_vbf_uncertainty_top_2023BPix, /afs/cern.ch/user/j/jiahua/CROWN_run3/build_vbf/libCROWNLIB.so
+Proxy_path = /afs/cern.ch/user/j/jiahua/proxy/x509up_u139833
+output_path = /eos/user/j/jiahua/MC_2023BPix_inc/MC_2023BPix_vbf/WZZ_amcatnlo_23BPix
+arguments = $(Proxy_path) $(output_path) $(input_name) $(ClusterID) $(ProcId)
+Output = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Jobs/WZZ_amcatnlo_23BPix_$(ClusterId)_$(ProcId).out
+Error = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Jobs/WZZ_amcatnlo_23BPix_$(ClusterId)_$(ProcId).err
+Log = /afs/cern.ch/user/j/jiahua/CROWN_run3/condor_vbf_2023BPix/Jobs/hello_$(ClusterId)_$(ProcId).log
+request_cpus = 1
++JobFlavour = "workday"
+input_name = root://cms-xrd-global.cern.ch/Python path configuration:
+Queue
+input_name = root://cms-xrd-global.cern.ch/  PYTHONHOME = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  PYTHONPATH = (not set)
+Queue
+input_name = root://cms-xrd-global.cern.ch/  program name = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  isolated = 0
+Queue
+input_name = root://cms-xrd-global.cern.ch/  environment = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  user site = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  import site = 1
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys._base_executable = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.base_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.base_exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.platlibdir = 'lib64'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.executable = '/usr/bin/python3'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt'
+Queue
+input_name = root://cms-xrd-global.cern.ch/  sys.path = [
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python39.zip',
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9',
+Queue
+input_name = root://cms-xrd-global.cern.ch/    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc11-opt/lib64/python3.9/lib-dynload',
+Queue
+input_name = root://cms-xrd-global.cern.ch/  ]
+Queue
+input_name = root://cms-xrd-global.cern.ch/Fatal Python error: init_fs_encoding: failed to get the Python codec of the filesystem encoding
+Queue
+input_name = root://cms-xrd-global.cern.ch/Python runtime state: core initialized
+Queue
+input_name = root://cms-xrd-global.cern.ch/ModuleNotFoundError: No module named 'encodings'
+Queue
+input_name = root://cms-xrd-global.cern.ch/
+Queue
+input_name = root://cms-xrd-global.cern.ch/Current thread 0x00007f0363456740 (most recent call first):
+Queue
+input_name = root://cms-xrd-global.cern.ch/<no Python frame>
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/c0d91f45-8af6-474b-815f-c99a53fb3744.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/d2fe54d3-de85-4dc8-bf5a-3dde86f6a00e.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/98385129-acd8-4458-a4d3-9f8e13e8ae67.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/e65463df-dec9-4968-81ea-a0a2f6fdf51d.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/614cfa50-97f0-4c2d-9c82-aa209652f89e.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/29147c94-4344-4155-9216-4de71fe023a2.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/48eabc9f-dc69-4ec4-bf33-c7f9d67087b6.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/90c6732f-a4f5-4a2b-aa4a-def26c066104.root
+Queue
+input_name = root://cms-xrd-global.cern.ch//store/mc/Run3Summer23BPixNanoAODv12/WZZ_TuneCP5_13p6TeV_amcatnlo-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/2540000/e5f68a87-f084-4afe-a3e1-dec5a3776d5f.root
+Queue

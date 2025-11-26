@@ -1,0 +1,47 @@
+000 (13087775.332.000) 11/21 10:07:54 Job submitted from host: <188.185.121.235:9618?addrs=188.185.121.235-9618+[2001-1458-d00-49--100-36e]-9618&alias=bigbird22.cern.ch&noUDP&sock=schedd_232129_c3ca>
+...
+040 (13087775.332.000) 11/21 10:22:30 Started transferring input files
+	Transferring to host: <188.185.192.64:9618?addrs=188.185.192.64-9618+[2001-1458-303-1f--100-3c]-9618&alias=b9p13p4717.cern.ch&noUDP&sock=slot1_37_7679_4cd1_64305>
+...
+040 (13087775.332.000) 11/21 10:22:30 Finished transferring input files
+...
+001 (13087775.332.000) 11/21 10:22:31 Job executing on host: <188.185.192.64:9618?addrs=188.185.192.64-9618+[2001-1458-303-1f--100-3c]-9618&alias=b9p13p4717.cern.ch&noUDP&sock=startd_6604_5f88>
+	SlotName: slot1_37@b9p13p4717.cern.ch
+	CondorScratchDir = "/pool/condor/dir_3251699"
+	Cpus = 1
+	Disk = 16164
+	GPUs = 0
+	Memory = 3000
+...
+006 (13087775.332.000) 11/21 10:22:44 Image size of job updated: 126200
+	124  -  MemoryUsage of job (MB)
+	126200  -  ResidentSetSize of job (KB)
+...
+006 (13087775.332.000) 11/21 10:25:36 Image size of job updated: 691384
+	124  -  MemoryUsage of job (MB)
+	126628  -  ResidentSetSize of job (KB)
+...
+040 (13087775.332.000) 11/21 10:25:37 Started transferring output files
+...
+040 (13087775.332.000) 11/21 10:25:37 Finished transferring output files
+...
+005 (13087775.332.000) 11/21 10:25:43 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:02:48, Sys 0 00:00:02  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:02:48, Sys 0 00:00:02  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	10082  -  Run Bytes Sent By Job
+	11510364  -  Run Bytes Received By Job
+	10082  -  Total Bytes Sent By Job
+	11510364  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :    11275    12500     16164 
+	   GPUs                 :                           0 
+	   Memory (MB)          :      124     3000      3000 
+	   TimeExecute (s)      :      185                    
+	   TimeSlotBusy (s)     :      187                    
+
+	Job terminated of its own accord at 2025-11-21T09:25:36Z with exit-code 0.
+...

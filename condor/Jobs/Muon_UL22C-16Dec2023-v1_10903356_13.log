@@ -1,0 +1,43 @@
+000 (10903356.013.000) 06/21 17:42:10 Job submitted from host: <188.185.121.235:9618?addrs=188.185.121.235-9618+[2001-1458-d00-49--100-36e]-9618&alias=bigbird22.cern.ch&noUDP&sock=schedd_5086_26c4>
+...
+040 (10903356.013.000) 06/21 17:43:04 Started transferring input files
+	Transferring to host: <188.185.194.22:9618?addrs=188.185.194.22-9618+[2001-1458-303-21--100-12]-9618&alias=b9p20p0210.cern.ch&noUDP&sock=slot1_33_11535_336e_6019>
+...
+040 (10903356.013.000) 06/21 17:43:04 Finished transferring input files
+...
+001 (10903356.013.000) 06/21 17:43:05 Job executing on host: <188.185.194.22:9618?addrs=188.185.194.22-9618+[2001-1458-303-21--100-12]-9618&alias=b9p20p0210.cern.ch&noUDP&sock=startd_10756_4cc1>
+	SlotName: slot1_33@b9p20p0210.cern.ch
+	CondorScratchDir = "/pool/condor/dir_23966"
+	Cpus = 1
+	Disk = 13067
+	GPUs = 0
+	Memory = 3000
+...
+006 (10903356.013.000) 06/21 17:43:19 Image size of job updated: 54824
+	54  -  MemoryUsage of job (MB)
+	54824  -  ResidentSetSize of job (KB)
+...
+040 (10903356.013.000) 06/21 17:43:25 Started transferring output files
+...
+040 (10903356.013.000) 06/21 17:43:25 Finished transferring output files
+...
+005 (10903356.013.000) 06/21 17:43:25 Job terminated.
+	(1) Normal termination (return value 1)
+		Usr 0 00:00:07, Sys 0 00:00:02  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:07, Sys 0 00:00:02  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	2316  -  Run Bytes Sent By Job
+	9642281  -  Run Bytes Received By Job
+	2316  -  Total Bytes Sent By Job
+	9642281  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :     9444    10000     13067 
+	   GPUs                 :                           0 
+	   Memory (MB)          :       54     3000      3000 
+	   TimeExecute (s)      :       20                    
+	   TimeSlotBusy (s)     :       22                    
+
+	Job terminated of its own accord at 2025-06-21T15:43:25Z with exit-code 1.
+...

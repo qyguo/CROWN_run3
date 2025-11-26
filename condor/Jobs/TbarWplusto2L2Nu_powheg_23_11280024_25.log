@@ -1,0 +1,45 @@
+000 (11280024.025.000) 07/20 18:08:01 Job submitted from host: <188.185.121.235:9618?addrs=188.185.121.235-9618+[2001-1458-d00-49--100-36e]-9618&alias=bigbird22.cern.ch&noUDP&sock=schedd_232129_c3ca>
+...
+040 (11280024.025.000) 07/20 18:10:41 Started transferring input files
+	Transferring to host: <188.185.207.41:9618?addrs=188.185.207.41-9618+[2001-1458-303-d--100-26]-9618&alias=b9p07p5776.cern.ch&noUDP&sock=slot1_16_9076_9cea_45979>
+...
+040 (11280024.025.000) 07/20 18:10:41 Finished transferring input files
+...
+001 (11280024.025.000) 07/20 18:10:42 Job executing on host: <188.185.207.41:9618?addrs=188.185.207.41-9618+[2001-1458-303-d--100-26]-9618&alias=b9p07p5776.cern.ch&noUDP&sock=startd_9021_3bf0>
+	SlotName: slot1_16@b9p07p5776.cern.ch
+	CondorScratchDir = "/pool/condor/dir_1273813"
+	Cpus = 1
+	Disk = 12818
+	GPUs = 0
+	Memory = 3000
+...
+006 (11280024.025.000) 07/20 18:10:55 Image size of job updated: 96948
+	95  -  MemoryUsage of job (MB)
+	96948  -  ResidentSetSize of job (KB)
+...
+006 (11280024.025.000) 07/20 18:11:17 Image size of job updated: 240880
+	95  -  MemoryUsage of job (MB)
+	96948  -  ResidentSetSize of job (KB)
+...
+040 (11280024.025.000) 07/20 18:11:17 Started transferring output files
+...
+040 (11280024.025.000) 07/20 18:11:17 Finished transferring output files
+...
+005 (11280024.025.000) 07/20 18:11:17 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:00:16, Sys 0 00:00:03  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:16, Sys 0 00:00:03  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	10113  -  Run Bytes Sent By Job
+	9837493  -  Run Bytes Received By Job
+	10113  -  Total Bytes Sent By Job
+	9837493  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        1         1 
+	   Disk (KB)            :     9641    10000     12818 
+	   GPUs                 :                           0 
+	   Memory (MB)          :       95     3000      3000 
+
+	Job terminated of its own accord at 2025-07-20T16:11:17Z with exit-code 0.
+...
