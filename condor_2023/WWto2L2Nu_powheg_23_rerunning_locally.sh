@@ -1,1 +1,0 @@
-./vbfhmm_config_run3_vbf_HornVeto_top_2023 /eos/user/j/jiahua/MC_2023_inc/WWto2L2Nu_powheg_23/bfc141b0-646c-4e58-b1ce-0fc61842a241.root  root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WWto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v4/40000/bfc141b0-646c-4e58-b1ce-0fc61842a241.root 

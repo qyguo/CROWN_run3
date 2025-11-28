@@ -1,2 +1,0 @@
-condor_submit Job_VBFHto2Mu_M-125_powheg_23_resub1.sub
-condor_submit Job_WWto2L2Nu_powheg_23_resub1.sub

@@ -1,2 +1,0 @@
-condor_submit Job_WZto2L2Q_powheg_23BPix_resub1.sub
-condor_submit Job_WZto2L2Q_powheg_23BPix_resub1.sub

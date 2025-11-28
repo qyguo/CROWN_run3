@@ -1,2 +1,0 @@
-./vbfhmm_config_run3_vbf_HornVeto_top_2022EE /eos/user/j/jiahua/MC_2022EE_inc/Muon_UL22F-19Dec2023-v1/1ca58a83-b3cd-4833-a60e-d3e9e282c854.root  root://cms-xrd-global.cern.ch//store/data/Run2022F/Muon/NANOAOD/19Dec2023-v1/2560000/1ca58a83-b3cd-4833-a60e-d3e9e282c854.root 
-./vbfhmm_config_run3_vbf_HornVeto_top_2022EE /eos/user/j/jiahua/MC_2022EE_inc/Muon_UL22F-19Dec2023-v1/4234d0cc-2fcd-4427-ad21-8ef3d95c1208.root  root://cms-xrd-global.cern.ch//store/data/Run2022F/Muon/NANOAOD/19Dec2023-v1/80000/4234d0cc-2fcd-4427-ad21-8ef3d95c1208.root 

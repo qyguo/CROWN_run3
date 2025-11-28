@@ -1,1 +1,0 @@
-./vbfhmm_config_run3_Inc_v4_JetVeto_data_2023  /eos/user/j/jiahua/MC_2023_inc/DYto2L-2Jets_MLL-50_amcatnloFXFX_23/a01c9bdb-0368-4aee-a3d4-ff589b60b002.root root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/DYto2L-2Jets_MLL-50_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v1/2550000/a01c9bdb-0368-4aee-a3d4-ff589b60b002.root 

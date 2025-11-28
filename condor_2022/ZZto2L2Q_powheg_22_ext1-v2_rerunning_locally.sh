@@ -1,1 +1,0 @@
-./vbfhmm_config_run3_Inc_v4_JetVeto_data_2022  root://cms-xrd-global.cern.ch//store/mc/Run3Summer22NanoAODv12/ZZto2L2Q_TuneCP5_13p6TeV_powheg-pythia8/NANOAODSIM/130X_mcRun3_2022_realistic_v5_ext1-v2/30000/0b2bf916-8495-4981-97c8-7fb8d1aab87f.root 
