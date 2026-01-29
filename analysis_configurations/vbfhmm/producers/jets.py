@@ -68,6 +68,29 @@ JetPtCorrection_2022_v15 = Producer(
     output=[q.Jet_pt_corrected],
     scopes=["global"],
 )
+####v15
+# jet correction additional modification of pt<30 GeV of |eta| in (2,2.5)region.
+JetPtCorrection_2022_v15_v2 = Producer(
+    name="JetPtCorrection_2022_v15_v2",
+    call="physicsobject::jet::JetPtCorrection_2022_v15_v2({df}, {output}, {input}, {jet_reapplyJES}, {jet_jes_sources}, {jet_jes_shift}, {jet_jer_shift}, {jet_jec_file}, {jet_jer_tag}, {jet_jes_tag}, {jet_jec_algo}, {jet_veto_map}, {jet_veto_tag})",
+    input=[
+        nanoAOD.Jet_pt,
+        nanoAOD.Jet_eta,
+        nanoAOD.Jet_phi,
+        nanoAOD.Jet_area,
+        nanoAOD.Jet_rawFactor,
+        #nanoAOD.Jet_ID,
+        q.jet_id_v15,
+        nanoAOD.Jet_neEmEF,
+        nanoAOD.Jet_chEmEF,
+        nanoAOD.GenJet_pt,
+        nanoAOD.GenJet_eta,
+        nanoAOD.GenJet_phi,
+        nanoAOD.rho,
+    ],
+    output=[q.Jet_pt_corrected],
+    scopes=["global"],
+)
 ####
 JetPtCorrection_2022_GenMatch = Producer(
     name="JetPtCorrection_2022_GenMatch",
@@ -123,6 +146,14 @@ JetEnergyCorrection_2022_v15 = ProducerGroup(
     output=None,
     scopes=["global"],
     subproducers=[JetPtCorrection_2022_v15, JetMassCorrection],
+)
+JetEnergyCorrection_2022_v15_v2 = ProducerGroup(
+    name="JetEnergyCorrection_2022_v15_v2",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global"],
+    subproducers=[JetPtCorrection_2022_v15_v2, JetMassCorrection],
 )
 #
 JetEnergyCorrection_2022_GenMatch = ProducerGroup(

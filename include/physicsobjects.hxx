@@ -314,6 +314,46 @@ applyRoccoRMC_2022(ROOT::RDF::RNode df, const std::string &outputname,
               const std::string &phiColumn, const std::string &genPtColumn,
               const std::string &nTrackerLayersColumn,
               const std::string &rndmColumn, int error_set, int error_member);
+ROOT::RDF::RNode applyMuonScaReMC(ROOT::RDF::RNode df,
+                                  const std::string &outputname,
+                                  const std::string &jsonfile,
+                                  const int &position,
+                                  const std::string &objCollection,
+                                  const std::string &chargeCol,
+                                  const std::string &ptCol,
+                                  const std::string &etaCol,
+                                  const std::string &phiCol,
+                                  const std::string &nLCol);
+ROOT::RDF::RNode applyMuonScaReData(ROOT::RDF::RNode df,
+                                  const std::string &outputname,
+                                  const std::string &jsonfile,
+                                  const int &position,
+                                  const std::string &objCollection,
+                                  const std::string &chargeCol,
+                                  const std::string &ptCol,
+                                  const std::string &etaCol,
+                                  const std::string &phiCol);
+ROOT::RDF::RNode applyMuonScaReData_Err(
+                                  ROOT::RDF::RNode df,
+                                  const std::string &outputname,
+                                  const std::string &jsonfile,
+                                  const int &position,
+                                  const std::string &objCollection,
+                                  const std::string &ptCol,
+                                  const std::string &etaCol,
+                                  const std::string &phiCol,
+                                  const std::string &chargeCol);
+ROOT::RDF::RNode applyMuonScaReMC_Err(
+                                  ROOT::RDF::RNode df,
+                                  const std::string &outputname,
+                                  const std::string &jsonfile,
+                                  const int &position,
+                                  const std::string &objCollection,
+                                  const std::string &ptCol,
+                                  const std::string &etaCol,
+                                  const std::string &phiCol,
+                                  const std::string &chargeCol,
+                                  const std::string &nLCol);
 } // namespace muon
 namespace tau {
 ROOT::RDF::RNode CutDecayModes(ROOT::RDF::RNode df, const std::string &maskname,

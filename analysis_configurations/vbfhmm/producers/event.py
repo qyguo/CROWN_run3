@@ -304,6 +304,53 @@ ApplyRoccoRData = ProducerGroup(
     }
 )
 
+# Rochester correction BSC
+ApplyRoccoRData_BSC_1 = Producer(
+    name="ApplyRoccoRData_BSC_1",
+    call='physicsobject::muon::applyRoccoRData({df}, {output}, "{muon_RoccoR_files}", 0, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_rc_bsc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRData_BSC_2 = Producer(
+    name="ApplyRoccoRData_BSC_2",
+    #call="physicsobject::muon::applyRoccoRData({df}, {output}, {muon_RoccoR_files}, 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})",
+    call='physicsobject::muon::applyRoccoRData({df}, {output}, "{muon_RoccoR_files}", 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_rc_bsc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRData_BSC = ProducerGroup(
+    name="ApplyRoccoRData_BSC",
+    call=None,
+    input=None,
+    output=None,
+    #scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    #scopes=["vbfhmm","mm","mmet"],
+    scopes=["vbfhmm"],
+    subproducers= {
+        "vbfhmm": [ApplyRoccoRData_BSC_1, ApplyRoccoRData_BSC_2],
+    }
+)
+
 MuonRoccoRRndm = Producer(
     name="MuonRndm",
     call="physicsobject::muon::GenerateRndmRVec({df}, {output}, {input}, {RoccoR_seed})",
@@ -413,7 +460,325 @@ ApplyRoccoRMC_2022 = ProducerGroup(
         "vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_2022_1, ApplyRoccoRMC_2022_2],
     }
 )
+
+# Apply RoccoRMC BSC
+ApplyRoccoRMC_BSC_2022_1 = Producer(
+    name="ApplyRoccoRMC_BSC_1",
+    call='physicsobject::muon::applyRoccoRMC_2022({df}, {output}, "{muon_RoccoR_files}", 0, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        q.genmu1_fromH_pt,
+        nanoAOD.Muon_nTrackerLayers,
+        q.rndms,
+    ],
+    output=[q.pt_rc_bsc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRMC_BSC_2022_2 = Producer(
+    name="ApplyRoccoRMC_BSC_2",
+    call='physicsobject::muon::applyRoccoRMC_2022({df}, {output}, "{muon_RoccoR_files}", 1, {input}, {RoccoR_error_set}, {RoccoR_error_member})',
+    input=[
+        #q.good_muon_collection,
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        q.genmu2_fromH_pt,
+        nanoAOD.Muon_nTrackerLayers,
+        q.rndms,
+    ],
+    output=[q.pt_rc_bsc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+ApplyRoccoRMC_BSC_2022 = ProducerGroup(
+    name="ApplyRoccoRMC_BSC_2022",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["vbfhmm"],
+    subproducers= {
+        #"vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_BSC_2022_1, ApplyRoccoRMC_BSC_2022_2],
+        "vbfhmm": [ApplyRoccoRMC_BSC_2022_1, ApplyRoccoRMC_BSC_2022_2],
+    }
+)
 ###ahhh
+
+####KIT correction
+########################
+#run 3 muon scale and resolution correction for BSC
+applyMuonScaReData_BSC_1 = Producer(
+    name="applyMuonScaReData_BSC_1",
+    call='physicsobject::muon::applyMuonScaReData({df}, {output}, "{muon_KIT_files}", 0, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_kit_bsc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReData_BSC_2 = Producer(
+    name="applyMuonScaReData_BSC_2",
+    call='physicsobject::muon::applyMuonScaReData({df}, {output}, "{muon_KIT_files}", 1, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_kit_bsc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReData_BSC = ProducerGroup(
+    name="applyMuonScaReData_BSC",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global","vbfhmm"],
+    subproducers= {
+        "global": [applyMuonScaReData_BSC_1, applyMuonScaReData_BSC_2],
+        "vbfhmm": [applyMuonScaReData_BSC_1, applyMuonScaReData_BSC_2],
+    }
+)
+
+applyMuonScaReMC_BSC_1 = Producer(
+    name="applyMuonScaReMC_BSC_1",
+    call='physicsobject::muon::applyMuonScaReMC({df}, {output}, "{muon_KIT_files}", 0, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.pt_kit_bsc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReMC_BSC_2 = Producer(
+    name="applyMuonScaReMC_BSC_2",
+    call='physicsobject::muon::applyMuonScaReMC({df}, {output}, "{muon_KIT_files}", 1, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.pt_kit_bsc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReMC_BSC = ProducerGroup(
+    name="applyMuonScaReMC_BSC",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global","vbfhmm"],
+    subproducers= {
+        "vbfhmm": [applyMuonScaReMC_BSC_1, applyMuonScaReMC_BSC_2],
+        "global": [applyMuonScaReMC_BSC_1, applyMuonScaReMC_BSC_2],
+    }
+)
+##################
+#run 3 muon scale and resolution correction, correct err
+applyMuonScaReData_Err_BSC_1 = Producer(
+    name="applyMuonScaReData_Err_BSC_1",
+    call='physicsobject::muon::applyMuonScaReData_Err({df}, {output}, "{muon_KIT_files}", 0, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_charge,
+    ],
+    output=[q.ptErr_kit_bsc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReData_Err_BSC_2 = Producer(
+    name="applyMuonScaReData_Err_BSC_2",
+    call='physicsobject::muon::applyMuonScaReData_Err({df}, {output}, "{muon_KIT_files}", 1, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_charge,
+    ],
+    output=[q.ptErr_kit_bsc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReData_Err_BSC = ProducerGroup(
+    name="applyMuonScaReData_Err_BSC",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global","vbfhmm"],
+    subproducers= {
+        "vbfhmm": [applyMuonScaReData_Err_BSC_1, applyMuonScaReData_Err_BSC_2],
+        "global": [applyMuonScaReData_Err_BSC_1, applyMuonScaReData_Err_BSC_2],
+    }
+)
+
+applyMuonScaReMC_Err_BSC_1 = Producer(
+    name="applyMuonScaReMC_Err_BSC_1",
+    call='physicsobject::muon::applyMuonScaReMC_Err({df}, {output}, "{muon_KIT_files}", 0, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.ptErr_kit_bsc_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReMC_Err_BSC_2 = Producer(
+    name="applyMuonScaReMC_Err_BSC_2",
+    call='physicsobject::muon::applyMuonScaReMC_Err({df}, {output}, "{muon_KIT_files}", 1, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        #nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.ptErr_kit_bsc_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReMC_Err_BSC = ProducerGroup(
+    name="applyMuonScaReMC_Err_BSC",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global","vbfhmm"],
+    subproducers= {
+        "vbfhmm": [applyMuonScaReMC_Err_BSC_1, applyMuonScaReMC_Err_BSC_2],
+        "global": [applyMuonScaReMC_Err_BSC_1, applyMuonScaReMC_Err_BSC_2],
+    }
+)
+#run 3 muon scale and resolution correction for origin
+applyMuonScaReData_1 = Producer(
+    name="applyMuonScaReData_1",
+    call='physicsobject::muon::applyMuonScaReData({df}, {output}, "{muon_KIT_files}", 0, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_kit_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReData_2 = Producer(
+    name="applyMuonScaReData_2",
+    call='physicsobject::muon::applyMuonScaReData({df}, {output}, "{muon_KIT_files}", 1, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+    ],
+    output=[q.pt_kit_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReData = ProducerGroup(
+    name="applyMuonScaReData",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global","vbfhmm"],
+    subproducers= {
+        "vbfhmm": [applyMuonScaReData_1, applyMuonScaReData_2],
+        "global": [applyMuonScaReData_1, applyMuonScaReData_2],
+    }
+)
+
+applyMuonScaReMC_1 = Producer(
+    name="applyMuonScaReMC_1",
+    call='physicsobject::muon::applyMuonScaReMC({df}, {output}, "{muon_KIT_files}", 0, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.pt_kit_1],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReMC_2 = Producer(
+    name="applyMuonScaReMC_2",
+    call='physicsobject::muon::applyMuonScaReMC({df}, {output}, "{muon_KIT_files}", 1, {input})',
+    input=[
+        #q.good_muon_collection, #good muon ordered by pt
+        q.dimuon_HiggsCand_collection,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.pt_kit_2],
+    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+
+applyMuonScaReMC = ProducerGroup(
+    name="applyMuonScaReMC",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global","vbfhmm"],
+    subproducers= {
+        "vbfhmm": [applyMuonScaReMC_1, applyMuonScaReMC_2],
+        "global": [applyMuonScaReMC_1, applyMuonScaReMC_2],
+    }
+)
+####KIT correction
 
 #####################
 # Producer Groups
