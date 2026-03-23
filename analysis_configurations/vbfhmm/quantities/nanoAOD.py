@@ -107,7 +107,8 @@ GenJet_phi = NanoAODQuantity("GenJet_phi")
 GenJet_mass = NanoAODQuantity("GenJet_mass")
 
 Pileup_nTrueInt = NanoAODQuantity("Pileup_nTrueInt")
-rho = NanoAODQuantity("Pileup_pudensity")
+#rho = NanoAODQuantity("Pileup_pudensity")
+rho = NanoAODQuantity("Rho_fixedGridRhoFastjetAll")
 
 GenParticle_eta = NanoAODQuantity("GenPart_eta")
 GenParticle_phi = NanoAODQuantity("GenPart_phi")

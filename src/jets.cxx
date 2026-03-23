@@ -2308,7 +2308,401 @@ JetPtCorrection_data_2022(ROOT::RDF::RNode df, const std::string &corrected_jet_
 
     }
 }
-/// jet correction additional modification of pt<30 GeV of |eta| in (2,2.5)region.
+//
+// jet correction additional modification of pt<30 GeV of |eta| in (2,2.5)region.
+ROOT::RDF::RNode
+JetPtCorrection_data_2024(ROOT::RDF::RNode df,
+                             const std::string &corrected_jet_pt,
+                             const std::string &jet_pt,
+                             const std::string &jet_eta,
+                             const std::string &jet_phi,
+                             const std::string &jet_area,
+                             const std::string &jet_rawFactor,
+                             const std::string &jet_ID,
+                             const std::string &rho,
+                             const std::string &jet_neEmEF,
+                             const std::string &jet_chEmEF,
+                             const std::string &run,
+                             const std::string &jec_file,
+                             const std::string &jes_tag,
+                             const std::string &jec_algo,
+                             const std::string &jet_veto_map,
+                             const std::string &jet_veto_tag) {
+  // -----------------------------
+  // Jet veto map
+  // -----------------------------
+  auto jet_veto_map_evaluator =
+      correction::CorrectionSet::from_file(jet_veto_map)->at(jet_veto_tag);
+
+  auto jet_veto_SF = [jet_veto_map_evaluator](float eta, float phi) -> float {
+    if (std::abs(eta) < 5.19f && std::abs(phi) < 3.14159f)
+      return jet_veto_map_evaluator->evaluate({"jetvetomap", eta, phi});
+    return 0.0f;
+  };
+
+  auto hasJetVeto = [jet_veto_SF](const ROOT::RVec<float> &pt,
+                                 const ROOT::RVec<float> &eta,
+                                 const ROOT::RVec<float> &phi,
+                                 const ROOT::RVec<UChar_t> &ID,
+                                 const ROOT::RVec<float> &neEmEF,
+                                 const ROOT::RVec<float> &chEmEF) -> bool {
+    for (int i = 0; i < (int)pt.size(); ++i) {
+      Logger::get("JetEnergyResolution")
+          ->debug("checking jet veto map for index {} ", i);
+
+      if (pt[i] > 15.f && ID[i] >= 6 && ((neEmEF[i] + chEmEF[i]) < 0.9f)) {
+        const float v = jet_veto_SF(eta[i], phi[i]);
+        if (v != 0.f) return true;
+      }
+    }
+    return false;
+  };
+
+  // -----------------------------
+  // Anna's clipping rule:
+  // clip the pT USED TO EVALUATE L2L3Residual, where that pT is AFTER L2Rel.
+  // In 2.0<|eta|<2.5, if pt_after_L2Rel < 30 -> use 30 for residual evaluation.
+  // -----------------------------
+  auto clipPtForResidualAfterL2Rel = [](float pt_after_L2Rel, float eta) -> float {
+    const float aeta = std::abs(eta);
+    if (aeta > 2.0f && aeta < 2.5f && pt_after_L2Rel < 30.f) return 30.f;
+    return pt_after_L2Rel;
+  };
+
+  // =====================================================================
+  // JES/JEC branch
+  // =====================================================================
+  if (!jes_tag.empty()) {
+    //auto cset = correction::CorrectionSet::from_file(jec_file)->compound();
+    auto cset = correction::CorrectionSet::from_file(jec_file);
+
+    // Names based on your JSON snippets
+    const std::string name_L1  = jes_tag + "_L1FastJet_"    + jec_algo; // inputs: JetA, JetEta, JetPt, Rho
+    const std::string name_L2  = jes_tag + "_L2Relative_"   + jec_algo; // inputs: JetEta, JetPhi, JetPt
+    const std::string name_L3  = jes_tag + "_L3Absolute_"   + jec_algo; // inputs: JetEta, JetPt
+    const std::string name_Res = jes_tag + "_L2L3Residual_" + jec_algo; // inputs: run, JetEta, JetPt
+
+    //auto L1_eval  = cset.at(name_L1);
+    //auto L2_eval  = cset.at(name_L2);
+    //auto L3_eval  = cset.at(name_L3);
+    //auto Res_eval = cset.at(name_Res);
+    auto L1_eval  = cset->at(name_L1);
+    auto L2_eval  = cset->at(name_L2);
+    auto L3_eval  = cset->at(name_L3);
+    auto Res_eval = cset->at(name_Res);
+
+    Logger::get("JetEnergyScaleData")->debug(
+        "file: {}, evaluators: {}, {}, {}, {}",
+        jec_file, name_L1, name_L2, name_L3, name_Res);
+
+    // Main lambda
+    auto JetEnergyCorrectionLambda =
+        [=](const ROOT::RVec<float> &pt_values,
+            const ROOT::RVec<float> &eta_values,
+            const ROOT::RVec<float> &phi_values,
+            const ROOT::RVec<float> &area_values,
+            const ROOT::RVec<float> &rawFactor_values,
+            const ROOT::RVec<UChar_t> &ID_values,
+            const float &rho_value,
+            const ROOT::RVec<float> &jet_neEmEF_values,
+            const ROOT::RVec<float> &jet_chEmEF_values,
+            const UInt_t run_value) {
+
+          ROOT::RVec<float> out;
+          out.reserve(pt_values.size());
+
+          // --- event veto ---
+          if (hasJetVeto(pt_values, eta_values, phi_values,
+                         ID_values, jet_neEmEF_values, jet_chEmEF_values)) {
+            out.assign(pt_values.size(), -999.f);
+            return out;
+          }
+
+          // --- per-jet corrections ---
+          for (int i = 0; i < (int)pt_values.size(); ++i) {
+            const float eta = eta_values[i];
+            const float phi = phi_values[i];
+            const float area = area_values[i];
+
+            // Start from RAW
+            const float raw_pt = pt_values[i] * (1.f - rawFactor_values[i]);
+
+            float corr_pt = raw_pt;
+
+            // Only apply within validity, follow your previous convention
+            if (std::abs(eta) < 4.7f) {
+              // L1FastJet: (JetA, JetEta, JetPt, Rho)
+              const float cL1 = L1_eval->evaluate({area, eta, raw_pt, rho_value});
+              const float pt_L1 = raw_pt * cL1;
+
+              // L2Relative: (JetEta, JetPhi, JetPt)
+              float cL2 = 1.0f;
+              if (std::abs(phi) < 3.1416f)
+                  cL2 = L2_eval->evaluate({eta, phi, pt_L1});
+              const float pt_L2 = pt_L1 * cL2; // <-- MC-truth corrected pT (after L2Rel)
+
+              // L3Absolute: (JetEta, JetPt)
+              const float cL3 = L3_eval->evaluate({eta, pt_L2});
+              const float pt_L3 = pt_L2 * cL3;
+
+              // L2L3Residual: (run, JetEta, JetPt)
+              // IMPORTANT: JetPt input here must be AFTER L2Rel, and clipped as requested.
+              const float pt_for_res = clipPtForResidualAfterL2Rel(pt_L2, eta);
+              float cRes = 1.0f;
+              if( float(run_value) >= 379412.0 && float(run_value) < 387121.0 ) 
+                  cRes = Res_eval->evaluate({float(run_value), eta, pt_for_res});
+              corr_pt = pt_L3 * cRes;
+
+              Logger::get("JetEnergyScaleData")->debug(
+                  "data JEC split: i {} pt {} raw {} pt_L2 {} pt_for_res {} corr_pt {}",
+                  i, pt_values[i], raw_pt, pt_L2, pt_for_res, corr_pt);
+            }
+
+            out.push_back(corr_pt);
+          }
+
+          return out;
+        };
+
+    return df.Define(corrected_jet_pt, JetEnergyCorrectionLambda,
+                     {jet_pt, jet_eta, jet_phi, jet_area, jet_rawFactor,
+                      jet_ID, rho, jet_neEmEF, jet_chEmEF, run});
+  }
+
+  // =====================================================================
+  // No JEC: veto only, pass-through pT
+  // =====================================================================
+  auto JetVetoOnlyLambda =
+      [=](const ROOT::RVec<float> &pt_values,
+          const ROOT::RVec<float> &eta_values,
+          const ROOT::RVec<float> &phi_values,
+          const ROOT::RVec<float> & /*area_values*/,
+          const ROOT::RVec<float> & /*rawFactor_values*/,
+          const ROOT::RVec<UChar_t> &ID_values,
+          const ROOT::RVec<float> &jet_neEmEF_values,
+          const ROOT::RVec<float> &jet_chEmEF_values) {
+
+        ROOT::RVec<float> out;
+        out.reserve(pt_values.size());
+
+        if (hasJetVeto(pt_values, eta_values, phi_values,
+                       ID_values, jet_neEmEF_values, jet_chEmEF_values)) {
+          out.assign(pt_values.size(), -999.f);
+          return out;
+        }
+
+        out = pt_values;
+        return out;
+      };
+
+  return df.Define(corrected_jet_pt, JetVetoOnlyLambda,
+                   {jet_pt, jet_eta, jet_phi, jet_area, jet_rawFactor,
+                    jet_ID, jet_neEmEF, jet_chEmEF});
+}
+
+// jet correction no additional modification of pt<30 GeV of |eta| in (2,2.5)region for 25.
+// L2L3Res set the run in the input for 24 but not 25
+ROOT::RDF::RNode
+JetPtCorrection_data_2025(ROOT::RDF::RNode df,
+                             const std::string &corrected_jet_pt,
+                             const std::string &jet_pt,
+                             const std::string &jet_eta,
+                             const std::string &jet_phi,
+                             const std::string &jet_area,
+                             const std::string &jet_rawFactor,
+                             const std::string &jet_ID,
+                             const std::string &rho,
+                             const std::string &jet_neEmEF,
+                             const std::string &jet_chEmEF,
+                             const std::string &run,
+                             const std::string &jec_file,
+                             const std::string &jes_tag,
+                             const std::string &jec_algo,
+                             const std::string &jet_veto_map,
+                             const std::string &jet_veto_tag) {
+  // -----------------------------
+  // Jet veto map
+  // -----------------------------
+  auto jet_veto_map_evaluator =
+      correction::CorrectionSet::from_file(jet_veto_map)->at(jet_veto_tag);
+
+  auto jet_veto_SF = [jet_veto_map_evaluator](float eta, float phi) -> float {
+    if (std::abs(eta) < 5.19f && std::abs(phi) < 3.14159f)
+      return jet_veto_map_evaluator->evaluate({"jetvetomap", eta, phi});
+    return 0.0f;
+  };
+
+  auto hasJetVeto = [jet_veto_SF](const ROOT::RVec<float> &pt,
+                                 const ROOT::RVec<float> &eta,
+                                 const ROOT::RVec<float> &phi,
+                                 const ROOT::RVec<UChar_t> &ID,
+                                 const ROOT::RVec<float> &neEmEF,
+                                 const ROOT::RVec<float> &chEmEF) -> bool {
+    for (int i = 0; i < (int)pt.size(); ++i) {
+      Logger::get("JetEnergyResolution")
+          ->debug("checking jet veto map for index {} ", i);
+
+      if (pt[i] > 15.f && ID[i] >= 6 && ((neEmEF[i] + chEmEF[i]) < 0.9f)) {
+        const float v = jet_veto_SF(eta[i], phi[i]);
+        if (v != 0.f) return true;
+      }
+    }
+    return false;
+  };
+
+  // -----------------------------
+  // only for 24 not for 25~
+  // Anna's clipping rule:
+  // clip the pT USED TO EVALUATE L2L3Residual, where that pT is AFTER L2Rel.
+  // In 2.0<|eta|<2.5, if pt_after_L2Rel < 30 -> use 30 for residual evaluation.
+  // -----------------------------
+  auto clipPtForResidualAfterL2Rel = [](float pt_after_L2Rel, float eta) -> float {
+    const float aeta = std::abs(eta);
+    if (aeta > 2.0f && aeta < 2.5f && pt_after_L2Rel < 30.f) return 30.f;
+    return pt_after_L2Rel;
+  };
+
+  // =====================================================================
+  // JES/JEC branch
+  // =====================================================================
+  if (!jes_tag.empty()) {
+    //auto cset = correction::CorrectionSet::from_file(jec_file)->compound();
+    auto cset = correction::CorrectionSet::from_file(jec_file);
+
+    // Names based on your JSON snippets
+    const std::string name_L1  = jes_tag + "_L1FastJet_"    + jec_algo; // inputs: JetA, JetEta, JetPt, Rho
+    const std::string name_L2  = jes_tag + "_L2Relative_"   + jec_algo; // inputs: JetEta, JetPhi, JetPt
+    const std::string name_L3  = jes_tag + "_L3Absolute_"   + jec_algo; // inputs: JetEta, JetPt
+    const std::string name_Res = jes_tag + "_L2L3Residual_" + jec_algo; // inputs: run, JetEta, JetPt // no run in 25
+
+    //auto L1_eval  = cset.at(name_L1);
+    //auto L2_eval  = cset.at(name_L2);
+    //auto L3_eval  = cset.at(name_L3);
+    //auto Res_eval = cset.at(name_Res);
+    auto L1_eval  = cset->at(name_L1);
+    auto L2_eval  = cset->at(name_L2);
+    auto L3_eval  = cset->at(name_L3);
+    auto Res_eval = cset->at(name_Res);
+
+    Logger::get("JetEnergyScaleData")->debug(
+        "file: {}, evaluators: {}, {}, {}, {}",
+        jec_file, name_L1, name_L2, name_L3, name_Res);
+
+    // Main lambda
+    auto JetEnergyCorrectionLambda =
+        [=](const ROOT::RVec<float> &pt_values,
+            const ROOT::RVec<float> &eta_values,
+            const ROOT::RVec<float> &phi_values,
+            const ROOT::RVec<float> &area_values,
+            const ROOT::RVec<float> &rawFactor_values,
+            const ROOT::RVec<UChar_t> &ID_values,
+            const float &rho_value,
+            const ROOT::RVec<float> &jet_neEmEF_values,
+            const ROOT::RVec<float> &jet_chEmEF_values,
+            const UInt_t run_value) {
+
+          ROOT::RVec<float> out;
+          out.reserve(pt_values.size());
+
+          // --- event veto ---
+          if (hasJetVeto(pt_values, eta_values, phi_values,
+                         ID_values, jet_neEmEF_values, jet_chEmEF_values)) {
+            out.assign(pt_values.size(), -999.f);
+            return out;
+          }
+
+          // --- per-jet corrections ---
+          for (int i = 0; i < (int)pt_values.size(); ++i) {
+            const float eta = eta_values[i];
+            const float phi = phi_values[i];
+            const float area = area_values[i];
+
+            // Start from RAW
+            const float raw_pt = pt_values[i] * (1.f - rawFactor_values[i]);
+
+            float corr_pt = raw_pt;
+
+            // Only apply within validity, follow your previous convention
+            if (std::abs(eta) < 4.7f) {
+              // L1FastJet: (JetA, JetEta, JetPt, Rho)
+              const float cL1 = L1_eval->evaluate({area, eta, raw_pt, rho_value});
+              const float pt_L1 = raw_pt * cL1;
+
+              // L2Relative: (JetEta, JetPhi, JetPt)
+              float cL2 = 1.0f;
+              if (std::abs(phi) < 3.1416f)
+                  cL2 = L2_eval->evaluate({eta, phi, pt_L1});
+              const float pt_L2 = pt_L1 * cL2; // <-- MC-truth corrected pT (after L2Rel)
+
+              // L3Absolute: (JetEta, JetPt)
+              const float cL3 = L3_eval->evaluate({eta, pt_L2});
+              const float pt_L3 = pt_L2 * cL3;
+
+              // L2L3Residual: (run, JetEta, JetPt)
+              // IMPORTANT: JetPt input here must be AFTER L2Rel, and clipped as requested.
+              //const float pt_for_res = clipPtForResidualAfterL2Rel(pt_L2, eta);
+              float pt_for_res = pt_L2;
+              float cRes = 1.0f;
+              //24 run goldson file from 378981 to 386951
+              // and the HF special correction is only for 24
+              if( float(run_value) >= 378981.0 && float(run_value) <= 386951.0 )
+              {
+                  pt_for_res = clipPtForResidualAfterL2Rel(pt_L2, eta);
+                  // boundry in the input file of the 24
+                  if( float(run_value) >= 379412.0 && float(run_value) < 387121.0 ) 
+                      cRes = Res_eval->evaluate({float(run_value), eta, pt_for_res});
+              }
+              else cRes = Res_eval->evaluate({float(run_value), eta, pt_for_res});
+              corr_pt = pt_L3 * cRes;
+
+              Logger::get("JetEnergyScaleData")->debug(
+                  "data JEC split: i {} pt {} raw {} pt_L2 {} pt_for_res {} corr_pt {}",
+                  i, pt_values[i], raw_pt, pt_L2, pt_for_res, corr_pt);
+            }
+
+            out.push_back(corr_pt);
+          }
+
+          return out;
+        };
+
+    return df.Define(corrected_jet_pt, JetEnergyCorrectionLambda,
+                     {jet_pt, jet_eta, jet_phi, jet_area, jet_rawFactor,
+                      jet_ID, rho, jet_neEmEF, jet_chEmEF, run});
+  }
+
+  // =====================================================================
+  // No JEC: veto only, pass-through pT
+  // =====================================================================
+  auto JetVetoOnlyLambda =
+      [=](const ROOT::RVec<float> &pt_values,
+          const ROOT::RVec<float> &eta_values,
+          const ROOT::RVec<float> &phi_values,
+          const ROOT::RVec<float> & /*area_values*/,
+          const ROOT::RVec<float> & /*rawFactor_values*/,
+          const ROOT::RVec<UChar_t> &ID_values,
+          const ROOT::RVec<float> &jet_neEmEF_values,
+          const ROOT::RVec<float> &jet_chEmEF_values) {
+
+        ROOT::RVec<float> out;
+        out.reserve(pt_values.size());
+
+        if (hasJetVeto(pt_values, eta_values, phi_values,
+                       ID_values, jet_neEmEF_values, jet_chEmEF_values)) {
+          out.assign(pt_values.size(), -999.f);
+          return out;
+        }
+
+        out = pt_values;
+        return out;
+      };
+
+  return df.Define(corrected_jet_pt, JetVetoOnlyLambda,
+                   {jet_pt, jet_eta, jet_phi, jet_area, jet_rawFactor,
+                    jet_ID, jet_neEmEF, jet_chEmEF});
+}
+
+/// jet correction no additional modification of pt<30 GeV of |eta| in (2,2.5)region.
 ROOT::RDF::RNode
 JetPtCorrection_2022_v15_v2(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
                          const std::string &jet_pt, const std::string &jet_eta,
@@ -2370,14 +2764,16 @@ JetPtCorrection_2022_v15_v2(ROOT::RDF::RNode df, const std::string &corrected_je
     return (float)L1_eval->evaluate({area, eta, pt, rho});
   };
 
-  auto evalL2 = [L2_eval](float eta, float pt, float rho) -> float {
+  auto evalL2 = [L2_eval](float eta, float phi, float pt) -> float {
     if (std::abs(eta) >= 4.7f) return 1.0f;
+    if (std::abs(phi) >= 3.1416f) return 1.0f;
     // Most often {eta, pt}; sometimes {eta, pt, rho}
-    try {
-      return (float)L2_eval->evaluate({eta, pt});
-    } catch (const std::exception &) {
-      return (float)L2_eval->evaluate({eta, pt, rho});
-    }
+    //try {
+    //  return (float)L2_eval->evaluate({eta, pt});
+    //} catch (const std::exception &) {
+    //  return (float)L2_eval->evaluate({eta, pt, rho});
+    //}
+    return (float)L2_eval->evaluate({eta, phi, pt});
   };
 
   auto evalL3 = [L3_eval](float eta, float pt) -> float {
@@ -2456,27 +2852,29 @@ JetPtCorrection_2022_v15_v2(ROOT::RDF::RNode df, const std::string &corrected_je
           // ----------------------------------------------------------
           if (reapplyJES) {
             const float eta = eta_values.at(i);
+            const float phi = phi_values.at(i);
             const float raw_pt = pt_values.at(i) * (1.0f - rawFactor_values.at(i));
 
             // sequential nominal (use pt after previous step)
             const float c1 = evalL1(area_values.at(i), eta, raw_pt, rho_value);
             const float pt1 = raw_pt * c1;
 
-            const float c2 = evalL2(eta, pt1, rho_value);
+            //const float c2 = evalL2(eta, pt1, rho_value);
+            const float c2 = evalL2(eta, phi, pt1);
             const float pt2 = pt1 * c2;
 
             const float c3 = evalL3(eta, pt2);
             float pt3 = pt2 * c3; // "MC-truth corrected pT" (MC JEC result)
 
-            // --- MC-only freeze: if pt3 < 30 in 2.0<|eta|<2.5
-            if (inFreezeBand(eta) && pt3 < 30.0f) {
-              const float pt_eval = 30.0f;
-              const float c2_freeze = evalL2(eta, pt_eval, rho_value);
-              const float c3_freeze = evalL3(eta, pt_eval);
+            //// --- MC-only freeze: if pt3 < 30 in 2.0<|eta|<2.5
+            //if (inFreezeBand(eta) && pt3 < 30.0f) {
+            //  const float pt_eval = 30.0f;
+            //  const float c2_freeze = evalL2(eta, pt_eval, rho_value);
+            //  const float c3_freeze = evalL3(eta, pt_eval);
 
-              // keep L1 evaluated at raw_pt; replace L2/L3 by frozen values
-              pt3 = pt1 * c2_freeze * c3_freeze;
-            }
+            //  // keep L1 evaluated at raw_pt; replace L2/L3 by frozen values
+            //  pt3 = pt1 * c2_freeze * c3_freeze;
+            //}
 
             corr_pt = pt3;
           }
@@ -2525,7 +2923,7 @@ JetPtCorrection_2022_v15_v2(ROOT::RDF::RNode df, const std::string &corrected_je
             if (!jes_shift_sources.empty() && jes_shift_sources.at(0) != "HEMIssue") {
 
               float pt_unc_eval = pt_values_corrected.at(i);
-              if (inFreezeBand(eta_values.at(i))) pt_unc_eval = clamp30(pt_unc_eval);
+              //if (inFreezeBand(eta_values.at(i))) pt_unc_eval = clamp30(pt_unc_eval);
 
               if (JetEnergyScaleShifts.size() == 1) {
                 float sf = 1.0f;
