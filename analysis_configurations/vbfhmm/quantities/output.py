@@ -3,6 +3,7 @@ from code_generation.quantity import Quantity
 lumi = Quantity("lumi")
 puweight = Quantity("puweight")
 prefireweight = Quantity("prefiring_wgt")
+genWeight = Quantity("genWeight")
 
 base_taus_mask = Quantity("base_taus_mask")
 good_taus_mask = Quantity("good_taus_mask")

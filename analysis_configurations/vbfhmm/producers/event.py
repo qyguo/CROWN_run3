@@ -34,6 +34,14 @@ PrefireWeight = Producer(
     scopes=["global"],
 )
 
+GenWeight = Producer(
+    name="GenWeight",
+    call="basefunctions::rename<Float_t>({df}, {input}, {output})",
+    input=[nanoAOD.genWeight],
+    output=[q.genWeight],
+    scopes=["fsim"],
+)
+
 is_data = Producer(
     name="isData",
     input=[],

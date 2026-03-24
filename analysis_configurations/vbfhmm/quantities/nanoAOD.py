@@ -161,6 +161,7 @@ GenMET_pt = NanoAODQuantity("GenMET_pt")
 GenMET_phi = NanoAODQuantity("GenMET_phi")
 
 ## Embedding Quantities
+genTestWeight = NanoAODQuantity("Generator_weight") # TODO: use in fsim
 genWeight = NanoAODQuantity("Generator_weight") # TODO: use in fsim
 # genWeight = NanoAODQuantity("genWeight") # TODO: not in fsim
 TauEmbedding_initialMETEt = NanoAODQuantity("TauEmbedding_initialMETEt")
