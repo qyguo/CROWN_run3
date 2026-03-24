@@ -11,7 +11,7 @@ Muon_pTErr_1 = Producer(
     call="quantities::ptErr({df}, {output}, 0, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_ptErr],
     output=[q.mu1_fromH_ptErr],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 Muon_pTErr_2 = Producer(
@@ -19,7 +19,7 @@ Muon_pTErr_2 = Producer(
     call="quantities::ptErr({df}, {output}, 1, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_ptErr],
     output=[q.mu2_fromH_ptErr],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 Muon_bsConstrainedChi2_1 = Producer(
@@ -27,7 +27,7 @@ Muon_bsConstrainedChi2_1 = Producer(
     call="quantities::ptErr({df}, {output}, 0, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedChi2],
     output=[q.mu1_fromH_bsConstrainedChi2],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 Muon_bsConstrainedChi2_2 = Producer(
@@ -35,7 +35,7 @@ Muon_bsConstrainedChi2_2 = Producer(
     call="quantities::ptErr({df}, {output}, 1, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedChi2],
     output=[q.mu2_fromH_bsConstrainedChi2],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 Muon_bsConstrainedPt_1 = Producer(
@@ -43,7 +43,7 @@ Muon_bsConstrainedPt_1 = Producer(
     call="quantities::ptErr({df}, {output}, 0, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPt],
     output=[q.mu1_fromH_bsConstrainedPt],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 Muon_bsConstrainedPt_2 = Producer(
@@ -51,7 +51,7 @@ Muon_bsConstrainedPt_2 = Producer(
     call="quantities::ptErr({df}, {output}, 1, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPt],
     output=[q.mu2_fromH_bsConstrainedPt],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 Muon_bsConstrainedPtErr_1 = Producer(
@@ -59,7 +59,7 @@ Muon_bsConstrainedPtErr_1 = Producer(
     call="quantities::ptErr({df}, {output}, 0, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPtErr],
     output=[q.mu1_fromH_bsConstrainedPtErr],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 Muon_bsConstrainedPtErr_2 = Producer(
@@ -67,7 +67,7 @@ Muon_bsConstrainedPtErr_2 = Producer(
     call="quantities::ptErr({df}, {output}, 1, {input})",
     input=[q.dimuon_HiggsCand_collection, nanoAOD.Muon_bsConstrainedPtErr],
     output=[q.mu2_fromH_bsConstrainedPtErr],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 ###
@@ -76,14 +76,14 @@ MuonPtCut = Producer(
     call="physicsobject::CutPt({df}, {input}, {output}, {min_muon_pt})",
     input=[nanoAOD.Muon_pt],
     output=[],
-    scopes=["global","gghmm","vbfhmm"],
+    scopes=["global","gghmm","vbfhmm","fsim"],
 )
 MuonEtaCut = Producer(
     name="MuonEtaCut",
     call="physicsobject::CutEta({df}, {input}, {output}, {max_muon_eta})",
     input=[nanoAOD.Muon_eta],
     output=[],
-    scopes=["global","gghmm","vbfhmm"],
+    scopes=["global","gghmm","vbfhmm","fsim"],
 )
 MuonDxyCut = Producer(
     name="MuonDxyCut",
@@ -120,7 +120,7 @@ MuonIDCut = Producer(
     #input=[nanoAOD.Muon_mediumId],
     input=[],
     output=[],
-    scopes=["global","gghmm","vbfhmm"],
+    scopes=["global","gghmm","vbfhmm","fsim"],
 )
 MuonIsoCut = Producer(
     name="MuonIsoCut",
@@ -128,14 +128,14 @@ MuonIsoCut = Producer(
     input=[nanoAOD.Muon_pfRelIso04_all], # vh
     #input=[nanoAOD.Muon_miniPFRelIso_all],
     output=[],
-    scopes=["global","gghmm","vbfhmm"],
+    scopes=["global","gghmm","vbfhmm","fsim"],
 )
 BaseMuons = ProducerGroup(
     name="BaseMuons",
     call="physicsobject::CombineMasks({df}, {output}, {input})",
     input=[],
     output=[q.base_muons_mask],
-    scopes=["global","vbfhmm","gghmm"],
+    scopes=["global","vbfhmm","gghmm","fsim"],
     subproducers=[
         MuonPtCut,
         MuonEtaCut,
@@ -161,14 +161,14 @@ GoodMuonPtCut = Producer(
     call="physicsobject::CutPt({df}, {input}, {output}, {min_muon_pt})",
     input=[nanoAOD.Muon_pt],
     output=[],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 GoodMuonEtaCut = Producer(
     name="GoodMuonEtaCut",
     call="physicsobject::CutEta({df}, {input}, {output}, {max_muon_eta})",
     input=[nanoAOD.Muon_eta],
     output=[],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 GoodMuonIDCut = Producer(
     name="GoodMuonIDCut",
@@ -176,7 +176,7 @@ GoodMuonIDCut = Producer(
     #input=[nanoAOD.Muon_mediumId],
     input=[],
     output=[],
-    scopes=["global","gghmm","vbfhmm"],
+    scopes=["global","gghmm","vbfhmm","fsim"],
 )
 ###
 GoodMuonIsoCut = Producer(
@@ -186,14 +186,14 @@ GoodMuonIsoCut = Producer(
     input=[nanoAOD.Muon_pfRelIso04_all],
     #input=[nanoAOD.Muon_miniPFRelIso_all],
     output=[],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 GoodMuons = ProducerGroup(
     name="GoodMuons",
     call="physicsobject::CombineMasks({df}, {output}, {input})",
     input=[q.base_muons_mask],
     output=[q.good_muons_mask], # vh these are the final selection muons' mask
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
     subproducers=[
         GoodMuonPtCut,
         GoodMuonEtaCut,
@@ -207,7 +207,7 @@ NumberOfGoodMuons = Producer(
     call="quantities::NumberOfGoodObjects({df}, {output}, {input})",
     input=[q.good_muons_mask],
     output=[q.nmuons],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 VetoMuons = Producer(
     name="VetoMuons",
@@ -285,7 +285,7 @@ MuonCollection = Producer(
     call="jet::OrderJetsByPt({df}, {output}, {input})",
     input=[nanoAOD.Muon_pt, q.good_muons_mask],
     output=[q.good_muon_collection],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 LVMu1 = Producer(
     name="LVMu1",
@@ -298,7 +298,7 @@ LVMu1 = Producer(
         nanoAOD.Muon_mass,
     ],
     output=[q.muon_p4_1],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm"],
 )
 LVMu2 = Producer(
     name="LVMu2",
@@ -311,7 +311,7 @@ LVMu2 = Producer(
         nanoAOD.Muon_mass,
     ],
     output=[q.muon_p4_2],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm"],
 )
 LVMu3 = Producer(
     name="LVMu3",
@@ -352,7 +352,7 @@ Mu1_H = Producer(
         nanoAOD.Muon_mass,
     ],
     output=[q.muon_leadingp4_H],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","nnmm","fjmm"],
 )
 ##### The sub leading muon form Higgs
 Mu2_H = Producer(
@@ -366,7 +366,7 @@ Mu2_H = Producer(
         nanoAOD.Muon_mass,
     ],
     output=[q.muon_subleadingp4_H],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","nnmm","fjmm"],
 )
 ##### The leading muon from Higgs in 4m channel
 Mu1_H_4m = Producer(

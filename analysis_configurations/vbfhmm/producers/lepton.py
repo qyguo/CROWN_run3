@@ -38,7 +38,7 @@ LeptonChargeSumVeto = Producer(
     input=[nanoAOD.Muon_charge,  # only in m2m and 4m can input only muon charge
            q.good_muon_collection],
     output=[q.Flag_LeptonChargeSumVeto],   # 1 stands pm1, 2 stands 0, 0 stands others
-    scopes=["global","gghmm","vbfhmm","m2m","mmmm","nnmm","fjmm","nnmm_dycontrol"],
+    scopes=["global","gghmm","fsim","vbfhmm","m2m","mmmm","nnmm","fjmm","nnmm_dycontrol"],
 )
 LeptonChargeSumVeto_elemu = Producer(
     name="LeptonChargeSumVeto_elemu",

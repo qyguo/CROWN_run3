@@ -56,6 +56,22 @@ GenerateSingleMuonTriggerFlagsForDiMuChannel_2022 = ExtendedVectorProducer(
     scope=["gghmm","vbfhmm","e2m","eemm","nnmm","fjmm"],
     vec_config="singlemuon_trigger",
 )
+ 
+GenerateSingleMuonTriggerFlagsForDiMuChannelFSIM = ExtendedVectorProducer(
+    name="GenerateSingleMuonTriggerFlagsForDiMuChannelFSIM",
+    call='trigger::GenerateDoubleTriggerFlagFromEfficiency({df}, {output}, {input}, "{eff_json}", "{eff_name}", {ptcut}, {ptcut}, {etacut}, {etacut})',
+    input=[
+        nanoAOD.run,
+        nanoAOD.luminosityBlock,
+        nanoAOD.event,
+        q.muon_p4_1,
+        q.muon_p4_2,
+    ],
+    output="flagname",
+    scope=["fsim"],
+    vec_config="singlemuon_trigger_eff",
+)
+
 GenerateSingleMuonTriggerFlagsForQuadMuChannel = ExtendedVectorProducer(
     name="GenerateSingleMuonTriggerFlagsForQuadMuChannel",
     call='trigger::GenerateQuadTriggerORFlag({df}, {output}, {input}, "{hlt_path}", {ptcut}, {ptcut}, {ptcut}, {ptcut}, {etacut}, {etacut}, {etacut}, {etacut}, {trigger_particle_id}, {trigger_particle_id}, {trigger_particle_id}, {trigger_particle_id}, {filterbit}, {filterbit}, {filterbit}, {filterbit}, {max_deltaR_triggermatch} )',

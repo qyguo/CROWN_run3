@@ -100,14 +100,16 @@ Jet_QGdiscriminator = NanoAODQuantity("Jet_btagDeepFlavQG")
 Jet_qgl = NanoAODQuantity("Jet_qgl") # Quark vs Gluon likelihood discriminator  
 nSoftJet5 = NanoAODQuantity("SoftActivityJetNjets5")
 #SoftActivityJetNjets5 = NanoAODQuantity("SoftActivityJetNjets5")
-nGenJet = NanoAODQuantity("nGenJet")
+
+fold = NanoAODQuantity("fold") # TODO: only in fsim
+# nGenJet = NanoAODQuantity("nGenJet") # TODO: not in fsim
+
 GenJet_pt = NanoAODQuantity("GenJet_pt")
 GenJet_eta = NanoAODQuantity("GenJet_eta")
 GenJet_phi = NanoAODQuantity("GenJet_phi")
 GenJet_mass = NanoAODQuantity("GenJet_mass")
 
 Pileup_nTrueInt = NanoAODQuantity("Pileup_nTrueInt")
-#rho = NanoAODQuantity("Pileup_pudensity")
 rho = NanoAODQuantity("Rho_fixedGridRhoFastjetAll")
 
 GenParticle_eta = NanoAODQuantity("GenPart_eta")
@@ -159,7 +161,8 @@ GenMET_pt = NanoAODQuantity("GenMET_pt")
 GenMET_phi = NanoAODQuantity("GenMET_phi")
 
 ## Embedding Quantities
-genWeight = NanoAODQuantity("genWeight")
+genWeight = NanoAODQuantity("Generator_weight") # TODO: use in fsim
+# genWeight = NanoAODQuantity("genWeight") # TODO: not in fsim
 TauEmbedding_initialMETEt = NanoAODQuantity("TauEmbedding_initialMETEt")
 TauEmbedding_initialMETphi = NanoAODQuantity("TauEmbedding_initialMETphi")
 TauEmbedding_initialPuppiMETEt = NanoAODQuantity("TauEmbedding_initialPuppiMETEt")

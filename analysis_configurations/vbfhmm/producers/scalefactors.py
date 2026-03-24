@@ -72,28 +72,28 @@ Muon_1_ID_SF = Producer(
     call='scalefactor::muon::id({df}, {input}, "{muon_sf_year_id}", "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_id_sf_name}")',
     input=[q.mu1_fromH_pt, q.mu1_fromH_eta],
     output=[q.id_wgt_mu_1],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Muon_1_Iso_SF = Producer(
     name="MuonIso_SF",
     call='scalefactor::muon::iso({df}, {input}, "{muon_sf_year_id}", "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_iso_sf_name}")',
     input=[q.mu1_fromH_pt, q.mu1_fromH_eta],
     output=[q.iso_wgt_mu_1],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Muon_2_ID_SF = Producer(
     name="MuonID_SF",
     call='scalefactor::muon::id({df}, {input}, "{muon_sf_year_id}", "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_id_sf_name}")',
     input=[q.mu2_fromH_pt, q.mu2_fromH_eta],
     output=[q.id_wgt_mu_2],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Muon_2_Iso_SF = Producer(
     name="MuonIso_SF",
     call='scalefactor::muon::iso({df}, {input}, "{muon_sf_year_id}", "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_iso_sf_name}")',
     input=[q.mu2_fromH_pt, q.mu2_fromH_eta],
     output=[q.iso_wgt_mu_2],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 MuonIDIso_SF_vbfhmm = ProducerGroup(
@@ -101,8 +101,14 @@ MuonIDIso_SF_vbfhmm = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers={
+        "fsim": [
+            Muon_1_ID_SF,
+            Muon_1_Iso_SF,
+            Muon_2_ID_SF,
+            Muon_2_Iso_SF,
+        ],
         "vbfhmm": [
             Muon_1_ID_SF,
             Muon_1_Iso_SF,
@@ -118,28 +124,28 @@ Muon_1_ID_SF_noYear = Producer(
     call='scalefactor::muon::id({df}, {input}, "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_id_sf_name}")',
     input=[q.mu1_fromH_pt, q.mu1_fromH_eta],
     output=[q.id_wgt_mu_1],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Muon_1_Iso_SF_noYear = Producer(
     name="MuonIso_SF_noYear",
     call='scalefactor::muon::iso({df}, {input}, "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_iso_sf_name}")',
     input=[q.mu1_fromH_pt, q.mu1_fromH_eta],
     output=[q.iso_wgt_mu_1],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Muon_2_ID_SF_noYear = Producer(
     name="MuonID_SF_noYear",
     call='scalefactor::muon::id({df}, {input}, "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_id_sf_name}")',
     input=[q.mu2_fromH_pt, q.mu2_fromH_eta],
     output=[q.id_wgt_mu_2],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Muon_2_Iso_SF_noYear = Producer(
     name="MuonIso_SF_noYear",
     call='scalefactor::muon::iso({df}, {input}, "{muon_sf_varation}", {output}, "{muon_sf_file}", "{muon_iso_sf_name}")',
     input=[q.mu2_fromH_pt, q.mu2_fromH_eta],
     output=[q.iso_wgt_mu_2],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 MuonIDIso_SF_vbfhmm_noYear = ProducerGroup(
@@ -147,8 +153,14 @@ MuonIDIso_SF_vbfhmm_noYear = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers={
+        "fsim": [
+            Muon_1_ID_SF_noYear,
+            Muon_1_Iso_SF_noYear,
+            Muon_2_ID_SF_noYear,
+            Muon_2_Iso_SF_noYear,
+        ],
         "vbfhmm": [
             Muon_1_ID_SF_noYear,
             Muon_1_Iso_SF_noYear,
@@ -399,5 +411,5 @@ btagging_SF = Producer(
         q.jet_overlap_veto_mask,
     ],
     output=[q.btag_weight],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )

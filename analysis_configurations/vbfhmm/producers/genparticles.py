@@ -15,7 +15,7 @@ dimuon_gen_collection = Producer(
         q.dimuon_HiggsCand_collection,
     ],
     output=[q.dimuon_gen_collection],
-    scopes=["nnmm","vbfhmm"],
+    scopes=["nnmm","vbfhmm","fsim"],
 )
 genMu1_H = Producer(
     name="genMu1_H",
@@ -28,7 +28,7 @@ genMu1_H = Producer(
         nanoAOD.GenParticle_mass,
     ],
     output=[q.genmuon_leadingp4_H],
-    scopes=["e2m","m2m", "eemm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m", "eemm","nnmm","vbfhmm","fsim"],
 )
 genMu2_H = Producer(
     name="genMu2_H",
@@ -41,7 +41,7 @@ genMu2_H = Producer(
         nanoAOD.GenParticle_mass,
     ],
     output=[q.genmuon_subleadingp4_H],
-    scopes=["e2m","m2m", "eemm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m", "eemm","nnmm","vbfhmm","fsim"],
 )
 # check W or Z boson Truth decay mode in nnmm
 BosonDecayMode = Producer(
@@ -53,7 +53,7 @@ BosonDecayMode = Producer(
         nanoAOD.GenParticle_statusFlags,
     ],
     output=[q.BosonDecayMode],
-    scopes=["gghmm","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","mmmm","nnmm","fjmm"],
 )
 
 MMGenPair = Producer(

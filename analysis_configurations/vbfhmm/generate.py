@@ -12,6 +12,7 @@ def run(args):
         "data",
         "vhmm", # vh
         "gghmm",
+        "fsim",
         "vbfhmm",
         "zjjew",
         "triboson",
@@ -23,7 +24,7 @@ def run(args):
     ]
     #available_eras = ["2016preVFP","2016postVFP","2017","2018","2022","2022EE","2023","2023BPix"]
     available_eras = ["AAAA","2016preVFP","2016postVFP","2017","2018","2022","2022EE","2023","2023BPix","2024", "2025"]
-    available_scopes = ["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"]
+    available_scopes = ["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"]
 
     ## setup variables
     shifts = set([shift.lower() for shift in args.shifts])

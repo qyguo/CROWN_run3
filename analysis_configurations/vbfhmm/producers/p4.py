@@ -15,7 +15,7 @@ mu1_fromH_pt = Producer(
       q.muon_leadingp4_H,
     ],
     output=[q.mu1_fromH_pt],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 mu1_fromH_eta = Producer(
     name="mu1_fromH_eta",
@@ -24,7 +24,7 @@ mu1_fromH_eta = Producer(
       q.muon_leadingp4_H,
     ],
     output=[q.mu1_fromH_eta],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 mu1_fromH_phi = Producer(
     name="mu1_fromH_phi",
@@ -33,7 +33,7 @@ mu1_fromH_phi = Producer(
       q.muon_leadingp4_H,
     ],
     output=[q.mu1_fromH_phi],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 # mu1_fromH_mass = Producer(
 #     name="mu1_fromH_mass",
@@ -54,7 +54,7 @@ mu2_fromH_pt = Producer(
       q.muon_subleadingp4_H,
     ],
     output=[q.mu2_fromH_pt],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 mu2_fromH_eta = Producer(
     name="mu2_fromH_eta",
@@ -63,7 +63,7 @@ mu2_fromH_eta = Producer(
       q.muon_subleadingp4_H,
     ],
     output=[q.mu2_fromH_eta],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 mu2_fromH_phi = Producer(
     name="mu2_fromH_phi",
@@ -72,7 +72,7 @@ mu2_fromH_phi = Producer(
       q.muon_subleadingp4_H,
     ],
     output=[q.mu2_fromH_phi],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 # mu2_fromH_mass = Producer(
 #     name="mu2_fromH_mass",
@@ -93,7 +93,7 @@ H_pt = Producer(
       q.dimuon_p4_Higgs,
     ],
     output=[q.H_pt],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 H_eta = Producer(
     name="H_eta",
@@ -102,7 +102,7 @@ H_eta = Producer(
       q.dimuon_p4_Higgs,
     ],
     output=[q.H_eta],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 H_phi = Producer(
     name="H_phi",
@@ -111,7 +111,7 @@ H_phi = Producer(
       q.dimuon_p4_Higgs,
     ],
     output=[q.H_phi],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 H_mass = Producer(
     name="H_mass",
@@ -120,7 +120,7 @@ H_mass = Producer(
       q.dimuon_p4_Higgs,
     ],
     output=[q.H_mass],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 
 ##### for met pt and phi
@@ -132,7 +132,7 @@ met_pt = Producer(
       q.met_p4,
     ],
     output=[q.met_pt],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 met_phi = Producer(
     name="met_phi",
@@ -141,7 +141,7 @@ met_phi = Producer(
       q.met_p4,
     ],
     output=[q.met_phi],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 #pfmet_pt = Producer(
 #    name="pfmet_pt",
@@ -171,7 +171,7 @@ genmet_pt = Producer(
       q.genmet_p4,
     ],
     output=[q.genmet_pt],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 genmet_phi = Producer(
     name="genmet_phi",
@@ -180,7 +180,7 @@ genmet_phi = Producer(
       q.genmet_p4,
     ],
     output=[q.genmet_phi],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 
 ##### for extra lepton
@@ -424,7 +424,7 @@ genmu1_fromH_pt = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_pt],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 genmu1_fromH_eta = Producer(
     name="genmu1_fromH_eta",
@@ -433,7 +433,7 @@ genmu1_fromH_eta = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_eta],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 genmu1_fromH_phi = Producer(
     name="genmu1_fromH_phi",
@@ -442,7 +442,7 @@ genmu1_fromH_phi = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_phi],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 genmu1_fromH_mass = Producer(
     name="genmu1_fromH_mass",
@@ -451,7 +451,7 @@ genmu1_fromH_mass = Producer(
       q.genmuon_leadingp4_H,
     ],
     output=[q.genmu1_fromH_mass],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 
 genmu2_fromH_pt = Producer(
@@ -461,7 +461,7 @@ genmu2_fromH_pt = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_pt],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 genmu2_fromH_eta = Producer(
     name="genmu2_fromH_eta",
@@ -470,7 +470,7 @@ genmu2_fromH_eta = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_eta],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 genmu2_fromH_phi = Producer(
     name="genmu2_fromH_phi",
@@ -479,7 +479,7 @@ genmu2_fromH_phi = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_phi],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 genmu2_fromH_mass = Producer(
     name="genmu2_fromH_mass",
@@ -488,7 +488,7 @@ genmu2_fromH_mass = Producer(
       q.genmuon_subleadingp4_H,
     ],
     output=[q.genmu2_fromH_mass],
-    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm"],
+    scopes=["e2m","m2m","eemm","mmmm","nnmm","vbfhmm","fsim"],
 )
 ## for fatjet + mm channel
 fatjet_pt = Producer(
@@ -537,7 +537,7 @@ jet1_pt = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_pt],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 jet1_eta = Producer(
     name="jet1_eta",
@@ -546,7 +546,7 @@ jet1_eta = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_eta],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 jet1_phi = Producer(
     name="jet1_phi",
@@ -555,7 +555,7 @@ jet1_phi = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_phi],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 jet1_mass = Producer(
     name="jet1_mass",
@@ -564,7 +564,7 @@ jet1_mass = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_mass],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 jet2_pt = Producer(
@@ -574,7 +574,7 @@ jet2_pt = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_pt],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 jet2_eta = Producer(
     name="jet2_eta",
@@ -583,7 +583,7 @@ jet2_eta = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_eta],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 jet2_phi = Producer(
     name="jet2_phi",
@@ -592,7 +592,7 @@ jet2_phi = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_phi],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 jet2_mass = Producer(
     name="jet2_mass",
@@ -601,5 +601,5 @@ jet2_mass = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_mass],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )

@@ -82,6 +82,36 @@ ROOT::RDF::RNode GenerateQuadTriggerORFlag(
 
 /////###
 
+ROOT::RDF::RNode GenerateDoubleTriggerFlagFromEfficiency(
+    ROOT::RDF::RNode df, const std::string &triggerflag_name,
+    const std::string &run_column, const std::string &luminosityBlock_column,
+    const std::string &event_column, const std::string &particle1_p4,
+    const std::string &particle2_p4, const std::string &eff_json,
+    const std::string &eff_correction, const float &p1_pt_cut,
+    const float &p2_pt_cut, const float &p1_eta_cut, const float &p2_eta_cut);
+
+ROOT::RDF::RNode GenerateTripleTriggerFlagFromEfficiency(
+    ROOT::RDF::RNode df, const std::string &triggerflag_name,
+    const std::string &run_column, const std::string &luminosityBlock_column,
+    const std::string &event_column, const std::string &particle1_p4,
+    const std::string &particle2_p4, const std::string &particle3_p4,
+    const std::string &eff_json, const std::string &eff_correction,
+    const float &p1_pt_cut, const float &p2_pt_cut, const float &p3_pt_cut,
+    const float &p1_eta_cut, const float &p2_eta_cut, const float &p3_eta_cut);
+
+ROOT::RDF::RNode GenerateQuadTriggerFlagFromEfficiency(
+    ROOT::RDF::RNode df, const std::string &triggerflag_name,
+    const std::string &run_column, const std::string &luminosityBlock_column,
+    const std::string &event_column, const std::string &particle1_p4,
+    const std::string &particle2_p4, const std::string &particle3_p4,
+    const std::string &particle4_p4, const std::string &eff_json,
+    const std::string &eff_correction, const float &p1_pt_cut,
+    const float &p2_pt_cut, const float &p3_pt_cut, const float &p4_pt_cut,
+    const float &p1_eta_cut, const float &p2_eta_cut, const float &p3_eta_cut,
+    const float &p4_eta_cut);
+
+/////###
+
 ROOT::RDF::RNode MatchSingleTriggerObject(
     ROOT::RDF::RNode df, const std::string &triggerflag_name,
     const std::string &particle_p4, const std::string &triggerobject_bits,

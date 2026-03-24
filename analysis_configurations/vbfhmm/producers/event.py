@@ -270,7 +270,7 @@ ApplyRoccoRData_1 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_rc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRData_2 = Producer(
@@ -286,7 +286,7 @@ ApplyRoccoRData_2 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_rc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRData = ProducerGroup(
@@ -296,8 +296,9 @@ ApplyRoccoRData = ProducerGroup(
     output=None,
     #scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
     #scopes=["vbfhmm","mm","mmet"],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers= {
+        "fsim": [ApplyRoccoRData_1, ApplyRoccoRData_2],
         "vbfhmm": [ApplyRoccoRData_1, ApplyRoccoRData_2],
         #"mm": [ApplyRoccoRData_1, ApplyRoccoRData_2],
         #"mmet": [ApplyRoccoRData_1],
@@ -318,7 +319,7 @@ ApplyRoccoRData_BSC_1 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_rc_bsc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRData_BSC_2 = Producer(
@@ -335,7 +336,7 @@ ApplyRoccoRData_BSC_2 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_rc_bsc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRData_BSC = ProducerGroup(
@@ -345,8 +346,9 @@ ApplyRoccoRData_BSC = ProducerGroup(
     output=None,
     #scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
     #scopes=["vbfhmm","mm","mmet"],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers= {
+        "fsim": [ApplyRoccoRData_BSC_1, ApplyRoccoRData_BSC_2],
         "vbfhmm": [ApplyRoccoRData_BSC_1, ApplyRoccoRData_BSC_2],
     }
 )
@@ -359,7 +361,7 @@ MuonRoccoRRndm = Producer(
         q.dimuon_HiggsCand_collection,
     ],
     output=[q.rndms],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 
@@ -379,7 +381,7 @@ ApplyRoccoRMC_1 = Producer(
         q.rndms,
     ],
     output=[q.pt_rc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRMC_2 = Producer(
@@ -398,7 +400,7 @@ ApplyRoccoRMC_2 = Producer(
         q.rndms,
     ],
     output=[q.pt_rc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRMC = ProducerGroup(
@@ -408,8 +410,9 @@ ApplyRoccoRMC = ProducerGroup(
     output=None,
     #scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
     #scopes=["vbfhmm","mm","mmet"],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers= {
+        "fsim": [MuonRoccoRRndm, ApplyRoccoRMC_1, ApplyRoccoRMC_2],
         "vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_1, ApplyRoccoRMC_2],
     }
 )
@@ -429,7 +432,7 @@ ApplyRoccoRMC_2022_1 = Producer(
         q.rndms,
     ],
     output=[q.pt_rc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRMC_2022_2 = Producer(
@@ -447,7 +450,7 @@ ApplyRoccoRMC_2022_2 = Producer(
         q.rndms,
     ],
     output=[q.pt_rc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRMC_2022 = ProducerGroup(
@@ -455,8 +458,9 @@ ApplyRoccoRMC_2022 = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers= {
+        "fsim": [MuonRoccoRRndm, ApplyRoccoRMC_2022_1, ApplyRoccoRMC_2022_2],
         "vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_2022_1, ApplyRoccoRMC_2022_2],
     }
 )
@@ -478,7 +482,7 @@ ApplyRoccoRMC_BSC_2022_1 = Producer(
         q.rndms,
     ],
     output=[q.pt_rc_bsc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRMC_BSC_2022_2 = Producer(
@@ -497,7 +501,7 @@ ApplyRoccoRMC_BSC_2022_2 = Producer(
         q.rndms,
     ],
     output=[q.pt_rc_bsc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 ApplyRoccoRMC_BSC_2022 = ProducerGroup(
@@ -505,10 +509,11 @@ ApplyRoccoRMC_BSC_2022 = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers= {
         #"vbfhmm": [MuonRoccoRRndm, ApplyRoccoRMC_BSC_2022_1, ApplyRoccoRMC_BSC_2022_2],
         "vbfhmm": [ApplyRoccoRMC_BSC_2022_1, ApplyRoccoRMC_BSC_2022_2],
+        "fsim": [ApplyRoccoRMC_BSC_2022_1, ApplyRoccoRMC_BSC_2022_2],
     }
 )
 ###ahhh
@@ -528,7 +533,7 @@ applyMuonScaReData_BSC_1 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_kit_bsc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReData_BSC_2 = Producer(
@@ -543,7 +548,7 @@ applyMuonScaReData_BSC_2 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_kit_bsc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReData_BSC = ProducerGroup(
@@ -551,10 +556,11 @@ applyMuonScaReData_BSC = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
     subproducers= {
         "global": [applyMuonScaReData_BSC_1, applyMuonScaReData_BSC_2],
         "vbfhmm": [applyMuonScaReData_BSC_1, applyMuonScaReData_BSC_2],
+        "fsim": [applyMuonScaReData_BSC_1, applyMuonScaReData_BSC_2],
     }
 )
 
@@ -571,7 +577,7 @@ applyMuonScaReMC_BSC_1 = Producer(
         nanoAOD.Muon_nTrackerLayers,
     ],
     output=[q.pt_kit_bsc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReMC_BSC_2 = Producer(
@@ -587,7 +593,7 @@ applyMuonScaReMC_BSC_2 = Producer(
         nanoAOD.Muon_nTrackerLayers,
     ],
     output=[q.pt_kit_bsc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReMC_BSC = ProducerGroup(
@@ -595,8 +601,9 @@ applyMuonScaReMC_BSC = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
     subproducers= {
+        "fsim": [applyMuonScaReMC_BSC_1, applyMuonScaReMC_BSC_2],
         "vbfhmm": [applyMuonScaReMC_BSC_1, applyMuonScaReMC_BSC_2],
         "global": [applyMuonScaReMC_BSC_1, applyMuonScaReMC_BSC_2],
     }
@@ -616,7 +623,7 @@ applyMuonScaReData_Err_BSC_1 = Producer(
         nanoAOD.Muon_charge,
     ],
     output=[q.ptErr_kit_bsc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReData_Err_BSC_2 = Producer(
@@ -632,7 +639,7 @@ applyMuonScaReData_Err_BSC_2 = Producer(
         nanoAOD.Muon_charge,
     ],
     output=[q.ptErr_kit_bsc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReData_Err_BSC = ProducerGroup(
@@ -640,10 +647,11 @@ applyMuonScaReData_Err_BSC = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
     subproducers= {
         "vbfhmm": [applyMuonScaReData_Err_BSC_1, applyMuonScaReData_Err_BSC_2],
         "global": [applyMuonScaReData_Err_BSC_1, applyMuonScaReData_Err_BSC_2],
+        "fsim": [applyMuonScaReData_Err_BSC_1, applyMuonScaReData_Err_BSC_2],
     }
 )
 
@@ -661,7 +669,7 @@ applyMuonScaReMC_Err_BSC_1 = Producer(
         nanoAOD.Muon_nTrackerLayers,
     ],
     output=[q.ptErr_kit_bsc_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReMC_Err_BSC_2 = Producer(
@@ -678,7 +686,7 @@ applyMuonScaReMC_Err_BSC_2 = Producer(
         nanoAOD.Muon_nTrackerLayers,
     ],
     output=[q.ptErr_kit_bsc_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReMC_Err_BSC = ProducerGroup(
@@ -686,10 +694,11 @@ applyMuonScaReMC_Err_BSC = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
     subproducers= {
         "vbfhmm": [applyMuonScaReMC_Err_BSC_1, applyMuonScaReMC_Err_BSC_2],
         "global": [applyMuonScaReMC_Err_BSC_1, applyMuonScaReMC_Err_BSC_2],
+        "fsim": [applyMuonScaReMC_Err_BSC_1, applyMuonScaReMC_Err_BSC_2],
     }
 )
 #run 3 muon scale and resolution correction for origin
@@ -705,7 +714,7 @@ applyMuonScaReData_1 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_kit_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReData_2 = Producer(
@@ -720,7 +729,7 @@ applyMuonScaReData_2 = Producer(
         nanoAOD.Muon_phi,
     ],
     output=[q.pt_kit_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReData = ProducerGroup(
@@ -728,10 +737,12 @@ applyMuonScaReData = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
     subproducers= {
         "vbfhmm": [applyMuonScaReData_1, applyMuonScaReData_2],
         "global": [applyMuonScaReData_1, applyMuonScaReData_2],
+        "fsim": [applyMuonScaReData_1, applyMuonScaReData_2],
+
     }
 )
 
@@ -748,7 +759,7 @@ applyMuonScaReMC_1 = Producer(
         nanoAOD.Muon_nTrackerLayers,
     ],
     output=[q.pt_kit_1],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReMC_2 = Producer(
@@ -764,7 +775,7 @@ applyMuonScaReMC_2 = Producer(
         nanoAOD.Muon_nTrackerLayers,
     ],
     output=[q.pt_kit_2],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 
 applyMuonScaReMC = ProducerGroup(
@@ -772,10 +783,11 @@ applyMuonScaReMC = ProducerGroup(
     call=None,
     input=None,
     output=None,
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
     subproducers= {
         "vbfhmm": [applyMuonScaReMC_1, applyMuonScaReMC_2],
         "global": [applyMuonScaReMC_1, applyMuonScaReMC_2],
+        "fsim": [applyMuonScaReMC_1, applyMuonScaReMC_2],
     }
 )
 ####KIT correction
@@ -835,14 +847,14 @@ VetoVHMuon = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {vetoVH_max_nmuons}, "<=", "Veto VH <= 2 muons")',
     input=[q.nmuons],
     output=None,
-    scopes=["gghmm","vbfhmm"],
+    scopes=["gghmm","vbfhmm","fsim"],
 )
 VetoVHElectron = Producer(
     name="VetoVHElectron",
     call='basefunctions::FilterThreshold({df}, {input}, {vetoVH_max_nelectrons}, "<=", "Veto VH <= 0 electrons")',
     input=[q.nelectrons],
     output=None,
-    scopes=["gghmm","vbfhmm"],
+    scopes=["gghmm","vbfhmm","fsim"],
 )
 
 # write by botao
@@ -928,7 +940,7 @@ FilterNMuons = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {vbf_nmuons}, "==", "Number of muons 2")',
     input=[q.nmuons],
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 FilterNMuons_OverE2 = Producer(
@@ -936,7 +948,7 @@ FilterNMuons_OverE2 = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {vbf_nmuons}, ">=", "Number of muons 2")',
     input=[q.nmuons],
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 LeadMuonPtCut = Producer(
@@ -944,7 +956,7 @@ LeadMuonPtCut = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {lead_muon_pt}, ">", "lead muon pt > 26 GeV")',
     input=[q.mu1_fromH_pt],
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 LeadJetPtCut = Producer(
@@ -952,7 +964,7 @@ LeadJetPtCut = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {lead_jet_pt}, ">", "lead jet pt > 35 GeV")',
     input=[q.jet1_pt],
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 SubleadJetPtCut = Producer(
@@ -960,7 +972,7 @@ SubleadJetPtCut = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {sublead_jet_pt}, ">", "sublead jet pt > 25 GeV")',
     input=[q.jet2_pt],
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 DiJetMassCut = Producer(
@@ -968,7 +980,7 @@ DiJetMassCut = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {dijet_mass}, ">", "dijet mass > 400 GeV")',
     input=[q.dijet_mass],
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 DiJetEtaCut = Producer(
@@ -976,7 +988,7 @@ DiJetEtaCut = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {dijet_eta}, ">", "dijet delta eta > 2.5")',
     input=[q.dijet_eta],
     output=None,
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 DielectronMinMassCut = Producer(
@@ -992,7 +1004,7 @@ Flag_DiMuonFromHiggs = Producer(
     call='physicsobject::DiMuonFromHiggs({df}, {output}, {input})',
     input=[q.dimuon_HiggsCand_collection],
     output=[q.Flag_DiMuonFromHiggs],
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 ### need a collection that di_ele after cut
 Flag_DiEleFromZ = Producer(
@@ -1012,7 +1024,7 @@ HiggsToDiMuonPair_p4 = Producer(
            nanoAOD.Muon_mass,
            q.dimuon_HiggsCand_collection],
     output=[q.dimuon_p4_Higgs],
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 HiggsToDiMuonPair_p4_4m = Producer(
     name="HiggsToDiMuonPair_p4_4m",
@@ -1057,7 +1069,7 @@ DiMuonMassFromZVeto = Producer(
            nanoAOD.Muon_charge,
            q.good_muon_collection],
     output=[q.Flag_dimuon_Zmass_veto], # 1 stands for noZmass, 0 stands for has dimuon from Zmass
-    scopes=["global","vbfhmm","gghmm","m2m","eemm","mmmm"],
+    scopes=["global","fsim","vbfhmm","gghmm","m2m","eemm","mmmm"],
 )
 Mask_DiMuonPair = Producer(
     name="Mask_DiMuonPair",
@@ -1069,7 +1081,7 @@ Mask_DiMuonPair = Producer(
            nanoAOD.Muon_charge,
            q.good_muon_collection],
     output=[q.dimuon_HiggsCand_collection], # index about the two selected muons may from Higgs
-    scopes=["global","gghmm","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+    scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
 Mask_DiElectronPair = Producer(
     name="Mask_DiElectronPair",
@@ -1121,7 +1133,7 @@ mumuH_dR = Producer(
       q.muon_subleadingp4_H,
     ],
     output=[q.mumuH_dR],
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 ### e2m channel 
 muSSwithElectronW_p4 = Producer(
@@ -1350,14 +1362,14 @@ FilterFlagDiMuFromH = Producer(
     call='basefunctions::FilterThreshold({df}, {input}, {flag_DiMuonFromHiggs}, "==", "DiMuon From Higgs")',
     input=[q.Flag_DiMuonFromHiggs],
     output=None,
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm"],
 )
 FilterFlagLepChargeSum = Producer(
     name="FilterFlagLepChargeSum",
     call='basefunctions::FilterThreshold({df}, {input}, {flag_LeptonChargeSumVeto}, "==", "LeptonChargeSum")',
     input=[q.Flag_LeptonChargeSumVeto],
     output=None,
-    scopes=["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"],
 )
 FilterFlagEleVeto = Producer(
     name="FilterFlagEleVeto",
@@ -1412,7 +1424,7 @@ mu1_mu2_dphi = Producer(
       q.muon_subleadingp4_H,
     ],
     output=[q.mu1_mu2_dphi],
-    scopes=["gghmm","vbfhmm","e2m","m2m","nnmm","fjmm"],
+    scopes=["gghmm","fsim","vbfhmm","e2m","m2m","nnmm","fjmm"],
 )
 lep_mu1_dphi = Producer(
     name="lep_mu1_dphi",

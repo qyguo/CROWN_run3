@@ -420,21 +420,21 @@ GEN_JetPtCut = Producer(
     call="physicsobject::CutPt({df}, {input}, {output}, {min_genjet_pt})",
     input=[nanoAOD.GenJet_pt],
     output=[],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 GEN_JetEtaCut = Producer(
     name="GEN_JetEtaCut",
     call="physicsobject::CutEta({df}, {input}, {output}, {max_genjet_eta})",
     input=[nanoAOD.GenJet_eta],
     output=[],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 GEN_GoodJets = ProducerGroup(
     name="GEN_GoodJets",
     call="physicsobject::CombineMasks({df}, {output}, {input})",
     input=[],
     output=[q.good_genjets_mask],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
     subproducers=[GEN_JetPtCut, GEN_JetEtaCut],
 )
 
@@ -451,7 +451,7 @@ NumberOfGoodGENJets = Producer(
     call="quantities::NumberOfGoodObjects({df}, {output}, {input})",
     input=[q.good_genjets_mask],
     output=[q.ngenjets],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 ###
 
@@ -514,14 +514,14 @@ Jet1_QGdiscriminator = Producer(
     call="quantities::ptErr({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_QGdiscriminator],
     output=[q.jet1_btagDeepFlavQG],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Jet2_QGdiscriminator = Producer(
     name="Jet2_QGdiscriminator",
     call="quantities::ptErr({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_QGdiscriminator],
     output=[q.jet2_btagDeepFlavQG],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 #Jet1_qgl = Producer(
 #    name="Jet1_qgl",
@@ -552,28 +552,28 @@ Jet1_rawpT = Producer(
     call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_pt],
     output=[q.jet1_rawpT],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Jet2_rawpT = Producer(
     name="Jet2_rawpT",
     call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_pt],
     output=[q.jet2_rawpT],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Jet1_rawMass = Producer(
     name="Jet1_rawMass",
     call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_mass],
     output=[q.jet1_rawMass],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Jet2_rawMass = Producer(
     name="Jet2_rawMass",
     call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_mass],
     output=[q.jet2_rawMass],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 #Jet PU 
 
@@ -582,14 +582,14 @@ Jet1_puIdDisc = Producer(
     call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_puIdDisc],
     output=[q.jet1_puIdDisc],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 Jet2_puIdDisc = Producer(
     name="Jet2_puIdDisc",
     call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_puIdDisc],
     output=[q.jet2_puIdDisc],
-    scopes=["vbfhmm"],
+    scopes=["vbfhmm","fsim"],
 )
 
 LVJet1 = Producer(
@@ -603,7 +603,7 @@ LVJet1 = Producer(
         q.Jet_mass_corrected,
     ],
     output=[q.jet_p4_1],
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 LVJet2 = Producer(
     name="LVJet2",
@@ -616,7 +616,7 @@ LVJet2 = Producer(
         q.Jet_mass_corrected,
     ],
     output=[q.jet_p4_2],
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 LVJet3 = Producer(
     name="LVJet3",
@@ -629,7 +629,7 @@ LVJet3 = Producer(
         q.Jet_mass_corrected,
     ],
     output=[q.jet_p4_3],
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 LVJet4 = Producer(
     name="LVJet4",
@@ -642,14 +642,14 @@ LVJet4 = Producer(
         q.Jet_mass_corrected,
     ],
     output=[q.jet_p4_4],
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 FilterNJets = Producer(
     name="FilterNJets",
     call='basefunctions::FilterThreshold({df}, {input}, {vbf_njets}, ">=", "Number of jets >= 2")',
     input=[q.njets],
     output=None,
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 Calc_MHT_all = Producer(
     name="Calc_MHT_all",
@@ -685,7 +685,7 @@ DiJetMass = Producer(
            q.good_jet_collection,
     ],
     output=[q.dijet_mass],
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 DiJetEta = Producer(
     name="DiJetEta",
@@ -697,7 +697,7 @@ DiJetEta = Producer(
            q.good_jet_collection,
     ],
     output=[q.dijet_eta],
-    scopes=["global","vbfhmm"],
+    scopes=["global","vbfhmm","fsim"],
 )
 
 #nSoftJet5 = Producer(
