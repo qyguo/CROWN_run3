@@ -2791,13 +2791,31 @@ JetPtCorrection_2022_v15_v2(ROOT::RDF::RNode df, const std::string &corrected_je
   };
 
   auto JER_SF_evaluator = cset->at(jer_tag + "_ScaleFactor_" + jec_algo);
-  auto JetEnergyResolutionSF = [JER_SF_evaluator](float eta, float pt, const std::string &shift) -> float {
+  std::shared_ptr<const correction::Correction> JER_SF_unc_evaluator = nullptr;
+  try {
+    JER_SF_unc_evaluator = cset->at(jer_tag + "_SFUncertainty_" + jec_algo);
+  } catch (const std::exception &) {
+    JER_SF_unc_evaluator = nullptr;
+  }
+  auto JetEnergyResolutionSF = [JER_SF_evaluator, JER_SF_unc_evaluator](float eta, float pt, const std::string &shift) -> float {
+    if (std::abs(eta) >= 4.7f) return 1.0f;
+
+    if (JER_SF_unc_evaluator) {
+      const float sf = (float)JER_SF_evaluator->evaluate({eta, pt});
+      const float unc = (float)JER_SF_unc_evaluator->evaluate({eta, pt});
+      if (shift == "up") return sf + unc;
+      if (shift == "down") return sf - unc;
+      return sf;
+    }
+
     try {
-      if (std::abs(eta) < 4.7f) return (float)JER_SF_evaluator->evaluate({eta, pt, shift});
-      return 1.0f;
+      return (float)JER_SF_evaluator->evaluate({eta, pt, shift});
     } catch (const std::exception &) {
-      if (std::abs(eta) < 4.7f) return (float)JER_SF_evaluator->evaluate({eta, shift});
-      return 1.0f;
+      try {
+        return (float)JER_SF_evaluator->evaluate({eta, pt});
+      } catch (const std::exception &) {
+        return (float)JER_SF_evaluator->evaluate({eta, shift});
+      }
     }
   };
 
