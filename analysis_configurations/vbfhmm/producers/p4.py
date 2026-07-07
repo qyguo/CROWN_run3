@@ -537,7 +537,7 @@ jet1_pt = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_pt],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 jet1_eta = Producer(
     name="jet1_eta",
@@ -546,7 +546,7 @@ jet1_eta = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_eta],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 jet1_phi = Producer(
     name="jet1_phi",
@@ -555,7 +555,7 @@ jet1_phi = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_phi],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 jet1_mass = Producer(
     name="jet1_mass",
@@ -564,7 +564,7 @@ jet1_mass = Producer(
       q.jet_p4_1,
     ],
     output=[q.jet1_mass],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 
 jet2_pt = Producer(
@@ -574,7 +574,7 @@ jet2_pt = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_pt],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 jet2_eta = Producer(
     name="jet2_eta",
@@ -583,7 +583,7 @@ jet2_eta = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_eta],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 jet2_phi = Producer(
     name="jet2_phi",
@@ -592,7 +592,7 @@ jet2_phi = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_phi],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 jet2_mass = Producer(
     name="jet2_mass",
@@ -601,5 +601,5 @@ jet2_mass = Producer(
       q.jet_p4_2,
     ],
     output=[q.jet2_mass],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )

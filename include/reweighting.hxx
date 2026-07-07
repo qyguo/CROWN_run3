@@ -26,5 +26,17 @@ ROOT::RDF::RNode lhe_scale_weights(ROOT::RDF::RNode df,
                                    const std::string &weightname,
                                    const std::string &lhe_scale_weights,
                                    const float muR, const float muF);
+ROOT::RDF::RNode PartonShower(ROOT::RDF::RNode df,
+                            const std::string &outputname,
+                            const std::string &ps_weights,
+                            const float isr, const float fsr);
+ROOT::RDF::RNode LHEscale(ROOT::RDF::RNode df,
+                            const std::string &outputname,
+                            const std::string &lhe_scale_weights,
+                            const std::string &variation);
+ROOT::RDF::RNode LHEpdf(ROOT::RDF::RNode df,
+                        const std::string &outputname,
+                        const std::string &lhe_pdf_weights,
+                        const std::string &variation);
 } // namespace reweighting
 #endif /* GUARD_REWEIGHTING_H */

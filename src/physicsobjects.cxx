@@ -1011,7 +1011,7 @@ ROOT::RDF::RNode MaxMetCut(ROOT::RDF::RNode df, const std::string &outputname,
 ROOT::RDF::RNode HiggsCandDiMuonGenPairCollection(ROOT::RDF::RNode df, const std::string &outputname,
                                  const std::string &Muon_indexToGen,
                                  const std::string &dimuon_index) {
-    auto RecoToGen = [](const ROOT::RVec<int> &Muon_indexToGen,
+    auto RecoToGen = [](const ROOT::RVec<short> &Muon_indexToGen,
                                const ROOT::RVec<int> &dimuon_index) {
                                  int index1 = -1,index2 = -1;
                                  index1 = Muon_indexToGen.at(dimuon_index[0]);

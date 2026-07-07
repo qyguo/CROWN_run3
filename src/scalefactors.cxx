@@ -222,6 +222,7 @@ ROOT::RDF::RNode iso(ROOT::RDF::RNode df, const std::string &pt,
                     //{year_id, std::abs(eta), pt, variation});
                     {std::abs(eta), pt, variation});
             }
+            Logger::get("muonIsoSF")->debug("ISO - after eval sf {}", sf);
             return sf;
         },
         {pt, eta});
@@ -937,7 +938,7 @@ btagSF(ROOT::RDF::RNode df, const std::string &pt, const std::string &eta,
                           variation](const ROOT::RVec<float> &pt_values,
                                      const ROOT::RVec<float> &eta_values,
                                      const ROOT::RVec<float> &btag_values,
-                                     const ROOT::RVec<int> &flavors,
+                                     const ROOT::RVec<unsigned char> &flavors,
                                      const ROOT::RVec<int> &jet_mask,
                                      const ROOT::RVec<int> &bjet_mask,
                                      const ROOT::RVec<int> &jet_veto_mask) {

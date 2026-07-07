@@ -5,6 +5,10 @@ luminosityBlock = NanoAODQuantity("luminosityBlock")
 event = NanoAODQuantity("event")
 LHE_Njets = NanoAODQuantity("LHE_Njets")
 prefireWeight = NanoAODQuantity("L1PreFiringWeight_Nom")
+#LHE part
+LHEScaleWeight = NanoAODQuantity("LHEScaleWeight")
+LHEPdfWeight = NanoAODQuantity("LHEPdfWeight")
+LHEWeight_originalXWGTUP = NanoAODQuantity("LHEWeight_originalXWGTUP")
 
 Tau_pt = NanoAODQuantity("Tau_pt")
 Tau_eta = NanoAODQuantity("Tau_eta")
@@ -69,10 +73,6 @@ Electron_mvaTTH = NanoAODQuantity("Electron_mvaTTH")
 Electron_pdgId = NanoAODQuantity("Electron_pdgId")
 Muon_pdgId = NanoAODQuantity("Muon_pdgId")
 # end write
-
-GenJet_pt = NanoAODQuantity("GenJet_pt")
-GenJet_eta = NanoAODQuantity("GenJet_eta")
-GenJet_phi = NanoAODQuantity("GenJet_phi")
 
 Jet_eta = NanoAODQuantity("Jet_eta")
 Jet_phi = NanoAODQuantity("Jet_phi")

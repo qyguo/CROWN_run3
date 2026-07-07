@@ -91,6 +91,30 @@ JetPtCorrection_2022_v15_v2 = Producer(
     output=[q.Jet_pt_corrected],
     scopes=["global"],
 )
+
+# 2025 new SFUncertainty
+# jet correction additional modification of pt<30 GeV of |eta| in (2,2.5)region.
+JetPtCorrection_2022_v15_v3 = Producer(
+    name="JetPtCorrection_2022_v15_v3",
+    call="physicsobject::jet::JetPtCorrection_2022_v15_v3({df}, {output}, {input}, {jet_reapplyJES}, {jet_jes_sources}, {jet_jes_shift}, {jet_jer_shift}, {jet_jec_file}, {jet_jer_tag}, {jet_jes_tag}, {jet_jec_algo}, {jet_veto_map}, {jet_veto_tag})",
+    input=[
+        nanoAOD.Jet_pt,
+        nanoAOD.Jet_eta,
+        nanoAOD.Jet_phi,
+        nanoAOD.Jet_area,
+        nanoAOD.Jet_rawFactor,
+        #nanoAOD.Jet_ID,
+        q.jet_id_v15,
+        nanoAOD.Jet_neEmEF,
+        nanoAOD.Jet_chEmEF,
+        nanoAOD.GenJet_pt,
+        nanoAOD.GenJet_eta,
+        nanoAOD.GenJet_phi,
+        nanoAOD.rho,
+    ],
+    output=[q.Jet_pt_corrected],
+    scopes=["global"],
+)
 ####
 JetPtCorrection_2022_GenMatch = Producer(
     name="JetPtCorrection_2022_GenMatch",
@@ -154,6 +178,14 @@ JetEnergyCorrection_2022_v15_v2 = ProducerGroup(
     output=None,
     scopes=["global"],
     subproducers=[JetPtCorrection_2022_v15_v2, JetMassCorrection],
+)
+JetEnergyCorrection_2022_v15_v3 = ProducerGroup(
+    name="JetEnergyCorrection_2022_v15_v3",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global"],
+    subproducers=[JetPtCorrection_2022_v15_v3, JetMassCorrection],
 )
 #
 JetEnergyCorrection_2022_GenMatch = ProducerGroup(
@@ -453,7 +485,173 @@ NumberOfGoodGENJets = Producer(
     output=[q.ngenjets],
     scopes=["vbfhmm"],
 )
+
 ###
+### dy gen level checking the vbf filter or not with a flag
+GEN_vbffilter = ProducerGroup(
+    name="GEN_vbffilter",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global","vbfhmm"],
+    subproducers=[
+        Producer(
+            name="genvbffilter_flag",
+            call=(
+                "physicsobject::jet::VBFGenJetFilterFlag("
+                "{df}, {output}, {input}, true)"
+                # "{df}, correctionManager, {output}, {input}, true)"
+                # the true here is the setting in DY_vbf-filter sample
+                # leadJetsNoLepMass = cms.untracked.bool ( True), # Require the cut on the mass of the leading jets consist with DY_vbf-filter sample
+                # https://cms-pdmv-prod.web.cern.ch/mcm/public/restapi/requests/get_fragment/HIG-RunIII2024Summer24wmLHEGS-01941/0
+            ),
+            input=[
+                nanoAOD.GenJet_pt,
+                nanoAOD.GenJet_eta,
+                nanoAOD.GenJet_phi,
+                nanoAOD.GenJet_mass,
+                nanoAOD.GenParticle_pdgId,
+                nanoAOD.GenParticle_eta,
+                nanoAOD.GenParticle_phi,
+                nanoAOD.GenParticle_statusFlags,
+            ],
+            output=[q.genvbffilter_flag],
+            scopes=["global","vbfhmm"],
+        ),
+    ],
+)
+###
+##checking the jet1 and jet2 macthed genjets
+MatchedGenJetPt1 = Producer(
+    name="MatchedGenJetPt1",
+    #call="physicsobject::jet::MatchedGenJetFloat({df}, correctionManager, {output}, {input}, 0)",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 0)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_pt,
+    ],
+    output=[q.genjet_pt_1],
+    scopes=["global", "vbfhmm"],
+)
+
+MatchedGenJetEta1 = Producer(
+    name="MatchedGenJetEta1",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 0)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_eta,
+    ],
+    output=[q.genjet_eta_1],
+    scopes=["global", "vbfhmm"],
+)
+
+MatchedGenJetPhi1 = Producer(
+    name="MatchedGenJetPhi1",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 0)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_phi,
+    ],
+    output=[q.genjet_phi_1],
+    scopes=["global", "vbfhmm"],
+)
+
+MatchedGenJetMass1 = Producer(
+    name="MatchedGenJetMass1",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 0)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_mass,
+    ],
+    output=[q.genjet_mass_1],
+    scopes=["global", "vbfhmm"],
+)
+
+
+MatchedGenJetPt2 = Producer(
+    name="MatchedGenJetPt2",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 1)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_pt,
+    ],
+    output=[q.genjet_pt_2],
+    scopes=["global", "vbfhmm"],
+)
+
+MatchedGenJetEta2 = Producer(
+    name="MatchedGenJetEta2",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 1)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_eta,
+    ],
+    output=[q.genjet_eta_2],
+    scopes=["global", "vbfhmm"],
+)
+
+MatchedGenJetPhi2 = Producer(
+    name="MatchedGenJetPhi2",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 1)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_phi,
+    ],
+    output=[q.genjet_phi_2],
+    scopes=["global", "vbfhmm"],
+)
+
+MatchedGenJetMass2 = Producer(
+    name="MatchedGenJetMass2",
+    call="physicsobject::jet::MatchedGenJetFloat({df}, {output}, {input}, 1)",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_mass,
+    ],
+    output=[q.genjet_mass_2],
+    scopes=["global", "vbfhmm"],
+)
+
+
+NMatchedGenJetsJet1Jet2 = Producer(
+    name="NMatchedGenJetsJet1Jet2",
+    call="physicsobject::jet::NMatchedGenJetsJet1Jet2({df}, {output}, {input})",
+    input=[
+        q.good_jet_collection,
+        nanoAOD.Jet_associatedGenJet,
+        nanoAOD.GenJet_pt,
+    ],
+    output=[q.n_jets_matched_genjet],
+    scopes=["global", "vbfhmm"],
+)
+
+
+MatchedGenJetVariables = ProducerGroup(
+    name="MatchedGenJetVariables",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global", "vbfhmm"],
+    subproducers=[
+        MatchedGenJetPt1,
+        MatchedGenJetEta1,
+        MatchedGenJetPhi1,
+        MatchedGenJetMass1,
+        MatchedGenJetPt2,
+        MatchedGenJetEta2,
+        MatchedGenJetPhi2,
+        MatchedGenJetMass2,
+        NMatchedGenJetsJet1Jet2,
+    ],
+)
 
 GoodBJetsLoose = ProducerGroup(
     name="GoodBJetsLoose",
@@ -514,14 +712,14 @@ Jet1_QGdiscriminator = Producer(
     call="quantities::ptErr({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_QGdiscriminator],
     output=[q.jet1_btagDeepFlavQG],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 Jet2_QGdiscriminator = Producer(
     name="Jet2_QGdiscriminator",
     call="quantities::ptErr({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_QGdiscriminator],
     output=[q.jet2_btagDeepFlavQG],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 #Jet1_qgl = Producer(
 #    name="Jet1_qgl",
@@ -552,28 +750,28 @@ Jet1_rawpT = Producer(
     call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_pt],
     output=[q.jet1_rawpT],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 Jet2_rawpT = Producer(
     name="Jet2_rawpT",
     call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_pt],
     output=[q.jet2_rawpT],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 Jet1_rawMass = Producer(
     name="Jet1_rawMass",
     call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_mass],
     output=[q.jet1_rawMass],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 Jet2_rawMass = Producer(
     name="Jet2_rawMass",
     call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_mass],
     output=[q.jet2_rawMass],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 #Jet PU 
 
@@ -582,14 +780,14 @@ Jet1_puIdDisc = Producer(
     call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_puIdDisc],
     output=[q.jet1_puIdDisc],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 Jet2_puIdDisc = Producer(
     name="Jet2_puIdDisc",
     call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
     input=[q.good_jet_collection, nanoAOD.Jet_puIdDisc],
     output=[q.jet2_puIdDisc],
-    scopes=["vbfhmm"],
+    scopes=["global","vbfhmm"],
 )
 
 LVJet1 = Producer(

@@ -243,5 +243,207 @@ ROOT::RDF::RNode lhe_scale_weights(ROOT::RDF::RNode df,
         df.Define(weightname, lhe_scale_weights_lambda, {lhe_scale_weights});
     return df1;
 }
+
+//jiahua
+/**
+ * @brief This function is used to evaluate the parton shower (PS) weight of an event. 
+ * The weights are stored in the nanoAOD files and defined as 
+ * \f$w_{variation}\f$ / \f$w_{nominal}\f$. The nominal weight is already applied, 
+ * therefore, the main use of this function is to get the initial state radiation (ISR) 
+ * and final state radiation (FSR) variations to the nominal PS weight.
+ *
+ * Depending on the selected ISR and FSR value, a specific index has to be identified. 
+ * The mapping between the index and the ISR and FSR values is:
+ *  ISR       | FSR        | index
+ * -----------|------------|---------
+ *  2.0       | 1.0        | 0
+ *  1.0       | 2.0        | 1
+ *  0.5       | 1.0        | 2
+ *  1.0       | 0.5        | 3
+ *
+ * @note For some simulated samples this mapping might be defined differently, 
+ * therefore, it is advisable to check the documentation of the `PSWeight` 
+ * branch in the nanoAOD files of the samples if issues occur.
+ *
+ * @param df input dataframe
+ * @param outputname name of the output column containing the ISR/FSR event weight
+ * @param ps_weights name of the column containing the parton shower (ISR/FSR) weights
+ * @param isr value of the ISR variation, possible values are 0.5, 1.0, 2.0
+ * @param fsr value of the FSR variation, possible values are 0.5, 1.0, 2.0
+ *
+ * @return a new dataframe containing the new column
+ */
+ROOT::RDF::RNode PartonShower(ROOT::RDF::RNode df,
+                            const std::string &outputname,
+                            const std::string &ps_weights,
+                            const float isr, const float fsr) {
+    // find the index we have to use, first check if the isr and fsr values are
+    // valid, only 0.5, 1.0, 2.0 are allowed
+    std::vector<float> allowed_values = {0.5, 1.0, 2.0};
+    if (std::find(allowed_values.begin(), allowed_values.end(), isr) ==
+        allowed_values.end()) {
+        Logger::get("event::reweighting::PartonShower")
+            ->error("Invalid value for isr: {}", isr);
+        throw std::runtime_error("Invalid value for isr");
+    }
+    if (std::find(allowed_values.begin(), allowed_values.end(), fsr) ==
+        allowed_values.end()) {
+        Logger::get("event::reweighting::PartonShower")
+            ->error("Invalid value for fsr: {}", fsr);
+        throw std::runtime_error("Invalid value for fsr");
+    }
+    
+    auto ps_weights_lambda =
+        [isr, fsr](const ROOT::RVec<float> ps_weights) {
+            if (isr == 1.0 && fsr == 1.0) {
+                // if the ISR and FSR are both 1.0, we return the nominal weight
+                return (float)1.0;
+            }
+            // now find the index
+            std::map<std::pair<const float, const float>, int> index_map;
+            if (ps_weights.size() == 4) {
+                index_map = {
+                    {{2.0, 1.0}, 0}, {{1.0, 2.0}, 1}, 
+                    {{0.5, 1.0}, 2}, {{1.0, 0.5}, 3}
+                };
+            } else {
+                Logger::get("event::reweighting::PartonShower")
+                    ->error("Invalid number of PS weights: {}",
+                            ps_weights.size());
+                throw std::runtime_error("Invalid number of PS weights");
+            }
+            std::pair<const float, const float> variations = {isr, fsr};
+            int index = index_map[variations];
+            return ps_weights.at(index);
+        };
+    auto df1 =
+        df.Define(outputname, ps_weights_lambda, {ps_weights});
+    return df1;
+}
+/**
+ * @brief This function is used to evaluate the LHE scale weight of an event. The weights
+ * are stored in the nanoAOD files and defined as \f$w_{variation}\f$ / \f$w_{nominal}\f$. 
+ * The nominal weight is already applied, therefore, the main use of this function is 
+ * to get the factorization and renormalization scale variations to the nominal scale 
+ * weight.
+ *
+ * Depending on the selected \f$\mu_R\f$ and \f$\mu_F\f$ value, a specific index has 
+ * to be identified. The mapping between the index and the \f$\mu_R\f$ and \f$\mu_F\f$ 
+ * values is:
+ *  mu_f       | mu_r        | index
+ * ------------|-------------|---------
+ *  0.5        | 0.5         | 0
+ *  1.0        | 0.5         | 1
+ *  2.0        | 0.5         | 2
+ *  0.5        | 1.0         | 3
+ *  1.0        | 1.0         | 4 (not always included)
+ *  2.0        | 1.0         | 5 (4)
+ *  0.5        | 2.0         | 6 (5)
+ *  1.0        | 2.0         | 7 (6)
+ *  2.0        | 2.0         | 8 (7)
+ *
+ * @note For some simulated samples this mapping might be defined differently, 
+ * therefore, it is advisable to check the documentation of the `LHEScaleWeight` 
+ * branch in the nanoAOD files of the samples if issues occur.
+ *
+ * @param df input dataframe
+ * @param outputname name of the output column containing the LHE scale event weight
+ * @param lhe_scale_weights name of the column containing the LHE scale weights
+ * @param mu_r value of \f$\mu_R\f$ variation, possible values are 0.5, 1.0, 2.0
+ * @param mu_f value of \f$\mu_F\f$ variation, possible values are 0.5, 1.0, 2.0
+ *
+ * @return a new dataframe containing the new column
+ */
+ROOT::RDF::RNode LHEscale(ROOT::RDF::RNode df,
+                            const std::string &outputname,
+                            const std::string &lhe_scale_weights,
+                            const std::string &variation) {
+    
+    auto lhe_scale_weights_lambda =
+        [variation](const ROOT::RVec<float> scale_weights) {
+            // now find the index
+            constexpr int idx[7] = {0, 1, 3, 4, 6, 7};
+            if (variation == "up") {
+                float maxv = 1.0f;
+                for (int i = 0; i < 6; ++i) {
+                    maxv = std::max(maxv, scale_weights[idx[i]]);
+                }
+                return maxv;
+            }
+            else if (variation == "down") {
+                float minv = 1.0f;
+                for (int i = 0; i < 6; ++i) {
+                    minv = std::min(minv, scale_weights[idx[i]]);
+                }
+                return minv;
+            }
+        };
+    auto df1 =
+        df.Define(outputname, lhe_scale_weights_lambda, {lhe_scale_weights});
+    return df1;
+}
+
+/**
+ * @brief This function is used to evaluate the LHE PDF weight of an event. The weights
+ * are stored in the nanoAOD files and defined as \f$w_{variation}\f$ / \f$w_{nominal}\f$. 
+ * The nominal weight is already applied, therefore, the main use of this function is 
+ * to get the variation of the PDF weights to the nominal PDF weight.
+ *
+ * The PDF weights consist of 101 weights, where the first weight is the nominal weight 
+ * and the remaining 100 weights correspond to alternative PDF sets. 
+ *
+ * @note The proper procedure is to use each alternative PDF set as an independent 
+ * systematic vatiation. However, in case of this function, a simplified approach is used 
+ * to calculate a single PDF weight variation. The standard deviation of the 100 
+ * alternative PDF weights is calculated and used to define the up and down variations as 
+ * follows: \f$w_{up/down} = 1 \pm \sqrt{\sum_{i=1}^{100} (w_i - 1)^2}\f$
+ *
+ * @param df input dataframe
+ * @param outputname name of the output column containing the LHE PDF event weight
+ * @param lhe_pdf_weights name of the column containing the LHE PDF weights
+ * @param variation name of the variation that should be evaluated, possible values 
+ * are "nominal", "up", "down"
+ *
+ * @return a new dataframe containing the new column
+ */
+ROOT::RDF::RNode LHEpdf(ROOT::RDF::RNode df,
+                        const std::string &outputname,
+                        const std::string &lhe_pdf_weights,
+                        const std::string &variation) {
+    auto lhe_pdf_weights_lambda =
+        [variation](const ROOT::RVec<float> pdf_weights) {
+            // the nominal weight is already applied, so we can return 1.0
+            if (variation == "nominal") {
+                return (float)1.0;
+            }
+            const int n_pdfs = pdf_weights.size();
+            if (n_pdfs == 101 || n_pdfs == 103) {
+                float sum = 0.0;
+                for (size_t i = 1; i < n_pdfs; i++) {
+                    float diff = pdf_weights[i] - 1;
+                    sum += diff * diff;        
+                }
+                if (variation == "up") {
+                    return (float)(1.0 + std::sqrt(sum));
+                } else if (variation == "down") {
+                    return (float)(1.0 - std::sqrt(sum));
+                } else {
+                    Logger::get("event::reweighting::LHEpdf")
+                        ->error("Invalid variation: {}", variation);
+                    throw std::runtime_error("Invalid variation for LHE PDF weights");
+                }
+            } else {
+                Logger::get("event::reweighting::LHEpdf")
+                    ->error("Invalid number of LHE PDF weights: {}",
+                            n_pdfs);
+                throw std::runtime_error("Invalid number of LHE PDF weights");
+            }
+        };
+
+    auto df1 =
+        df.Define(outputname, lhe_pdf_weights_lambda, {lhe_pdf_weights});
+    return df1;
+}
+
 } // namespace reweighting
 #endif /* GUARD_REWEIGHTING_H */
