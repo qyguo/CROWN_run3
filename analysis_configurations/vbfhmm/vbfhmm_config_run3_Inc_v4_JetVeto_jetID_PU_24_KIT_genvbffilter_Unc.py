@@ -1484,59 +1484,59 @@ def build_config(
     #    )
     #)
 
-    ##########################
-    ## muon efficiency systematics shift
-    ##########################
-    #if sample != "data":
-    #    configuration.add_shift(
-    #        SystematicShift(
-    #            name="MuonEffup",
-    #            shift_config={"vbfhmm": {"muon_sf_varation": "systup"}},
-    #            producers={
-    #                "vbfhmm": [
-    #                    scalefactors.MuonIDIso_SF_vbfhmm_noYear,
-    #                ]
-    #            },
-    #        )
-    #    )
-    #    configuration.add_shift(
-    #        SystematicShift(
-    #            name="MuonEffdown",
-    #            shift_config={"vbfhmm": {"muon_sf_varation": "systdown"}},
-    #            producers={
-    #                "vbfhmm": [
-    #                    scalefactors.MuonIDIso_SF_vbfhmm_noYear,
-    #                ]
-    #            },
-    #        )
-    #    )
+    #########################
+    # muon efficiency systematics shift
+    #########################
+    if sample != "data":
+        configuration.add_shift(
+            SystematicShift(
+                name="MuonEffup",
+                shift_config={"vbfhmm": {"muon_sf_varation": "systup"}},
+                producers={
+                    "vbfhmm": [
+                        scalefactors.MuonIDIso_SF_vbfhmm_noYear,
+                    ]
+                },
+            )
+        )
+        configuration.add_shift(
+            SystematicShift(
+                name="MuonEffdown",
+                shift_config={"vbfhmm": {"muon_sf_varation": "systdown"}},
+                producers={
+                    "vbfhmm": [
+                        scalefactors.MuonIDIso_SF_vbfhmm_noYear,
+                    ]
+                },
+            )
+        )
 
-    ##########################
-    ## PDF and QCD uncertainty
-    ##########################
-    #if sample != "data":
-    #    configuration.add_modification_rule(
-    #        "vbfhmm",
-    #        AppendProducer(
-    #            producers=[
-    #                syst.CalPDFUncertainty_up,
-    #                syst.CalPDFUncertainty_down,
-    #                syst.CalQCDScaleUncertainty_up,
-    #                syst.CalQCDScaleUncertainty_down,
-    #                ],
-    #            samples=sample,
-    #            update_output=False,
-    #        ),
-    #    ),
-    #    configuration.add_outputs(
-    #        scopes,
-    #        [
-    #            q.PDF_uncertainty_up,
-    #            q.PDF_uncertainty_down,
-    #            q.qcd_unc_up,
-    #            q.qcd_unc_down,
-    #        ],
-    #    )
+    #########################
+    # PDF and QCD uncertainty
+    #########################
+    if sample != "data":
+        configuration.add_modification_rule(
+            "vbfhmm",
+            AppendProducer(
+                producers=[
+                    syst.CalPDFUncertainty_up,
+                    syst.CalPDFUncertainty_down,
+                    syst.CalQCDScaleUncertainty_up,
+                    syst.CalQCDScaleUncertainty_down,
+                    ],
+                samples=sample,
+                update_output=False,
+            ),
+        ),
+        configuration.add_outputs(
+            scopes,
+            [
+                q.PDF_uncertainty_up,
+                q.PDF_uncertainty_down,
+                q.qcd_unc_up,
+                q.qcd_unc_down,
+            ],
+        )
 
     ##########################
     ## JER systematic shift
@@ -1574,56 +1574,85 @@ def build_config(
     #                },
     #            )
     #        )
-    ##########################
-    ## JES systematic shift
-    ##########################
-    #JEC_COMMON_SOURCES = [
-    #    "FlavorQCD",
-    #    "Absolute",
-    #    "BBEC1",
-    #    "EC2",
-    #    "HF",
-    #    "RelativeBal",
-    #]
+    if sample != "data":
+        configuration.add_shift(
+            SystematicShift(
+                name="JERUp",
+                shift_config={
+                    "global": {"jet_jer_shift": '"up"'}
+                },
+                producers={
+                    "global": [
+                        jets.JetEnergyCorrection_2022_v15_v3,
+                    ]
+                },
+            )
+        )
+    
+        configuration.add_shift(
+            SystematicShift(
+                name="JERDown",
+                shift_config={
+                    "global": {"jet_jer_shift": '"down"'}
+                },
+                producers={
+                    "global": [
+                        jets.JetEnergyCorrection_2022_v15_v3,
+                    ]
+                },
+            )
+        )
 
-    ## Sources requiring year suffix
-    #JEC_YEAR_DEPENDENT = [
-    #    "Absolute",
-    #    "BBEC1",
-    #    "EC2",
-    #    "HF",
-    #    "RelativeSample",
-    #]
+    #########################
+    # JES systematic shift
+    #########################
+    JEC_COMMON_SOURCES = [
+        "FlavorQCD",
+        "Absolute",
+        "BBEC1",
+        "EC2",
+        "HF",
+        "RelativeBal",
+    ]
 
-    ## Build final full list
-    #JEC_sources = list(JEC_COMMON_SOURCES)
+    # Sources requiring year suffix
+    JEC_YEAR_DEPENDENT = [
+        "Absolute",
+        "BBEC1",
+        "EC2",
+        "HF",
+        "RelativeSample",
+    ]
 
-    ## Append year-specific versions
-    #JEC_sources += [f"{src}_{era}" for src in JEC_YEAR_DEPENDENT]
+    # Build final full list
+    JEC_sources = list(JEC_COMMON_SOURCES)
 
-    #if sample != "data":
-    #    for source in JEC_sources:
-    #        jes_source_str = '{"Regrouped_' + source + '"}'
+    # Append year-specific versions
+    JEC_sources += [f"{src}_{era}" for src in JEC_YEAR_DEPENDENT]
 
-    #        for direction, shift_value in [("Up", 1), ("Down", -1)]:
-    #            name = f"jes{source}{direction}"
+    if sample != "data":
+        for source in JEC_sources:
+            jes_source_str = '{"Regrouped_' + source + '"}'
 
-    #            configuration.add_shift(
-    #                SystematicShift(
-    #                    name=name,
-    #                    shift_config={
-    #                        "global": {
-    #                            "jet_jes_shift": shift_value,
-    #                            "jet_jes_sources": jes_source_str,
-    #                        },
-    #                    },
-    #                    producers={
-    #                        "global": {
-    #                            jets.JetEnergyCorrection_2022_v15_v2,
-    #                        },
-    #                    },
-    #                )
-    #            )
+            for direction, shift_value in [("Up", 1), ("Down", -1)]:
+                name = f"jes{source}{direction}"
+
+                configuration.add_shift(
+                    SystematicShift(
+                        name=name,
+                        shift_config={
+                            "global": {
+                                "jet_jes_shift": shift_value,
+                                "jet_jes_sources": jes_source_str,
+                            },
+                        },
+                        producers={
+                            "global": {
+                                jets.JetEnergyCorrection_2022_v15_v3,
+                            },
+                        },
+                    )
+                )
 
     #########################
     # Finalize and validate the configuration

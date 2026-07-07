@@ -744,14 +744,35 @@ ROOT::RDF::RNode mt_tot(ROOT::RDF::RNode df, const std::string &outputname,
 ///
 /// \returns a dataframe with the new column
 
+//ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
+//                           const int &position, const std::string &pairname,
+//                           const std::string &ptErrcolumn) {
+//    return df.Define(outputname,
+//                     [position](const ROOT::RVec<int> &pair,
+//                                const ROOT::RVec<float> &ptErr) {
+//                         const int index = pair.at(position);
+//                         //const int index = pair.at(position, -1);
+//                         return ptErr.at(index, default_float);
+//                     },
+//                     {pairname, ptErrcolumn});
+//}
 ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
-                           const int &position, const std::string &pairname,
-                           const std::string &ptErrcolumn) {
+                       const int &position, const std::string &pairname,
+                       const std::string &ptErrcolumn) {
     return df.Define(outputname,
                      [position](const ROOT::RVec<int> &pair,
                                 const ROOT::RVec<float> &ptErr) {
+                         if (position < 0 ||
+                             position >= static_cast<int>(pair.size())) {
+                             return default_float;
+                         }
+
                          const int index = pair.at(position);
-                         //const int index = pair.at(position, -1);
+                         if (index < 0 ||
+                             index >= static_cast<int>(ptErr.size())) {
+                             return default_float;
+                         }
+
                          return ptErr.at(index, default_float);
                      },
                      {pairname, ptErrcolumn});
