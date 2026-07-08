@@ -2978,7 +2978,10 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
                          const int &jes_shift, const std::string &jer_shift,
                          const std::string &jec_file, const std::string &jer_tag,
                          const std::string &jes_tag, const std::string &jec_algo,
-                         const std::string &jet_veto_map, const std::string &jet_veto_tag) {
+                         const std::string &jet_veto_map, const std::string &jet_veto_tag,
+                         const bool &jet_horn_veto, const float &jet_horn_eta_min,
+                         const float &jet_horn_eta_max, const float &jet_horn_veto_max_pt,
+                         const bool &jet_horn_jer_genmatch_only) {
   // ----------------------------------------------------------------------
   // Jet radius from algorithm
   // ----------------------------------------------------------------------
@@ -2994,6 +2997,10 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
     return (aeta > 2.0f && aeta < 2.5f);
   };
   auto clamp30 = [](float pt) { return (pt < 30.0f ? 30.0f : pt); };
+  auto inJetHorn = [jet_horn_eta_min, jet_horn_eta_max](float eta) {
+    const float aeta = std::abs(eta);
+    return (aeta >= jet_horn_eta_min && aeta < jet_horn_eta_max);
+  };
 
   // ----------------------------------------------------------------------
   // Load correction set once
@@ -3153,6 +3160,12 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
 
           pt_values_corrected.push_back(corr_pt);
 
+          if (jet_horn_veto && inJetHorn(eta_values.at(i)) &&
+              pt_values_corrected.at(i) < jet_horn_veto_max_pt) {
+            pt_values_corrected.at(i) = pt_veto;
+            continue;
+          }
+
           // ----------------------------------------------------------
           // JER hybrid smearing (unchanged from your logic)
           // ----------------------------------------------------------
@@ -3184,8 +3197,9 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
             double shift = (resoSF - 1.0) * (pt_values_corrected.at(i) - genjetpt) / pt_values_corrected.at(i);
             pt_values_corrected.at(i) *= std::max(0.0, 1.0 + shift);
           } else {
-            // jet horn JER issue: only apply outside horn region
-            if (std::abs(eta_values.at(i)) > 3.0 || std::abs(eta_values.at(i)) < 2.5) {
+            const bool skip_unmatched_jer =
+                jet_horn_jer_genmatch_only && inJetHorn(eta_values.at(i));
+            if (!skip_unmatched_jer) {
               double shift = randm.Gaus(0, reso) * std::sqrt(std::max(resoSF * resoSF - 1.0, 0.0));
               pt_values_corrected.at(i) *= std::max(0.0, 1.0 + shift);
             }

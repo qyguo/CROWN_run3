@@ -387,7 +387,8 @@ def build_config(
                     "2022EE": "data/KIT_files/2022_Summer22EE.json",
                     "2023": "data/KIT_files/2023_Summer23.json",
                     "2023BPix": "data/KIT_files/2023_Summer23BPix.json",
-                    "2024": "data/KIT_files/2024_schemaV2.json",
+                    #"2024": "data/KIT_files/2024_schemaV2.json",
+                    "2024": "data/jsonpog-integration/POG/MUO/2024_Summer24/muon_scalesmearing_VXBS.json.gz",
                 }
             ),
         }
@@ -905,7 +906,7 @@ def build_config(
         ["vbfhmm"],
         {
             "vbf_nmuons" : 2,
-            "dimuon_mass_low": 70.0,
+            "dimuon_mass_low": 100.0,
             "dimuon_mass_high": 160.0,
             "flag_DiMuonFromHiggs" : 1,
             "flag_LeptonChargeSumVeto" : 2, # sum lepton charge = 0
@@ -1021,9 +1022,10 @@ def build_config(
             event.FilterNMuons_OverE2, # vbfhmm >= 2 muons
             muons.MuonCollection, # collect ordered by pt
             ###
-            event.Mask_DiMuonPair, # dimuonHiggs index
+            event.applyMuonScaReBSCPrePair,
+            event.Mask_DiMuonPair_KITBSC, # dimuonHiggs index based on KIT-BSC corrected pt
             event.Flag_DiMuonFromHiggs,
-            event.HiggsToDiMuonPair_p4, # select the dimuon pairs in [70,150] and order by pt
+            event.HiggsToDiMuonPair_p4_KITBSC, # select the dimuon pairs in [70,160] and order by KIT-BSC pt
             ###
             event.DiMuonMassFromZVeto,# has dimuon from Z return mask equal to 0, otherwise return 1
             ##event.VetoVHElectron,
@@ -1045,8 +1047,8 @@ def build_config(
             event.FilterFlagDiMuFromH,
             event.FilterFlagLepChargeSum,
             ###
-            muons.Mu1_H,
-            muons.Mu2_H,
+            muons.Mu1_H_KITBSC,
+            muons.Mu2_H_KITBSC,
             ###
             event.mumuH_dR,
             ###
@@ -1098,6 +1100,7 @@ def build_config(
 
             scalefactors.btagging_SF,
             scalefactors.MuonIDIso_SF_vbfhmm_noYear, #2 mu from H
+            event.MuonScaReBSCSelected,
             fsrPhoton.muon_fsrPhotonIdx_1,
             fsrPhoton.muon_fsrPhotonIdx_2,
 
@@ -1142,17 +1145,17 @@ def build_config(
     configuration.add_outputs(
         scopes,
         [
-            q.is_data,
-            q.is_embedding,
-            q.is_top,
-            q.is_dyjets,
-            q.is_wjets,
-            q.is_diboson,
-            q.is_vhmm,
-            q.is_gghmm,
-            q.is_vbfhmm,
-            q.is_zjjew,
-            q.is_triboson,
+            #q.is_data,
+            #q.is_embedding,
+            #q.is_top,
+            #q.is_dyjets,
+            #q.is_wjets,
+            #q.is_diboson,
+            #q.is_vhmm,
+            #q.is_gghmm,
+            #q.is_vbfhmm,
+            #q.is_zjjew,
+            #q.is_triboson,
             nanoAOD.run,
             q.lumi,
             nanoAOD.event,
@@ -1271,12 +1274,6 @@ def build_config(
             q.mu1_fromH_bsConstrainedPtErr,
             q.mu2_fromH_bsConstrainedPtErr,
 
-            q.pt_rc_1,
-            q.pt_rc_2,
-            q.pt_rc_bsc_1,
-            q.pt_rc_bsc_2,
-            q.pt_kit_1,
-            q.pt_kit_2,
             q.pt_kit_bsc_1,
             q.pt_kit_bsc_2,
             q.ptErr_kit_bsc_1,
@@ -1305,42 +1302,12 @@ def build_config(
     ##
     if sample != "data":
         configuration.add_modification_rule(
-            "vbfhmm",
-            AppendProducer(
-                # because MuonRoccoRRndm only need to load once. 
-                # start in ApplyRoccoRMC_2022 and then did not inial ApplyRoccoRMC_BSC_2022
-                producers=[event.ApplyRoccoRMC_2022,
-                    event.ApplyRoccoRMC_BSC_2022,
-                    event.applyMuonScaReMC,
-                    event.applyMuonScaReMC_BSC,
-                    event.applyMuonScaReMC_Err_BSC,
-                    ],
-                samples=sample,
-                update_output=False,
-            ),
-        )
-    if sample != "data":
-        configuration.add_modification_rule(
             "global",
             AppendProducer(
                 producers=[
                 jets.GEN_vbffilter,
                 jets.NMatchedGenJetsJet1Jet2,
                 ],
-                samples=sample,
-                update_output=False,
-            ),
-        )
-    if sample == "data":
-        configuration.add_modification_rule(
-            "vbfhmm",
-            AppendProducer(
-                producers=[event.ApplyRoccoRData,
-                    event.ApplyRoccoRData_BSC,
-                    event.applyMuonScaReData,
-                    event.applyMuonScaReData_BSC,
-                    event.applyMuonScaReData_Err_BSC,
-                    ],
                 samples=sample,
                 update_output=False,
             ),
@@ -1633,6 +1600,7 @@ def build_config(
                 },
             )
         )
+
     #########################
     # JES systematic shift
     #########################

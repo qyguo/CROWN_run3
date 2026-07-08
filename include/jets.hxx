@@ -185,7 +185,10 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
                          const int &jes_shift, const std::string &jer_shift,
                          const std::string &jec_file, const std::string &jer_tag,
                          const std::string &jes_tag, const std::string &jec_algo,
-                         const std::string &jet_veto_map, const std::string &jet_veto_tag);
+                         const std::string &jet_veto_map, const std::string &jet_veto_tag,
+                         const bool &jet_horn_veto, const float &jet_horn_eta_min,
+                         const float &jet_horn_eta_max, const float &jet_horn_veto_max_pt,
+                         const bool &jet_horn_jer_genmatch_only);
 ROOT::RDF::RNode
 JetPtCorrection_2022_GenMatch(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
                 const std::string &jet_pt, const std::string &jet_eta,

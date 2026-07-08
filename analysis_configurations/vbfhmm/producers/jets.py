@@ -96,7 +96,7 @@ JetPtCorrection_2022_v15_v2 = Producer(
 # jet correction additional modification of pt<30 GeV of |eta| in (2,2.5)region.
 JetPtCorrection_2022_v15_v3 = Producer(
     name="JetPtCorrection_2022_v15_v3",
-    call="physicsobject::jet::JetPtCorrection_2022_v15_v3({df}, {output}, {input}, {jet_reapplyJES}, {jet_jes_sources}, {jet_jes_shift}, {jet_jer_shift}, {jet_jec_file}, {jet_jer_tag}, {jet_jes_tag}, {jet_jec_algo}, {jet_veto_map}, {jet_veto_tag})",
+    call="physicsobject::jet::JetPtCorrection_2022_v15_v3({df}, {output}, {input}, {jet_reapplyJES}, {jet_jes_sources}, {jet_jes_shift}, {jet_jer_shift}, {jet_jec_file}, {jet_jer_tag}, {jet_jes_tag}, {jet_jec_algo}, {jet_veto_map}, {jet_veto_tag}, {jet_horn_veto}, {jet_horn_eta_min}, {jet_horn_eta_max}, {jet_horn_veto_max_pt}, {jet_horn_jer_genmatch_only})",
     input=[
         nanoAOD.Jet_pt,
         nanoAOD.Jet_eta,

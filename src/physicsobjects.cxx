@@ -23,6 +23,7 @@
 #include "TLorentzVector.h"
 #include "TLorentzRotation.h"
 #include <Math/Boost.h>
+#include <cmath>
 /// Namespace containing function to apply cuts on physics objects. The
 /// cut results are typically stored within a mask, which is represented by
 /// an `ROOT::RVec<int>`.
@@ -369,6 +370,68 @@ ROOT::RDF::RNode HiggsCandDiMuonPairCollection(ROOT::RDF::RNode df, const std::s
                                  ///return p4_dimuon; /// return dimuon_pair_p4 order by pt
                              };
     auto df1 = 
+        df.Define(outputname, pair_calc_p4byPt, {particle_pts, particle_etas, particle_phis, particle_masses, particle_charges, goodmuons_index});
+    return df1;
+}
+ROOT::RDF::RNode HiggsCandDiMuonPairCollectionWithMassWindow(ROOT::RDF::RNode df, const std::string &outputname,
+                                 const std::string &particle_pts,
+                                 const std::string &particle_etas,
+                                 const std::string &particle_phis,
+                                 const std::string &particle_masses,
+                                 const std::string &particle_charges,
+                                 const std::string &goodmuons_index,
+                                 const float &mass_low,
+                                 const float &mass_high) {
+    auto pair_calc_p4byPt = [mass_low, mass_high](const ROOT::RVec<float> &particle_pts,
+                               const ROOT::RVec<float> &particle_etas,
+                               const ROOT::RVec<float> &particle_phis,
+                               const ROOT::RVec<float> &particle_masses,
+                               const ROOT::RVec<int> &particle_charges,
+                               const ROOT::RVec<int> &goodmuons_index) {
+                                 std::vector<ROOT::Math::PtEtaPhiMVector> p4;
+                                 for (unsigned int k = 0; k < (int)goodmuons_index.size(); ++k) {
+                                    try {
+                                        p4.push_back(ROOT::Math::PtEtaPhiMVector(particle_pts.at(goodmuons_index[k]),
+                                                                         particle_etas.at(goodmuons_index[k]),
+                                                                         particle_phis.at(goodmuons_index[k]),
+                                                                         particle_masses.at(goodmuons_index[k])));
+                                    } catch (const std::out_of_range &e) {
+                                        p4.push_back(ROOT::Math::PtEtaPhiMVector(default_float, default_float,default_float, default_float));
+                                    }
+                                 }
+                                 std::vector<ROOT::Math::PtEtaPhiMVector> p4_1;
+                                 std::vector<ROOT::Math::PtEtaPhiMVector> p4_2;
+                                 p4_1 = p4;
+                                 p4_2 = p4;
+                                 float ptsum = -1;
+                                 int index1 = -1,index2 = -1;
+                                 for (unsigned int i = 0; i < p4_1.size(); ++i) {
+                                     for (unsigned int j = i + 1; j < p4_2.size(); ++j) {
+                                         if (p4_1[i].pt() < 0.0 || p4_2[j].pt() < 0.0)
+                                             continue;
+                                         if ( particle_charges[goodmuons_index[i]] + particle_charges[goodmuons_index[j]] != 0 ) {
+                                             continue;
+                                         }
+                                         const float mass = (p4_1[i] + p4_2[j]).mass();
+                                         if (mass < mass_low || mass > mass_high) {
+                                             continue;
+                                         }
+                                         if ( p4_1[i].pt() + p4_2[j].pt() > ptsum) {
+                                             ptsum = p4_1[i].pt() + p4_2[j].pt();
+                                             if ( p4_1[i].pt() > p4_1[j].pt() ) {
+                                                index1 = goodmuons_index[i];
+                                                index2 = goodmuons_index[j];
+                                             } else {
+                                                index1 = goodmuons_index[j];
+                                                index2 = goodmuons_index[i];
+                                             }
+                                         }
+                                     }
+                                 }
+                                 ROOT::RVec<int> DiMuonPair = {index1, index2};
+                                 return DiMuonPair;
+                             };
+    auto df1 =
         df.Define(outputname, pair_calc_p4byPt, {particle_pts, particle_etas, particle_phis, particle_masses, particle_charges, goodmuons_index});
     return df1;
 }
@@ -2160,6 +2223,145 @@ ROOT::RDF::RNode applyMuonScaReData(ROOT::RDF::RNode df,
     return df.Define(outputname, lambda,
                      {objCollection, chargeCol, ptCol, etaCol, phiCol});
 }
+
+ROOT::RDF::RNode MuonPtBscOrNominal(ROOT::RDF::RNode df,
+                                  const std::string &outputname,
+                                  const std::string &ptCol,
+                                  const std::string &bscPtCol,
+                                  const std::string &bscChi2Col,
+                                  const float &maxChi2)
+{
+    auto lambda = [maxChi2](const ROOT::RVec<float> &ptVec,
+                            const ROOT::RVec<float> &bscPtVec,
+                            const ROOT::RVec<float> &bscChi2Vec) {
+        ROOT::RVec<float> out;
+        out.reserve(ptVec.size());
+
+        for (std::size_t i = 0; i < ptVec.size(); ++i) {
+            const bool hasBsc =
+                i < bscPtVec.size() && i < bscChi2Vec.size() &&
+                std::isfinite(bscPtVec.at(i)) && std::isfinite(bscChi2Vec.at(i)) &&
+                bscPtVec.at(i) > 0.0f && bscChi2Vec.at(i) < maxChi2;
+
+            out.push_back(hasBsc ? bscPtVec.at(i) : ptVec.at(i));
+        }
+
+        return out;
+    };
+
+    return df.Define(outputname, lambda, {ptCol, bscPtCol, bscChi2Col});
+}
+
+ROOT::RDF::RNode applyMuonScaReBSCVector(ROOT::RDF::RNode df,
+                                  const std::string &outputname,
+                                  const std::string &jsonfile,
+                                  const bool &isData,
+                                  const std::string &ptCol,
+                                  const std::string &etaCol,
+                                  const std::string &phiCol,
+                                  const std::string &chargeCol,
+                                  const std::string &nLCol)
+{
+    auto muonscare = std::make_shared<MuonScaRe>(jsonfile);
+
+    auto lambda = [muonscare, isData](const ROOT::RVec<float> &ptVec,
+                                      const ROOT::RVec<float> &etaVec,
+                                      const ROOT::RVec<float> &phiVec,
+                                      const ROOT::RVec<int> &chargeVec,
+                                      const ROOT::RVec<UChar_t> &nLVec) {
+        ROOT::RVec<float> out;
+        out.reserve(ptVec.size());
+
+        for (std::size_t i = 0; i < ptVec.size(); ++i) {
+            if (i >= etaVec.size() || i >= phiVec.size() || i >= chargeVec.size()) {
+                out.push_back(default_float);
+                continue;
+            }
+
+            const double pt = ptVec.at(i);
+            const double eta = etaVec.at(i);
+            const double phi = phiVec.at(i);
+            const int charge = chargeVec.at(i);
+
+            if (!std::isfinite(pt) || !std::isfinite(eta) || !std::isfinite(phi) ||
+                pt <= 0.0) {
+                out.push_back(default_float);
+                continue;
+            }
+
+            const double pt_scaled = muonscare->pt_scale(isData, pt, eta, phi, charge);
+            if (isData) {
+                out.push_back(static_cast<float>(pt_scaled));
+            } else {
+                const UChar_t nL = i < nLVec.size() ? nLVec.at(i) : 0;
+                out.push_back(static_cast<float>(muonscare->pt_resol(pt_scaled, eta, nL)));
+            }
+        }
+
+        return out;
+    };
+
+    return df.Define(outputname, lambda, {ptCol, etaCol, phiCol, chargeCol, nLCol});
+}
+
+ROOT::RDF::RNode applyMuonScaReBSCVectorErr(ROOT::RDF::RNode df,
+                                  const std::string &outputname,
+                                  const std::string &jsonfile,
+                                  const bool &isData,
+                                  const std::string &ptCol,
+                                  const std::string &etaCol,
+                                  const std::string &phiCol,
+                                  const std::string &chargeCol,
+                                  const std::string &nLCol)
+{
+    auto muonscare = std::make_shared<MuonScaRe>(jsonfile);
+
+    auto lambda = [muonscare, isData](const ROOT::RVec<float> &ptVec,
+                                      const ROOT::RVec<float> &etaVec,
+                                      const ROOT::RVec<float> &phiVec,
+                                      const ROOT::RVec<int> &chargeVec,
+                                      const ROOT::RVec<UChar_t> &nLVec) {
+        ROOT::RVec<float> out;
+        out.reserve(ptVec.size());
+
+        for (std::size_t i = 0; i < ptVec.size(); ++i) {
+            if (i >= etaVec.size() || i >= phiVec.size() || i >= chargeVec.size()) {
+                out.push_back(default_float);
+                continue;
+            }
+
+            const double pt = ptVec.at(i);
+            const double eta = etaVec.at(i);
+            const double phi = phiVec.at(i);
+            const int charge = chargeVec.at(i);
+
+            if (!std::isfinite(pt) || !std::isfinite(eta) || !std::isfinite(phi) ||
+                pt <= 0.0) {
+                out.push_back(default_float);
+                continue;
+            }
+
+            if (isData) {
+                const double pt_nom = muonscare->pt_scale(true, pt, eta, phi, charge);
+                const double pt_up =
+                    muonscare->pt_scale_var(pt_nom, eta, phi, charge, std::string("up"));
+                out.push_back(static_cast<float>(std::abs(pt_up - pt_nom)));
+            } else {
+                const UChar_t nL = i < nLVec.size() ? nLVec.at(i) : 0;
+                const double scaled = muonscare->pt_scale(false, pt, eta, phi, charge);
+                const double smeared = muonscare->pt_resol(scaled, eta, nL);
+                const double pt_up =
+                    muonscare->pt_resol_var(scaled, smeared, eta, std::string("up"));
+                out.push_back(static_cast<float>(std::abs(pt_up - smeared)));
+            }
+        }
+
+        return out;
+    };
+
+    return df.Define(outputname, lambda, {ptCol, etaCol, phiCol, chargeCol, nLCol});
+}
+
 //calculate the uncertainty of corrected muon pt , seperated for MC and data
 ROOT::RDF::RNode applyMuonScaReData_Err(
                                   ROOT::RDF::RNode df,
