@@ -613,7 +613,7 @@ def build_config(
                     "2023": '"Summer23Prompt23_RunCv4_JRV1_MC"',
                     "2023BPix": '"Summer23BPixPrompt23_RunD_JRV1_MC"',
                     #"2024": '"Summer24Prompt24_V1_MC"',
-                    "2024": '"Summer23BPixPrompt23_RunD_JRV1_MC"',
+                    "2024": '"Summer24Prompt24_JRV1_MC"',
                 }
             ),
             "jet_jes_tag_data": '""',
@@ -628,7 +628,7 @@ def build_config(
                     "2022EE": '"Summer22EE_22Sep2023_V2_MC"',
                     "2023": '"Summer23Prompt23_V1_MC"',
                     "2023BPix": '"Summer23BPixPrompt23_V1_MC"',
-                    "2024": '"Summer24Prompt24_V1_MC"',
+                    "2024": '"Summer24Prompt24_V3_MC"',
                 }
             ),
             #"jet_jec_algo": '"AK4PFchs"',

@@ -32,3 +32,16 @@ Documentation
 --------------
 
 The full documentation can be found at https://crown.readthedocs.io/en/latest/.
+
+How to Run
+--------------
+```
+source init.sh fsim
+cd build
+cmake .. -DANALYSIS=fsim -DCONFIG=vbfhmm_config_run3_Inc_v4_JetVeto_jetID_PU_24_KIT_fsim -DSAMPLES=fsim -DERAS=2024 -DSCOPES=fsim
+make install -j 16
+cd bin
+voms-proxy-init -voms cms --valid 200:00
+xrdcp root://xrootd-cms.infn.it//store/group/rucio/flashsim/DYto2Mu-2Jets_Bin-MLL-105to160_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/flashsim_DY2Mu_2Jets_MLL-105to160-April2026_IreneFakes_Oversampling9/260421_142939/0000/tree_1.root ./
+./vbfhmm_config_run3_Inc_v4_JetVeto_jetID_PU_24_KIT_fsim_fsim_2024 flashsim_test.root /eos/user/j/jiehan/tree_1.root
+```

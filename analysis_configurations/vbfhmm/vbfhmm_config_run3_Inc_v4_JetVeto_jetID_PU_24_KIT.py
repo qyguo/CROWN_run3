@@ -9,6 +9,7 @@ from .producers import muons as muons
 from .producers import fsrPhoton as fsrPhoton
 from .producers import jets as jets
 from .producers import scalefactors as scalefactors
+from .producers import systematic as syst
 # add by botao
 from .producers import lepton as lepton
 from .producers import electrons as electrons
@@ -622,7 +623,7 @@ def build_config(
                     "2023": '"Summer23Prompt23_RunCv4_JRV1_MC"',
                     "2023BPix": '"Summer23BPixPrompt23_RunD_JRV1_MC"',
                     #"2024": '"Summer24Prompt24_V1_MC"',
-                    "2024": '"Summer23BPixPrompt23_RunD_JRV1_MC"',
+                    "2024": '"Summer24Prompt24_JRV1_MC"',
                 }
             ),
             "jet_jes_tag_data":EraModifier(
@@ -631,7 +632,7 @@ def build_config(
                     "2022EE": '"Summer22EE_22Sep2023_RunG_V3_DATA"',
                     "2023": '"Summer23Prompt23_V2_DATA"',
                     "2023BPix": '"Summer23BPixPrompt23_V3_DATA"',
-                    "2024": '"Summer24Prompt24_V2_DATA"',
+                    "2024": '"Summer24Prompt24_V3_DATA"',
                 }
             ),
             #
@@ -647,7 +648,7 @@ def build_config(
                     "2023": '"Summer23Prompt23_V1_MC"',
                     "2023BPix": '"Summer23BPixPrompt23_V1_MC"',
                     #"2024": '"Summer24Prompt24_V1_MC"',
-                    "2024": '"Summer24Prompt24_V2_MC"',
+                    "2024": '"Summer24Prompt24_V3_MC"',
                 }
             ),
             #"jet_jec_algo": '"AK4PFchs"',
@@ -1037,6 +1038,9 @@ def build_config(
 
             scalefactors.btagging_SF,
             scalefactors.MuonIDIso_SF_vbfhmm_noYear, #2 mu from H
+            syst.CalPDFUncertainty,
+            syst.CalAlphaSUncertainty,
+            syst.StoreLHEScaleWeights,
             fsrPhoton.muon_fsrPhotonIdx_1,
             fsrPhoton.muon_fsrPhotonIdx_2,
 
@@ -1254,6 +1258,14 @@ def build_config(
                 nanoAOD.genWeight,
                 nanoAOD.nGenJet,
                 q.ngenjets,
+                q.PDF_uncertainty,
+                q.alphaS_uncertainty,
+                q.LHEScaleWeight_0,
+                q.LHEScaleWeight_1,
+                q.LHEScaleWeight_2,
+                q.LHEScaleWeight_3,
+                q.LHEScaleWeight_4,
+                q.LHEScaleWeight_5,
             ],
         )
 
@@ -1356,6 +1368,9 @@ def build_config(
                 jets.NumberOfGoodGENJets,
                 scalefactors.MuonIDIso_SF_vbfhmm_noYear,
                 scalefactors.btagging_SF,
+                syst.CalPDFUncertainty,
+                syst.CalAlphaSUncertainty,
+                syst.StoreLHEScaleWeights,
             ],
             samples=["data"],
         ),
@@ -1379,31 +1394,70 @@ def build_config(
     #            ),
     #        )
 
+    if sample != "data":
+        for direction, variation in [("Up", "systup"), ("Down", "systdown")]:
+            configuration.add_shift(
+                SystematicShift(
+                    name=f"MuonIDIso{direction}",
+                    shift_config={"vbfhmm": {"muon_sf_varation": variation}},
+                    producers={
+                        "vbfhmm": [
+                            scalefactors.MuonIDIso_SF_vbfhmm_noYear,
+                        ]
+                    },
+                )
+            )
 
-    configuration.add_shift(
-        SystematicShift(
-            name="MuonIDUp",
-            shift_config={"m2m": {"muon_sf_varation": "systup"}},
-            producers={
-                "m2m": [
-                    # scalefactors.Muon_1_ID_SF,
-                    # scalefactors.Muon_2_ID_SF,
-                ]
-            },
-        )
-    )
-    configuration.add_shift(
-        SystematicShift(
-            name="MuonIDDown",
-            shift_config={"m2m": {"muon_sf_varation": "systdown"}},
-            producers={
-                "m2m": [
-                    # scalefactors.Muon_1_ID_SF,
-                    # scalefactors.Muon_2_ID_SF,
-                ]
-            },
-        )
-    )
+        for direction, variation in [("Up", '"up"'), ("Down", '"down"')]:
+            configuration.add_shift(
+                SystematicShift(
+                    name=f"jerTotal{direction}",
+                    shift_config={"global": {"jet_jer_shift": variation}},
+                    producers={
+                        "global": [
+                            jets.JetEnergyCorrection_2022_v15_v2,
+                        ]
+                    },
+                    ignore_producers={
+                        "global": [
+                            jets.LVJet1,
+                            jets.LVJet2,
+                            jets.LVJet3,
+                            jets.LVJet4,
+                            jets.DiJetMass,
+                            jets.DiJetEta,
+                        ]
+                    },
+                )
+            )
+
+        for direction, shift_value in [("Up", 1), ("Down", -1)]:
+            configuration.add_shift(
+                SystematicShift(
+                    name=f"jesTotal{direction}",
+                    shift_config={
+                        "global": {
+                            "jet_jes_shift": shift_value,
+                            "jet_jes_sources": '{"Total"}',
+                        },
+                    },
+                    producers={
+                        "global": [
+                            jets.JetEnergyCorrection_2022_v15_v2,
+                        ]
+                    },
+                    ignore_producers={
+                        "global": [
+                            jets.LVJet1,
+                            jets.LVJet2,
+                            jets.LVJet3,
+                            jets.LVJet4,
+                            jets.DiJetMass,
+                            jets.DiJetEta,
+                        ]
+                    },
+                )
+            )
 
     #########################
     # Finalize and validate the configuration

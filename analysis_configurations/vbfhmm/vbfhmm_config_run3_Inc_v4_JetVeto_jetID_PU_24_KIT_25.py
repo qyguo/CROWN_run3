@@ -660,7 +660,7 @@ def build_config(
                     "2023": '"Summer23Prompt23_RunCv4_JRV1_MC"',
                     "2023BPix": '"Summer23BPixPrompt23_RunD_JRV1_MC"',
                     #"2024": '"Summer24Prompt24_V1_MC"',
-                    "2024": '"Summer23BPixPrompt23_RunD_JRV1_MC"',
+                    "2024": '"Summer24Prompt24_JRV1_MC"',
                     "2025": '"Summer23BPixPrompt23_RunD_JRV1_MC"',
                 }
             ),
@@ -670,7 +670,7 @@ def build_config(
                     "2022EE": '"Summer22EE_22Sep2023_RunG_V3_DATA"',
                     "2023": '"Summer23Prompt23_V2_DATA"',
                     "2023BPix": '"Summer23BPixPrompt23_V3_DATA"',
-                    "2024": '"Summer24Prompt24_V2_DATA"',
+                    "2024": '"Summer24Prompt24_V3_DATA"',
                     "2025": '"Winter25Prompt25_V3_DATA"',
                 }
             ),
@@ -687,7 +687,7 @@ def build_config(
                     "2023": '"Summer23Prompt23_V1_MC"',
                     "2023BPix": '"Summer23BPixPrompt23_V1_MC"',
                     #"2024": '"Summer24Prompt24_V1_MC"',
-                    "2024": '"Summer24Prompt24_V2_MC"',
+                    "2024": '"Summer24Prompt24_V3_MC"',
                     "2025": '"Winter25Prompt25_V3_MC"',
                 }
             ),

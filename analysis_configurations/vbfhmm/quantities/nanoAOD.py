@@ -102,7 +102,7 @@ nSoftJet5 = NanoAODQuantity("SoftActivityJetNjets5")
 #SoftActivityJetNjets5 = NanoAODQuantity("SoftActivityJetNjets5")
 
 fold = NanoAODQuantity("fold") # TODO: only in fsim
-# nGenJet = NanoAODQuantity("nGenJet") # TODO: not in fsim
+nGenJet = NanoAODQuantity("nGenJet")
 
 GenJet_pt = NanoAODQuantity("GenJet_pt")
 GenJet_eta = NanoAODQuantity("GenJet_eta")
@@ -164,6 +164,8 @@ GenMET_phi = NanoAODQuantity("GenMET_phi")
 genTestWeight = NanoAODQuantity("Generator_weight") # TODO: use in fsim
 genWeight = NanoAODQuantity("Generator_weight") # TODO: use in fsim
 # genWeight = NanoAODQuantity("genWeight") # TODO: not in fsim
+LHEScaleWeight = NanoAODQuantity("LHEScaleWeight")
+LHEPdfWeight = NanoAODQuantity("LHEPdfWeight")
 TauEmbedding_initialMETEt = NanoAODQuantity("TauEmbedding_initialMETEt")
 TauEmbedding_initialMETphi = NanoAODQuantity("TauEmbedding_initialMETphi")
 TauEmbedding_initialPuppiMETEt = NanoAODQuantity("TauEmbedding_initialPuppiMETEt")

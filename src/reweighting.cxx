@@ -451,54 +451,47 @@ ROOT::RDF::RNode LHEalphaSUncertainty(ROOT::RDF::RNode df,
     return df1;
 }
 
-ROOT::RDF::RNode LHEscaleEnvelope(ROOT::RDF::RNode df,
-                                  const std::string &output_up,
-                                  const std::string &output_down,
-                                  const std::string &lhe_scale_weights) {
+ROOT::RDF::RNode LHEscaleWeights(
+    ROOT::RDF::RNode df, const std::vector<std::string> &output_names,
+    const std::string &lhe_scale_weights) {
+    if (output_names.size() != 6) {
+        throw std::runtime_error("LHEscaleWeights requires six output names");
+    }
     if (!hasColumn(df, lhe_scale_weights)) {
-        Logger::get("event::reweighting::LHEscaleEnvelope")
-            ->warn("Column {} is missing, setting {} and {} to 1",
-                   lhe_scale_weights, output_up, output_down);
-        auto df1 = df.Define(output_up, []() { return 1.0f; });
-        auto df2 = df1.Define(output_down, []() { return 1.0f; });
-        return df2;
+        Logger::get("event::reweighting::LHEscaleWeights")
+            ->warn("Column {} is missing, setting all scale weights to 1",
+                   lhe_scale_weights);
+        for (const auto &output_name : output_names) {
+            df = df.Define(output_name, []() { return 1.0f; });
+        }
+        return df;
     }
 
-    auto scale_unc_up_lambda = [](const ROOT::RVec<float> scale_weights) {
-        constexpr int scale_indices[] = {0, 1, 3, 4, 6, 7};
-        if (scale_weights.size() <= scale_indices[5]) {
-            Logger::get("event::reweighting::LHEscaleEnvelope")
+    const std::string selected_weights = output_names.front() + "_collection";
+    auto select_scale_weights = [](const ROOT::RVec<float> &scale_weights) {
+        if (scale_weights.size() != 8 && scale_weights.size() != 9) {
+            Logger::get("event::reweighting::LHEscaleWeights")
                 ->error("Invalid number of LHE scale weights: {}",
                         scale_weights.size());
             throw std::runtime_error("Invalid number of LHE scale weights");
         }
 
-        float maxv = 1.0f;
-        for (int index : scale_indices) {
-            maxv = std::max(maxv, scale_weights[index]);
+        constexpr size_t indices_9[] = {0, 1, 3, 5, 7, 8};
+        constexpr size_t indices_8[] = {0, 1, 3, 4, 6, 7};
+        const size_t *indices =
+            scale_weights.size() == 9 ? indices_9 : indices_8;
+        std::vector<float> selected;
+        selected.reserve(6);
+        for (size_t i = 0; i < 6; ++i) {
+            selected.push_back(scale_weights[indices[i]]);
         }
-        return maxv;
+        return selected;
     };
 
-    auto scale_unc_down_lambda = [](const ROOT::RVec<float> scale_weights) {
-        constexpr int scale_indices[] = {0, 1, 3, 4, 6, 7};
-        if (scale_weights.size() <= scale_indices[5]) {
-            Logger::get("event::reweighting::LHEscaleEnvelope")
-                ->error("Invalid number of LHE scale weights: {}",
-                        scale_weights.size());
-            throw std::runtime_error("Invalid number of LHE scale weights");
-        }
-
-        float minv = 1.0f;
-        for (int index : scale_indices) {
-            minv = std::min(minv, scale_weights[index]);
-        }
-        return minv;
-    };
-
-    auto df1 = df.Define(output_up, scale_unc_up_lambda, {lhe_scale_weights});
-    auto df2 = df1.Define(output_down, scale_unc_down_lambda, {lhe_scale_weights});
-    return df2;
+    auto df1 = df.Define(selected_weights, select_scale_weights,
+                         {lhe_scale_weights});
+    return basefunctions::UnrollVectorQuantity<float>(
+        df1, selected_weights, output_names);
 }
 } // namespace reweighting
 #endif /* GUARD_REWEIGHTING_H */
