@@ -338,6 +338,13 @@ JetIDCut = Producer(
     output=[q.jet_id_mask],
     scopes=["global"],
 )
+RenameJetID_v12 = Producer(
+    name="RenameJetID_v12",
+    call="basefunctions::rename<ROOT::RVec<UChar_t>>({df}, {input}, {output})",
+    input=[nanoAOD.Jet_ID],
+    output=[q.jet_id_v15],
+    scopes=["global"],
+)
 JetPUIDCut = Producer(
     name="JetPUIDCut",
     call="physicsobject::jet::CutPUID({df}, {output}, {input}, {jet_puid}, {jet_puid_max_pt})",

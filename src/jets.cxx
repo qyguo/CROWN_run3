@@ -354,25 +354,21 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
                                        const std::string &jet_muEF,
                                        const std::string &jet_chEmEF)
 {
-    // Define a new column in the dataset, "output_col", using the provided column names
     auto df1 = df.Define(
         output_col,
         [](const ROOT::RVec<float> &Jet_eta,
-           const ROOT::RVec<int>   &Jet_jetId,
+           const ROOT::RVec<UChar_t> &Jet_jetId,
            const ROOT::RVec<float> &Jet_neHEF,
            const ROOT::RVec<float> &Jet_neEmEF,
            const ROOT::RVec<float> &Jet_muEF,
            const ROOT::RVec<float> &Jet_chEmEF)
         {
-            // The output will be a boolean vector, one entry per jet.
             ROOT::RVec<int> PassJetId_FailTightLepVeto(Jet_eta.size(), 0);
 
             for (size_t i = 0; i < Jet_eta.size(); ++i) {
-                // 1) Compute Jet_passJetIdTight
                 bool jet_passTight = false;
                 float absEta = std::abs(Jet_eta[i]);
 
-                // Check 2nd bit of jetId: (1 << 1) means bit index 1 (a value of 2)
                 if (absEta <= 2.7) {
                     jet_passTight = (Jet_jetId[i] & (1 << 1));
                 }
@@ -380,11 +376,9 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
                     jet_passTight = ((Jet_jetId[i] & (1 << 1)) && (Jet_neHEF[i] < 0.99));
                 }
                 else {
-                    // absEta > 3.0
                     jet_passTight = ((Jet_jetId[i] & (1 << 1)) && (Jet_neEmEF[i] < 0.4));
                 }
 
-                // 2) Compute Jet_passJetIdTightLepVeto
                 bool jet_passTightLepVeto = false;
                 if (absEta <= 2.7) {
                     jet_passTightLepVeto = jet_passTight &&
@@ -394,17 +388,13 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
                     jet_passTightLepVeto = jet_passTight;
                 }
 
-                //PassJetId_FailTightLepVeto[i] = (jet_passTight && (!jet_passTightLepVeto));
                 PassJetId_FailTightLepVeto[i] = jet_passTight;
             }
 
-            return PassJetId_FailTightLepVeto; // RVec<bool>
+            return PassJetId_FailTightLepVeto;
         },
-        // Columns that the lambda above depends on
         {jet_eta, jet_jetId, jet_neHEF, jet_neEmEF, jet_muEF, jet_chEmEF}
     );
-
-    // Return the updated RNode
     return df1;
 }
 ///// NanoAODv13, 14, 15 jet_ID
@@ -2339,14 +2329,20 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
   const float jet_horn_eta_min = 2.5f;
   const float jet_horn_eta_max = 3.0f;
   const float jet_horn_veto_max_pt = 50.0f;
+  const bool is_2024 = jes_tag.find("Summer24") != std::string::npos;
+  const bool apply_hf_veto =
+      jes_tag.find("Summer22") != std::string::npos ||
+      jes_tag.find("Summer23") != std::string::npos;
 
   auto inJetHorn = [jet_horn_eta_min, jet_horn_eta_max](float eta) {
     const float aeta = std::abs(eta);
     return (aeta >= jet_horn_eta_min && aeta < jet_horn_eta_max);
   };
 
-  auto vetoDataJetHorn = [inJetHorn, jet_horn_veto_max_pt](float eta, float pt) {
-    return inJetHorn(eta) && pt < jet_horn_veto_max_pt;
+  auto vetoDataJet = [inJetHorn, jet_horn_eta_max, jet_horn_veto_max_pt,
+                      apply_hf_veto](float eta, float pt) {
+    const bool in_hf = apply_hf_veto && std::abs(eta) > jet_horn_eta_max;
+    return pt < jet_horn_veto_max_pt && (inJetHorn(eta) || in_hf);
   };
 
   auto hasJetVeto = [jet_veto_SF](const ROOT::RVec<float> &pt,
@@ -2382,6 +2378,7 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
     auto L2_eval  = cset->at(name_L2);
     auto L3_eval  = cset->at(name_L3);
     auto Res_eval = cset->at(name_Res);
+    const bool l2_uses_phi = L2_eval->inputs().size() == 3;
 
     auto JetEnergyCorrectionLambda =
         [=](const ROOT::RVec<float> &pt_values,
@@ -2416,22 +2413,26 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
               const float pt_L1 = raw_pt * cL1;
 
               float cL2 = 1.0f;
-              if (std::abs(phi) < 3.1416f)
-                cL2 = L2_eval->evaluate({eta, phi, pt_L1});
+              if (l2_uses_phi) {
+                if (std::abs(phi) < 3.1416f)
+                  cL2 = L2_eval->evaluate({eta, phi, pt_L1});
+              } else {
+                cL2 = L2_eval->evaluate({eta, pt_L1});
+              }
               const float pt_L2 = pt_L1 * cL2;
 
               const float cL3 = L3_eval->evaluate({eta, pt_L2});
               const float pt_L3 = pt_L2 * cL3;
 
-              const float pt_for_res = clipPtForResidualAfterL2Rel(pt_L2, eta);
-              float cRes = 1.0f;
-              if (float(run_value) >= 379412.0 && float(run_value) < 387121.0)
-                cRes = Res_eval->evaluate({float(run_value), eta, pt_for_res});
+              const float pt_for_res =
+                  is_2024 ? clipPtForResidualAfterL2Rel(pt_L2, eta) : pt_L2;
+              const float cRes =
+                  Res_eval->evaluate({float(run_value), eta, pt_for_res});
 
               corr_pt = pt_L3 * cRes;
             }
 
-            if (vetoDataJetHorn(eta, corr_pt)) {
+            if (vetoDataJet(eta, corr_pt)) {
               corr_pt = -999.f;
             }
 
@@ -2466,7 +2467,7 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
 
         for (int i = 0; i < (int)pt_values.size(); ++i) {
           float corr_pt = pt_values[i];
-          if (vetoDataJetHorn(eta_values[i], corr_pt)) {
+          if (vetoDataJet(eta_values[i], corr_pt)) {
             corr_pt = -999.f;
           }
           out.push_back(corr_pt);
@@ -3209,16 +3210,14 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
     return (float)L1_eval->evaluate({area, eta, pt, rho});
   };
 
-  auto evalL2 = [L2_eval](float eta, float phi, float pt) -> float {
+  const bool l2_uses_phi = L2_eval->inputs().size() == 3;
+  auto evalL2 = [L2_eval, l2_uses_phi](float eta, float phi, float pt) -> float {
     if (std::abs(eta) >= 4.7f) return 1.0f;
-    if (std::abs(phi) >= 3.1416f) return 1.0f;
-    // Most often {eta, pt}; sometimes {eta, pt, rho}
-    //try {
-    //  return (float)L2_eval->evaluate({eta, pt});
-    //} catch (const std::exception &) {
-    //  return (float)L2_eval->evaluate({eta, pt, rho});
-    //}
-    return (float)L2_eval->evaluate({eta, phi, pt});
+    if (l2_uses_phi) {
+      if (std::abs(phi) >= 3.1416f) return 1.0f;
+      return (float)L2_eval->evaluate({eta, phi, pt});
+    }
+    return (float)L2_eval->evaluate({eta, pt});
   };
 
   auto evalL3 = [L3_eval](float eta, float pt) -> float {
