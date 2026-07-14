@@ -15,6 +15,16 @@ bool matchParticle(const ROOT::Math::PtEtaPhiMVector &particle,
                    const int &trigger_particle_id_cut,
                    const int &triggerbit_cut);
 
+bool matchParticle(const ROOT::Math::PtEtaPhiMVector &particle,
+                   ROOT::RVec<float> &triggerobject_pts,
+                   ROOT::RVec<float> &triggerobject_etas,
+                   ROOT::RVec<float> &triggerobject_phis,
+                   ROOT::RVec<unsigned long long> &triggerobject_bits,
+                   ROOT::RVec<int> &triggerobject_ids, const float &matchDeltaR,
+                   const float &pt_cut, const float &eta_cut,
+                   const int &trigger_particle_id_cut,
+                   const int &triggerbit_cut);
+
 ROOT::RDF::RNode GenerateSingleTriggerFlag(
     ROOT::RDF::RNode df, const std::string &triggerflag_name,
     const std::string &particle_p4, const std::string &triggerobject_bits,

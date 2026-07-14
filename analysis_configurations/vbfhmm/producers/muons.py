@@ -354,6 +354,19 @@ Mu1_H = Producer(
     output=[q.muon_leadingp4_H],
     scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","nnmm","fjmm"],
 )
+Mu1_H_KITBSC = Producer(
+    name="Mu1_H_KITBSC",
+    call="lorentzvectors::build({df}, {input_vec}, 0, {output})",
+    input=[
+        q.dimuon_HiggsCand_collection,
+        q.Muon_pt_kit_bsc,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_mass,
+    ],
+    output=[q.muon_leadingp4_H],
+    scopes=["vbfhmm"],
+)
 ##### The sub leading muon form Higgs
 Mu2_H = Producer(
     name="Mu2_H",
@@ -367,6 +380,19 @@ Mu2_H = Producer(
     ],
     output=[q.muon_subleadingp4_H],
     scopes=["gghmm","fsim","vbfhmm","e2m","m2m", "eemm","nnmm","fjmm"],
+)
+Mu2_H_KITBSC = Producer(
+    name="Mu2_H_KITBSC",
+    call="lorentzvectors::build({df}, {input_vec}, 1, {output})",
+    input=[
+        q.dimuon_HiggsCand_collection,
+        q.Muon_pt_kit_bsc,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_mass,
+    ],
+    output=[q.muon_subleadingp4_H],
+    scopes=["vbfhmm"],
 )
 ##### The leading muon from Higgs in 4m channel
 Mu1_H_4m = Producer(

@@ -171,15 +171,38 @@ ROOT::RDF::RNode fsrIdx(ROOT::RDF::RNode df, const std::string &outputname,
         {pairname, fsrIdxcolumn});
 }
 
-ROOT::RDF::RNode fsrIdx_2022(ROOT::RDF::RNode df, const std::string &outputname,
-                        const int &position, const std::string &pairname,
-                        const std::string &fsrIdxcolumn) {
+//ROOT::RDF::RNode fsrIdx_2022(ROOT::RDF::RNode df, const std::string &outputname,
+//                        const int &position, const std::string &pairname,
+//                        const std::string &fsrIdxcolumn) {
+//    return df.Define(
+//        outputname,
+//        [position](const ROOT::RVec<int> &pair, const ROOT::RVec<Short_t> &fsrIdx) {
+//            const int index = pair.at(position);
+//            if (index < 0 || index >= static_cast<int>(fsrIdx.size()))
+//                return -1;  // or your default_int if you have one defined
+//            return static_cast<int>(fsrIdx.at(index));
+//        },
+//        {pairname, fsrIdxcolumn});
+//}
+ROOT::RDF::RNode fsrIdx_2022(ROOT::RDF::RNode df,
+                             const std::string &outputname,
+                             const int &position,
+                             const std::string &pairname,
+                             const std::string &fsrIdxcolumn) {
     return df.Define(
         outputname,
-        [position](const ROOT::RVec<int> &pair, const ROOT::RVec<Short_t> &fsrIdx) {
+        [position](const ROOT::RVec<int> &pair,
+                   const ROOT::RVec<Short_t> &fsrIdx) {
+            if (position < 0 || position >= static_cast<int>(pair.size())) {
+                return -1;
+            }
+
             const int index = pair.at(position);
-            if (index < 0 || index >= static_cast<int>(fsrIdx.size()))
-                return -1;  // or your default_int if you have one defined
+
+            if (index < 0 || index >= static_cast<int>(fsrIdx.size())) {
+                return -1;
+            }
+
             return static_cast<int>(fsrIdx.at(index));
         },
         {pairname, fsrIdxcolumn});
@@ -721,14 +744,35 @@ ROOT::RDF::RNode mt_tot(ROOT::RDF::RNode df, const std::string &outputname,
 ///
 /// \returns a dataframe with the new column
 
+//ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
+//                           const int &position, const std::string &pairname,
+//                           const std::string &ptErrcolumn) {
+//    return df.Define(outputname,
+//                     [position](const ROOT::RVec<int> &pair,
+//                                const ROOT::RVec<float> &ptErr) {
+//                         const int index = pair.at(position);
+//                         //const int index = pair.at(position, -1);
+//                         return ptErr.at(index, default_float);
+//                     },
+//                     {pairname, ptErrcolumn});
+//}
 ROOT::RDF::RNode ptErr(ROOT::RDF::RNode df, const std::string &outputname,
-                           const int &position, const std::string &pairname,
-                           const std::string &ptErrcolumn) {
+                       const int &position, const std::string &pairname,
+                       const std::string &ptErrcolumn) {
     return df.Define(outputname,
                      [position](const ROOT::RVec<int> &pair,
                                 const ROOT::RVec<float> &ptErr) {
+                         if (position < 0 ||
+                             position >= static_cast<int>(pair.size())) {
+                             return default_float;
+                         }
+
                          const int index = pair.at(position);
-                         //const int index = pair.at(position, -1);
+                         if (index < 0 ||
+                             index >= static_cast<int>(ptErr.size())) {
+                             return default_float;
+                         }
+
                          return ptErr.at(index, default_float);
                      },
                      {pairname, ptErrcolumn});

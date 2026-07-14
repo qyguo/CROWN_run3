@@ -173,6 +173,23 @@ JetPtCorrection_2022_v15_v2(ROOT::RDF::RNode df, const std::string &corrected_je
                          const std::string &jes_tag, const std::string &jec_algo,
                          const std::string &jet_veto_map, const std::string &jet_veto_tag);
 ROOT::RDF::RNode
+JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
+                         const std::string &jet_pt, const std::string &jet_eta,
+                         const std::string &jet_phi, const std::string &jet_area,
+                         const std::string &jet_rawFactor, const std::string &jet_ID,
+                         const std::string &jet_neEmEF, const std::string &jet_chEmEF,
+                         const std::string &gen_jet_pt, const std::string &gen_jet_eta,
+                         const std::string &gen_jet_phi, const std::string &rho,
+                         bool reapplyJES,
+                         const std::vector<std::string> &jes_shift_sources,
+                         const int &jes_shift, const std::string &jer_shift,
+                         const std::string &jec_file, const std::string &jer_tag,
+                         const std::string &jes_tag, const std::string &jec_algo,
+                         const std::string &jet_veto_map, const std::string &jet_veto_tag,
+                         const bool &jet_horn_veto, const float &jet_horn_eta_min,
+                         const float &jet_horn_eta_max, const float &jet_horn_veto_max_pt,
+                         const bool &jet_horn_jer_genmatch_only);
+ROOT::RDF::RNode
 JetPtCorrection_2022_GenMatch(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
                 const std::string &jet_pt, const std::string &jet_eta,
                 const std::string &jet_phi, const std::string &jet_area,
@@ -221,6 +238,39 @@ ROOT::RDF::RNode CutRawID(ROOT::RDF::RNode df, const std::string &quantity,
 ROOT::RDF::RNode AntiCutRawID(ROOT::RDF::RNode df, const std::string &quantity,
                               const std::string &maskname,
                               const float &idThreshold);
+//// check the gen VBF filter for DY sample
+ROOT::RDF::RNode VBFGenJetFilterFlag(
+    ROOT::RDF::RNode df,
+    //correctionManager::CorrectionManager &correctionManager,
+    const std::string &outputname,
+    const std::string &genjet_pt,
+    const std::string &genjet_eta,
+    const std::string &genjet_phi,
+    const std::string &genjet_mass,
+    const std::string &genpart_pdgid,
+    const std::string &genpart_eta,
+    const std::string &genpart_phi,
+    const std::string &genpart_statusflags,
+    const bool leadJetsNoLepMass);
+
+///check the jet1 and jet2 matched gen jets
+ROOT::RDF::RNode MatchedGenJetFloat(
+    ROOT::RDF::RNode df,
+    //correctionManager::CorrectionManager &correctionManager,
+    const std::string &outputname,
+    const std::string &jet_collection,
+    const std::string &jet_genjetidx,
+    const std::string &genjet_var,
+    const int jet_pos);
+
+ROOT::RDF::RNode NMatchedGenJetsJet1Jet2(
+    ROOT::RDF::RNode df,
+    //correctionManager::CorrectionManager &correctionManager,
+    const std::string &outputname,
+    const std::string &jet_collection,
+    const std::string &jet_genjetidx,
+    const std::string &genjet_pt);
+
 } // end namespace jet
 } // end namespace physicsobject
 

@@ -14,6 +14,7 @@
 #include <regex>
 
 typedef std::bitset<30> IntBits;
+typedef std::bitset<64> IntBits_64;
 
 namespace trigger {
 
@@ -179,6 +180,79 @@ bool matchParticle(const ROOT::Math::PtEtaPhiMVector &particle,
     }
     return false;
 };
+/// bit different type
+bool matchParticle(const ROOT::Math::PtEtaPhiMVector &particle,
+                   ROOT::RVec<float> &triggerobject_pts,
+                   ROOT::RVec<float> &triggerobject_etas,
+                   ROOT::RVec<float> &triggerobject_phis,
+                   ROOT::RVec<unsigned long long> &triggerobject_bits,
+                   ROOT::RVec<int> &triggerobject_ids, const float &matchDeltaR,
+                   const float &pt_cut, const float &eta_cut,
+                   const int &trigger_particle_id_cut,
+                   const int &triggerbit_cut) {
+    Logger::get("CheckTriggerMatch")->debug("Checking Triggerobjects");
+    Logger::get("CheckTriggerMatch")
+        ->debug("Total number of triggerobjects: {}", triggerobject_pts.size());
+    for (std::size_t idx = 0; idx < triggerobject_pts.size(); ++idx) {
+        Logger::get("CheckTriggerMatch")->debug("Triggerobject Nr. {}", idx);
+        Logger::get("CheckTriggerMatch")
+            ->debug("bit Value: {}", IntBits_64(triggerobject_bits[idx]));
+        Logger::get("CheckTriggerMatch")
+            ->debug("bit Value: {}", triggerobject_bits[idx]);
+        auto triggerobject = ROOT::Math::RhoEtaPhiVectorF(
+            0, triggerobject_etas[idx], triggerobject_phis[idx]);
+        // We check the deltaR match as well as that the pt and eta of the
+        // triggerobject are above the given thresholds
+        bool deltaR = ROOT::Math::VectorUtil::DeltaR(triggerobject, particle) <
+                      matchDeltaR;
+        // if we don't want to do any matching here, the triggerbut_cut value is
+        // -1
+        Logger::get("CheckTriggerMatch")
+            ->debug("bit Value: {}", triggerobject_bits[idx]);
+        //bool bit = (triggerbit_cut == -1) ||
+        //           (IntBits_64(triggerobject_bits[idx]).test(triggerbit_cut));
+        bool bit = (triggerbit_cut == -1) ||
+            (triggerbit_cut >= 0 && triggerbit_cut < 64 &&
+            IntBits_64(triggerobject_bits[idx]).test(triggerbit_cut));
+        bool id = triggerobject_ids[idx] == trigger_particle_id_cut;
+        bool pt = particle.pt() > pt_cut;
+        bool eta = abs(particle.eta()) < eta_cut;
+        Logger::get("CheckTriggerMatch")
+            ->debug("Partice Lorentz Vector: {}, {}, {}, {}", particle.pt(), particle.eta(), particle.phi(), particle.mass());
+        Logger::get("CheckTriggerMatch")
+            ->debug("-------------------------------------------------------");
+        Logger::get("CheckTriggerMatch")->debug("deltaR/matchDeltaR Check: {}/{}", deltaR, matchDeltaR);
+        Logger::get("CheckTriggerMatch")
+            ->debug("deltaR Value: {}",
+                    ROOT::Math::VectorUtil::DeltaR(triggerobject, particle));
+        Logger::get("CheckTriggerMatch")->debug("id/trigger_particle_id_cut Check: {}/{}", id, trigger_particle_id_cut);
+        Logger::get("CheckTriggerMatch")
+            ->debug("id Value: {}", triggerobject_ids[idx]);
+        Logger::get("CheckTriggerMatch")->debug("bit/triggerbit_cut Check: {}/{}", bit, triggerbit_cut);
+        Logger::get("CheckTriggerMatch")
+            ->debug("bit Value: {}", IntBits_64(triggerobject_bits[idx]));
+        Logger::get("CheckTriggerMatch")->debug("pt/pt_cut Check: {}/{}", pt, pt_cut);
+        Logger::get("CheckTriggerMatch")
+            ->debug("pt Value (trg): {}, pt Value (reco): {}", triggerobject_pts[idx], particle.pt());
+        Logger::get("CheckTriggerMatch")->debug("eta/eta_cut Check: {}/{}", eta, eta_cut);
+        Logger::get("CheckTriggerMatch")
+            ->debug("eta (trg) Value: {}, eta (reco) Value: {}", triggerobject_etas[idx], abs(particle.eta()));
+        Logger::get("CheckTriggerMatch")
+            ->debug("-------------------------------------------------------");
+        if (deltaR && bit && id && pt && eta) {
+            // remove the matching object from the object vectors so it cant be
+            // matched by the next particle as well (if there is one)
+            triggerobject_ids.erase(triggerobject_ids.begin() + idx);
+            triggerobject_bits.erase(triggerobject_bits.begin() + idx);
+            triggerobject_pts.erase(triggerobject_pts.begin() + idx);
+            triggerobject_etas.erase(triggerobject_etas.begin() + idx);
+            triggerobject_phis.erase(triggerobject_phis.begin() + idx);
+            return true;
+        }
+    }
+    return false;
+};
+
 /**
  * @brief Function to generate a trigger flag based on an hlt path and trigger
  * object matching for the given object. This relies on the
@@ -617,7 +691,7 @@ ROOT::RDF::RNode GenerateDoubleTriggerORFlag_2022(
                             bool hltpath,
                             const ROOT::Math::PtEtaPhiMVector &particle1_p4,
                             const ROOT::Math::PtEtaPhiMVector &particle2_p4,
-                            ROOT::RVec<int> triggerobject_bits,
+                            ROOT::RVec<unsigned long long> triggerobject_bits,
                             ROOT::RVec<UShort_t> triggerobject_ids_,
                             ROOT::RVec<float> triggerobject_pts,
                             ROOT::RVec<float> triggerobject_etas,

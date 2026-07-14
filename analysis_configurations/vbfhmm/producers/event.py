@@ -1,6 +1,7 @@
 from ..quantities import output as q
 from ..quantities import nanoAOD as nanoAOD
-from code_generation.producer import BaseFilter, Producer, ProducerGroup, VectorProducer
+#from code_generation.producer import BaseFilter, Producer, ProducerGroup, VectorProducer
+from code_generation.producer import BaseFilter, Producer, ProducerGroup, VectorProducer, Filter
 
 ####################
 # Set of general producers for event quantities
@@ -616,6 +617,114 @@ applyMuonScaReMC_BSC = ProducerGroup(
         "global": [applyMuonScaReMC_BSC_1, applyMuonScaReMC_BSC_2],
     }
 )
+
+MuonPtBscOrNominal = Producer(
+    name="MuonPtBscOrNominal",
+    call="physicsobject::muon::MuonPtBscOrNominal({df}, {output}, {input}, 30.0)",
+    input=[
+        nanoAOD.Muon_pt,
+        nanoAOD.Muon_bsConstrainedPt,
+        nanoAOD.Muon_bsConstrainedChi2,
+    ],
+    output=[q.Muon_pt_bsc_or_nominal],
+    scopes=["global", "vbfhmm"],
+)
+
+applyMuonScaReBSCVector = Producer(
+    name="applyMuonScaReBSCVector",
+    call='physicsobject::muon::applyMuonScaReBSCVector({df}, {output}, "{muon_KIT_files}", {is_data}, {input})',
+    input=[
+        q.Muon_pt_bsc_or_nominal,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.Muon_pt_kit_bsc],
+    scopes=["global", "vbfhmm"],
+)
+
+applyMuonScaReBSCVectorErr = Producer(
+    name="applyMuonScaReBSCVectorErr",
+    call='physicsobject::muon::applyMuonScaReBSCVectorErr({df}, {output}, "{muon_KIT_files}", {is_data}, {input})',
+    input=[
+        q.Muon_pt_bsc_or_nominal,
+        nanoAOD.Muon_eta,
+        nanoAOD.Muon_phi,
+        nanoAOD.Muon_charge,
+        nanoAOD.Muon_nTrackerLayers,
+    ],
+    output=[q.Muon_ptErr_kit_bsc],
+    scopes=["global", "vbfhmm"],
+)
+
+applyMuonScaReBSCPrePair = ProducerGroup(
+    name="applyMuonScaReBSCPrePair",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global", "vbfhmm"],
+    subproducers={
+        "global": [
+            MuonPtBscOrNominal,
+            applyMuonScaReBSCVector,
+            applyMuonScaReBSCVectorErr,
+        ],
+        "vbfhmm": [
+            MuonPtBscOrNominal,
+            applyMuonScaReBSCVector,
+            applyMuonScaReBSCVectorErr,
+        ],
+    },
+)
+
+MuonScaReBSC_1 = Producer(
+    name="MuonScaReBSC_1",
+    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+    input=[q.dimuon_HiggsCand_collection, q.Muon_pt_kit_bsc],
+    output=[q.pt_kit_bsc_1],
+    scopes=["vbfhmm"],
+)
+
+MuonScaReBSC_2 = Producer(
+    name="MuonScaReBSC_2",
+    call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
+    input=[q.dimuon_HiggsCand_collection, q.Muon_pt_kit_bsc],
+    output=[q.pt_kit_bsc_2],
+    scopes=["vbfhmm"],
+)
+
+MuonScaReBSC_Err_1 = Producer(
+    name="MuonScaReBSC_Err_1",
+    call="basefunctions::getvar<float>({df}, {output}, 0, {input})",
+    input=[q.dimuon_HiggsCand_collection, q.Muon_ptErr_kit_bsc],
+    output=[q.ptErr_kit_bsc_1],
+    scopes=["vbfhmm"],
+)
+
+MuonScaReBSC_Err_2 = Producer(
+    name="MuonScaReBSC_Err_2",
+    call="basefunctions::getvar<float>({df}, {output}, 1, {input})",
+    input=[q.dimuon_HiggsCand_collection, q.Muon_ptErr_kit_bsc],
+    output=[q.ptErr_kit_bsc_2],
+    scopes=["vbfhmm"],
+)
+
+MuonScaReBSCSelected = ProducerGroup(
+    name="MuonScaReBSCSelected",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["vbfhmm"],
+    subproducers={
+        "vbfhmm": [
+            MuonScaReBSC_1,
+            MuonScaReBSC_2,
+            MuonScaReBSC_Err_1,
+            MuonScaReBSC_Err_2,
+        ],
+    },
+)
 ##################
 #run 3 muon scale and resolution correction, correct err
 applyMuonScaReData_Err_BSC_1 = Producer(
@@ -1034,6 +1143,17 @@ HiggsToDiMuonPair_p4 = Producer(
     output=[q.dimuon_p4_Higgs],
     scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
 )
+HiggsToDiMuonPair_p4_KITBSC = Producer(
+    name="HiggsToDiMuonPair_p4_KITBSC",
+    call='physicsobject::HiggsToDiMuonPairCollection({df}, {output}, {input})',
+    input=[q.Muon_pt_kit_bsc,
+           nanoAOD.Muon_eta,
+           nanoAOD.Muon_phi,
+           nanoAOD.Muon_mass,
+           q.dimuon_HiggsCand_collection],
+    output=[q.dimuon_p4_Higgs],
+    scopes=["vbfhmm"],
+)
 HiggsToDiMuonPair_p4_4m = Producer(
     name="HiggsToDiMuonPair_p4_4m",
     call='physicsobject::HiggsToDiMuonPairCollection({df}, {output}, {input})',
@@ -1090,6 +1210,18 @@ Mask_DiMuonPair = Producer(
            q.good_muon_collection],
     output=[q.dimuon_HiggsCand_collection], # index about the two selected muons may from Higgs
     scopes=["global","gghmm","fsim","vbfhmm","e2m","m2m","eemm","nnmm","fjmm"],
+)
+Mask_DiMuonPair_KITBSC = Producer(
+    name="Mask_DiMuonPair_KITBSC",
+    call='physicsobject::HiggsCandDiMuonPairCollectionWithMassWindow({df}, {output}, {input}, {dimuon_mass_low}, {dimuon_mass_high})',
+    input=[q.Muon_pt_kit_bsc,
+           nanoAOD.Muon_eta,
+           nanoAOD.Muon_phi,
+           nanoAOD.Muon_mass,
+           nanoAOD.Muon_charge,
+           q.good_muon_collection],
+    output=[q.dimuon_HiggsCand_collection],
+    scopes=["vbfhmm"],
 )
 Mask_DiElectronPair = Producer(
     name="Mask_DiElectronPair",
@@ -1744,4 +1876,27 @@ fatjet_deepTagMD_ZvsQCD = Producer(
            q.good_fatjet_collection],
     output=[q.fatjet_deepTagMD_ZvsQCD],
     scopes=["fjmm"],
+)
+
+VBFJetCutFlag = Producer(
+    name="VBFJetCutFlag",
+    call="basefunctions::VBFJetCutFlag({df}, {output}, {input}, {vbf_njets}, {lead_jet_pt}, {sublead_jet_pt}, {dijet_mass}, {dijet_eta})",
+    input=[
+        q.njets,
+        q.good_jet_collection,
+        q.Jet_pt_corrected,
+        nanoAOD.Jet_eta,
+        nanoAOD.Jet_phi,
+        q.Jet_mass_corrected,
+    ],
+    output=[],
+    scopes=["vbfhmm"],
+)
+
+VBFJetAcceptanceFilter = Filter(
+    name="VBFJetAcceptanceFilter",
+    call='basefunctions::FilterFlagsAny({df}, "VBF jet acceptance any shift", {input})',
+    input=[],
+    scopes=["vbfhmm"],
+    subproducers=[VBFJetCutFlag],
 )

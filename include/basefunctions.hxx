@@ -9,6 +9,8 @@
 #include "utility/RooFunctorThreadsafe.hxx"
 #include "utility/utility.hxx"
 #include <nlohmann/json.hpp>
+#include <cmath>
+#include <Math/Vector4D.h>
 
 enum Channel { MT = 0, ET = 1, TT = 2, EM = 3 };
 
@@ -204,6 +206,60 @@ inline ROOT::RDF::RNode FilterFlagsAny(ROOT::RDF::RNode df,
             [](const ROOT::RVec<bool> &flags) { return Any(flags); }),
         FlagList, filtername);
 }
+
+inline ROOT::RDF::RNode VBFJetCutFlag(
+    ROOT::RDF::RNode df,
+    const std::string &output,
+    const std::string &njets,
+    const std::string &good_jet_collection,
+    const std::string &jet_pt,
+    const std::string &jet_eta,
+    const std::string &jet_phi,
+    const std::string &jet_mass,
+    const int &min_njets,
+    const float &min_jet1_pt,
+    const float &min_jet2_pt,
+    const float &min_dijet_mass,
+    const float &min_dijet_eta) {
+    return df.Define(
+        output,
+        [min_njets, min_jet1_pt, min_jet2_pt, min_dijet_mass, min_dijet_eta](
+            const int &njet, const ROOT::RVec<int> &good_jets,
+            const ROOT::RVec<float> &pts, const ROOT::RVec<float> &etas,
+            const ROOT::RVec<float> &phis, const ROOT::RVec<float> &masses) {
+            if (njet < min_njets || good_jets.size() < 2) {
+                return false;
+            }
+
+            const int j1 = good_jets.at(0);
+            const int j2 = good_jets.at(1);
+            if (j1 < 0 || j2 < 0 || j1 >= static_cast<int>(pts.size()) ||
+                j2 >= static_cast<int>(pts.size()) ||
+                j1 >= static_cast<int>(etas.size()) ||
+                j2 >= static_cast<int>(etas.size()) ||
+                j1 >= static_cast<int>(phis.size()) ||
+                j2 >= static_cast<int>(phis.size()) ||
+                j1 >= static_cast<int>(masses.size()) ||
+                j2 >= static_cast<int>(masses.size())) {
+                return false;
+            }
+
+            if (pts.at(j1) <= min_jet1_pt || pts.at(j2) <= min_jet2_pt) {
+                return false;
+            }
+
+            ROOT::Math::PtEtaPhiMVector jet1(
+                pts.at(j1), etas.at(j1), phis.at(j1), masses.at(j1));
+            ROOT::Math::PtEtaPhiMVector jet2(
+                pts.at(j2), etas.at(j2), phis.at(j2), masses.at(j2));
+            const auto mjj = (jet1 + jet2).mass();
+            const auto detajj = std::abs(etas.at(j1) - etas.at(j2));
+
+            return mjj > min_dijet_mass && detajj > min_dijet_eta;
+        },
+        {njets, good_jet_collection, jet_pt, jet_eta, jet_phi, jet_mass});
+}
+
 
 /// This function defines a flag being true if either of the input flags is
 /// true.
