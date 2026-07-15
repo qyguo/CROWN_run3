@@ -10,9 +10,16 @@
 #include "TH1.h"
 #include "correction.h"
 #include <Math/Vector4D.h>
+#include <algorithm>
+#include <cmath>
+#include <stdexcept>
 
 /// namespace used for reweighting related functions
 namespace reweighting {
+bool hasColumn(ROOT::RDF::RNode df, const std::string &column) {
+    const auto columns = df.GetColumnNames();
+    return std::find(columns.begin(), columns.end(), column) != columns.end();
+}
 /**
  * @brief Function used to read out pileup weights
  *
@@ -443,6 +450,108 @@ ROOT::RDF::RNode LHEpdf(ROOT::RDF::RNode df,
     auto df1 =
         df.Define(outputname, lhe_pdf_weights_lambda, {lhe_pdf_weights});
     return df1;
+}
+
+ROOT::RDF::RNode LHEpdfUncertainty(ROOT::RDF::RNode df,
+                                   const std::string &outputname,
+                                   const std::string &lhe_pdf_weights) {
+    if (!hasColumn(df, lhe_pdf_weights)) {
+        Logger::get("event::reweighting::LHEpdfUncertainty")
+            ->warn("Column {} is missing, setting {} to 0",
+                   lhe_pdf_weights, outputname);
+        return df.Define(outputname, []() { return 0.0f; });
+    }
+
+    auto lhe_pdf_uncertainty_lambda = [](const ROOT::RVec<float> pdf_weights) {
+        const int n_pdfs = pdf_weights.size();
+        if (n_pdfs != 101 && n_pdfs != 103) {
+            Logger::get("event::reweighting::LHEpdfUncertainty")
+                ->error("Invalid number of LHE PDF weights: {}", n_pdfs);
+            throw std::runtime_error("Invalid number of LHE PDF weights");
+        }
+
+        float sum = 0.0f;
+        for (int i = 1; i <= 100; ++i) {
+            const float diff = pdf_weights[i] - 1.0f;
+            sum += diff * diff;
+        }
+        return std::sqrt(sum);
+    };
+
+    auto df1 =
+        df.Define(outputname, lhe_pdf_uncertainty_lambda, {lhe_pdf_weights});
+    return df1;
+}
+
+ROOT::RDF::RNode LHEalphaSUncertainty(ROOT::RDF::RNode df,
+                                      const std::string &outputname,
+                                      const std::string &lhe_pdf_weights) {
+    if (!hasColumn(df, lhe_pdf_weights)) {
+        Logger::get("event::reweighting::LHEalphaSUncertainty")
+            ->warn("Column {} is missing, setting {} to 0",
+                   lhe_pdf_weights, outputname);
+        return df.Define(outputname, []() { return 0.0f; });
+    }
+
+    auto lhe_alpha_s_uncertainty_lambda = [](const ROOT::RVec<float> pdf_weights) {
+        const int n_pdfs = pdf_weights.size();
+        if (n_pdfs == 101) {
+            return 0.0f;
+        }
+        if (n_pdfs != 103) {
+            Logger::get("event::reweighting::LHEalphaSUncertainty")
+                ->error("Invalid number of LHE PDF weights: {}", n_pdfs);
+            throw std::runtime_error("Invalid number of LHE PDF weights");
+        }
+        return 0.5f * std::abs(pdf_weights[102] - pdf_weights[101]);
+    };
+
+    auto df1 =
+        df.Define(outputname, lhe_alpha_s_uncertainty_lambda, {lhe_pdf_weights});
+    return df1;
+}
+
+ROOT::RDF::RNode LHEscaleWeights(
+    ROOT::RDF::RNode df, const std::vector<std::string> &output_names,
+    const std::string &lhe_scale_weights) {
+    if (output_names.size() != 6) {
+        throw std::runtime_error("LHEscaleWeights requires six output names");
+    }
+    if (!hasColumn(df, lhe_scale_weights)) {
+        Logger::get("event::reweighting::LHEscaleWeights")
+            ->warn("Column {} is missing, setting all scale weights to 1",
+                   lhe_scale_weights);
+        for (const auto &output_name : output_names) {
+            df = df.Define(output_name, []() { return 1.0f; });
+        }
+        return df;
+    }
+
+    const std::string selected_weights = output_names.front() + "_collection";
+    auto select_scale_weights = [](const ROOT::RVec<float> &scale_weights) {
+        if (scale_weights.size() != 8 && scale_weights.size() != 9) {
+            Logger::get("event::reweighting::LHEscaleWeights")
+                ->error("Invalid number of LHE scale weights: {}",
+                        scale_weights.size());
+            throw std::runtime_error("Invalid number of LHE scale weights");
+        }
+
+        constexpr size_t indices_9[] = {0, 1, 3, 5, 7, 8};
+        constexpr size_t indices_8[] = {0, 1, 3, 4, 6, 7};
+        const size_t *indices =
+            scale_weights.size() == 9 ? indices_9 : indices_8;
+        std::vector<float> selected;
+        selected.reserve(6);
+        for (size_t i = 0; i < 6; ++i) {
+            selected.push_back(scale_weights[indices[i]]);
+        }
+        return selected;
+    };
+
+    auto df1 = df.Define(selected_weights, select_scale_weights,
+                         {lhe_scale_weights});
+    return basefunctions::UnrollVectorQuantity<float>(
+        df1, selected_weights, output_names);
 }
 
 } // namespace reweighting

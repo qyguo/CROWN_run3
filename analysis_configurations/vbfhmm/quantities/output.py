@@ -467,6 +467,16 @@ genmu2_fromH_mass = Quantity("genmu2_fromH_mass")
 
 BosonDecayMode = Quantity("BosonDecayMode")
 
+# LHE uncertainties
+PDF_uncertainty = Quantity("PDF_uncertainty")
+alphaS_uncertainty = Quantity("alphaS_uncertainty")
+LHEScaleWeight_0 = Quantity("LHEScaleWeight_0")
+LHEScaleWeight_1 = Quantity("LHEScaleWeight_1")
+LHEScaleWeight_2 = Quantity("LHEScaleWeight_2")
+LHEScaleWeight_3 = Quantity("LHEScaleWeight_3")
+LHEScaleWeight_4 = Quantity("LHEScaleWeight_4")
+LHEScaleWeight_5 = Quantity("LHEScaleWeight_5")
+
 # nnmm control region
 dimuon_ZControl_collection = Quantity("dimuon_ZControl_collection")
 Flag_DiMuonFromCR = Quantity("Flag_DiMuonFromCR")

@@ -38,5 +38,14 @@ ROOT::RDF::RNode LHEpdf(ROOT::RDF::RNode df,
                         const std::string &outputname,
                         const std::string &lhe_pdf_weights,
                         const std::string &variation);
+ROOT::RDF::RNode LHEpdfUncertainty(ROOT::RDF::RNode df,
+                                   const std::string &outputname,
+                                   const std::string &lhe_pdf_weights);
+ROOT::RDF::RNode LHEalphaSUncertainty(ROOT::RDF::RNode df,
+                                      const std::string &outputname,
+                                      const std::string &lhe_pdf_weights);
+ROOT::RDF::RNode LHEscaleWeights(
+    ROOT::RDF::RNode df, const std::vector<std::string> &output_names,
+    const std::string &lhe_scale_weights);
 } // namespace reweighting
 #endif /* GUARD_REWEIGHTING_H */

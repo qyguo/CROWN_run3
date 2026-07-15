@@ -115,6 +115,26 @@ JetPtCorrection_2022_v15_v3 = Producer(
     output=[q.Jet_pt_corrected],
     scopes=["global"],
 )
+JetPtCorrection_2022_22_23 = Producer(
+    name="JetPtCorrection_2022_22_23",
+    call="physicsobject::jet::JetPtCorrection_2022_v15_v3_22_23({df}, {output}, {input}, {jet_reapplyJES}, {jet_jes_sources}, {jet_jes_shift}, {jet_jer_shift}, {jet_jec_file}, {jet_jer_tag}, {jet_jes_tag}, {jet_jec_algo}, {jet_veto_map}, {jet_veto_tag}, {jet_hf_veto})",
+    input=[
+        nanoAOD.Jet_pt,
+        nanoAOD.Jet_eta,
+        nanoAOD.Jet_phi,
+        nanoAOD.Jet_area,
+        nanoAOD.Jet_rawFactor,
+        nanoAOD.Jet_ID,
+        nanoAOD.Jet_neEmEF,
+        nanoAOD.Jet_chEmEF,
+        nanoAOD.GenJet_pt,
+        nanoAOD.GenJet_eta,
+        nanoAOD.GenJet_phi,
+        nanoAOD.rho,
+    ],
+    output=[q.Jet_pt_corrected],
+    scopes=["global"],
+)
 ####
 JetPtCorrection_2022_GenMatch = Producer(
     name="JetPtCorrection_2022_GenMatch",
@@ -187,6 +207,14 @@ JetEnergyCorrection_2022_v15_v3 = ProducerGroup(
     scopes=["global"],
     subproducers=[JetPtCorrection_2022_v15_v3, JetMassCorrection],
 )
+JetEnergyCorrection_2022_22_23 = ProducerGroup(
+    name="JetEnergyCorrection_2022_22_23",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global"],
+    subproducers=[JetPtCorrection_2022_22_23, JetMassCorrection],
+)
 #
 JetEnergyCorrection_2022_GenMatch = ProducerGroup(
     name="JetEnergyCorrection_2022_GenMatch",
@@ -234,6 +262,24 @@ JetPtCorrection_data_2024 = Producer(
     output=[q.Jet_pt_corrected],
     scopes=["global"],
 )
+JetPtCorrection_data_22_23 = Producer(
+    name="JetPtCorrection_data_22_23",
+    call="physicsobject::jet::JetPtCorrection_data_2022({df}, {output}, {input}, {jet_jec_file}, {jet_jes_tag_data}, {jet_jec_algo}, {jet_veto_map}, {jet_veto_tag}, {jet_hf_veto})",
+    input=[
+        nanoAOD.Jet_pt,
+        nanoAOD.Jet_eta,
+        nanoAOD.Jet_phi,
+        nanoAOD.Jet_area,
+        nanoAOD.Jet_rawFactor,
+        nanoAOD.Jet_ID,
+        nanoAOD.rho,
+        nanoAOD.Jet_neEmEF,
+        nanoAOD.Jet_chEmEF,
+        nanoAOD.run,
+    ],
+    output=[q.Jet_pt_corrected],
+    scopes=["global"],
+)
 JetPtCorrection_data_2025 = Producer(
     name="JetPtCorrection_data_2025",
     #call="physicsobject::jet::JetPtCorrection_data_2022({df}, {output}, {input}, {jet_reapplyJES}, {jet_jes_sources}, {jet_jes_shift}, {jet_jer_shift}, {jet_jec_file}, {jet_jer_tag}, {jet_jes_tag}, {jet_jec_algo})",
@@ -269,6 +315,14 @@ JetEnergyCorrection_data_2024 = ProducerGroup(
     output=None,
     scopes=["global"],
     subproducers=[JetPtCorrection_data_2024, JetMassCorrection],
+)
+JetEnergyCorrection_data_22_23 = ProducerGroup(
+    name="JetEnergyCorrection_data_22_23",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global"],
+    subproducers=[JetPtCorrection_data_22_23, JetMassCorrection],
 )
 JetEnergyCorrection_data_2025 = ProducerGroup(
     name="JetEnergyCorrection_data_2025",
@@ -338,13 +392,6 @@ JetIDCut = Producer(
     output=[q.jet_id_mask],
     scopes=["global"],
 )
-RenameJetID_v12 = Producer(
-    name="RenameJetID_v12",
-    call="basefunctions::rename<ROOT::RVec<UChar_t>>({df}, {input}, {output})",
-    input=[nanoAOD.Jet_ID],
-    output=[q.jet_id_v15],
-    scopes=["global"],
-)
 JetPUIDCut = Producer(
     name="JetPUIDCut",
     call="physicsobject::jet::CutPUID({df}, {output}, {input}, {jet_puid}, {jet_puid_max_pt})",
@@ -361,6 +408,20 @@ BTagCutLoose = Producer(
 )
 BTagCutMedium = Producer(
     name="BTagCutMedium",
+    call="physicsobject::jet::CutRawID({df}, {input}, {output}, {btag_cut_medium})",
+    input=[nanoAOD.BJet_discriminator],
+    output=[],
+    scopes=["global"],
+)
+BTagCutLoose_22_23 = Producer(
+    name="BTagCutLoose_22_23",
+    call="physicsobject::jet::CutRawID({df}, {input}, {output}, {btag_cut_loose})",
+    input=[nanoAOD.BJet_discriminator],
+    output=[],
+    scopes=["global"],
+)
+BTagCutMedium_22_23 = Producer(
+    name="BTagCutMedium_22_23",
     call="physicsobject::jet::CutRawID({df}, {input}, {output}, {btag_cut_medium})",
     input=[nanoAOD.BJet_discriminator],
     output=[],
@@ -675,6 +736,22 @@ GoodBJetsMedium = ProducerGroup(
     output=[q.good_bjets_mask_medium],
     scopes=["global"],
     subproducers=[BTagCutMedium],
+)
+GoodBJetsLoose_22_23 = ProducerGroup(
+    name="GoodBJetsLoose_22_23",
+    call="physicsobject::CombineMasks({df}, {output}, {input})",
+    input=[q.good_jets_mask],
+    output=[q.good_bjets_mask_loose],
+    scopes=["global"],
+    subproducers=[BJetPtCut, BJetEtaCut, BTagCutLoose_22_23],
+)
+GoodBJetsMedium_22_23 = ProducerGroup(
+    name="GoodBJetsMedium_22_23",
+    call="physicsobject::CombineMasks({df}, {output}, {input})",
+    input=[q.good_bjets_mask_loose],
+    output=[q.good_bjets_mask_medium],
+    scopes=["global"],
+    subproducers=[BTagCutMedium_22_23],
 )
 
 NumberOfLooseB = Producer(

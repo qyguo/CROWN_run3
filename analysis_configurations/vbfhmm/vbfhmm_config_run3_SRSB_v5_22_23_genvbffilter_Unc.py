@@ -18,8 +18,8 @@ from .producers import p4 as p4
 from .producers import cr as cr
 from .producers import fatjets as fatjets
 # end 
-from .quantities import nanoAOD as nanoAOD
-#from .quantities import nanoAOD_v12 as nanoAOD
+# Use the NanoAOD v12 schema for 2022/2023 inputs.
+from .quantities import nanoAOD_v12 as nanoAOD
 # MET_pt phi ->PFMET_pt phi but nanoAOD used for p4 met .. so not change there then mv the default nanoAOD to be v12.
 from .quantities import output as q
 from code_generation.configuration import Configuration
@@ -687,7 +687,7 @@ def build_config(
                         "2024": '"Summer24Prompt24_RunBCDEFGHI_V1"',
                     }
             ),
-            "jet_horn_veto": EraModifier(
+            "jet_hf_veto": EraModifier(
                 {
                     "2016preVFP": False,
                     "2016postVFP": False,
@@ -697,23 +697,7 @@ def build_config(
                     "2022EE": True,
                     "2023": True,
                     "2023BPix": True,
-                    "2024": True,
-                }
-            ),
-            "jet_horn_eta_min": 2.5,
-            "jet_horn_eta_max": 3.0,
-            "jet_horn_veto_max_pt": 50.0,
-            "jet_horn_jer_genmatch_only": EraModifier(
-                {
-                    "2016preVFP": False,
-                    "2016postVFP": False,
-                    "2017": False,
-                    "2018": False,
-                    "2022": True,
-                    "2022EE": True,
-                    "2023": True,
-                    "2023BPix": True,
-                    "2024": True,
+                    "2024": False,
                 }
             ),
         },
@@ -954,24 +938,23 @@ def build_config(
             # vbfhmm muon Rochester corr, FSR recovery added 
             # GeoFit? TODO
             electrons.BaseElectrons,
-            jets.RenameJetID_v12,
             #jets.JetEnergyCorrection_2022, # include pt corr and mass corr and 2022 modify the JR sf adding pt
             # jets.JetEnergyCorrection_2022_v15, # include pt corr and mass corr and 2022 modify the JR sf adding pt
-            # jet correction additional modification of pt<30 GeV of |eta| in (2,2.5)region.
-            jets.JetEnergyCorrection_2022_v15_v3, # include pt corr and mass corr and 2022 modify the JR sf adding pt
+            # Dedicated NanoAOD v12 correction without the 2024/2025 fix-30 recipe.
+            jets.JetEnergyCorrection_2022_22_23,
             #jets.JetEnergyCorrection_2022_GenMatch, # include pt corr and mass corr and 2022 modify the JR sf adding pt
             #jets.GoodJets, # vh overlap removal with ?base? muons done [need validation]
             #jets.GoodJets_2022, # vh overlap removal with ?base? muons done [need validation]
             jets.GoodJets_2022_JetIdTightLepVeto, # vh overlap removal with ?base? muons done [need validation]
-            jets.GoodBJetsLoose, 
-            jets.GoodBJetsMedium, 
+            jets.GoodBJetsLoose_22_23,
+            jets.GoodBJetsMedium_22_23,
             ####
             jets.NumberOfGoodJets,
             jets.NumberOfLooseB, # vh count loose bjets for ttH veto
             jets.NumberOfMediumB, # vh count medium bjets for ttH veto
             #event.VetottHLooseB, # vh veto ttH no more than 1 loose bjet
             #event.VetottHMediumB, # vh veto ttH no more than 1 medium bjet
-            met.MetBasics, # build met vector for calculation
+            met.MetBasics_22_23, # build met vector for NanoAOD v12
             met.BuildGenMetVector,
             jets.JetCollection,
             jets.Calc_MHT,
@@ -1007,8 +990,6 @@ def build_config(
             jets.Jet1_rawMass,
             jets.Jet2_rawpT,
             jets.Jet2_rawMass,
-            jets.Jet1_puIdDisc,
-            jets.Jet2_puIdDisc,
         ],
     )
     configuration.add_producers(
@@ -1205,9 +1186,6 @@ def build_config(
             q.jet1_rawMass,
             q.jet2_rawpT,
             q.jet2_rawMass,
-            q.jet1_puIdDisc,
-            q.jet2_puIdDisc,
-
             q.jet2_pt,
             q.jet2_eta,
             q.jet2_phi,
@@ -1315,12 +1293,28 @@ def build_config(
     
     # add genWeight for everything but data
     if sample != "data":
+        configuration.add_producers(
+            "global",
+            [
+                syst.CalPDFUncertainty,
+                syst.CalAlphaSUncertainty,
+                syst.StoreLHEScaleWeights,
+            ],
+        )
         configuration.add_outputs(
             scopes,
             [
                 nanoAOD.genWeight,
                 nanoAOD.nGenJet,
                 q.ngenjets,
+                q.PDF_uncertainty,
+                q.alphaS_uncertainty,
+                q.LHEScaleWeight_0,
+                q.LHEScaleWeight_1,
+                q.LHEScaleWeight_2,
+                q.LHEScaleWeight_3,
+                q.LHEScaleWeight_4,
+                q.LHEScaleWeight_5,
             ],
         )
 
@@ -1341,7 +1335,7 @@ def build_config(
             #producers=[event.PUweights, event.PrefireWeight, jets.JetEnergyCorrection, met.BuildGenMetVector,],
             #producers=[event.PUweights, jets.JetEnergyCorrection_2022, met.BuildGenMetVector,],
             #producers=[event.PUweights, jets.JetEnergyCorrection_2022_v15, met.BuildGenMetVector,],
-            producers=[event.PUweights, jets.JetEnergyCorrection_2022_v15_v3, met.BuildGenMetVector,],
+            producers=[event.PUweights, jets.JetEnergyCorrection_2022_22_23, met.BuildGenMetVector,],
             #producers=[event.PUweights, jets.JetEnergyCorrection_2022_GenMatch, met.BuildGenMetVector,],
             samples=["data"],
         ),
@@ -1355,7 +1349,7 @@ def build_config(
                 #producers=[jets.RenameJetsData, fatjets.RenameFatJetsData, event.JSONFilter,],
                 #producers=[jets.RenameJetsData,event.JSONFilter,],
                 #jetvetomap
-                producers=[jets.JetEnergyCorrection_data_2024, event.JSONFilter,],
+                producers=[jets.JetEnergyCorrection_data_22_23, event.JSONFilter,],
                 samples=["data"],
                 update_output=False,
             ),
@@ -1580,7 +1574,7 @@ def build_config(
                 },
                 producers={
                     "global": [
-                        jets.JetEnergyCorrection_2022_v15_v3,
+                        jets.JetEnergyCorrection_2022_22_23,
                     ]
                 },
             )
@@ -1594,7 +1588,7 @@ def build_config(
                 },
                 producers={
                     "global": [
-                        jets.JetEnergyCorrection_2022_v15_v3,
+                        jets.JetEnergyCorrection_2022_22_23,
                     ]
                 },
             )
@@ -1645,7 +1639,7 @@ def build_config(
                         },
                         producers={
                             "global": {
-                                jets.JetEnergyCorrection_2022_v15_v3,
+                                jets.JetEnergyCorrection_2022_22_23,
                             },
                         },
                     )
