@@ -1,5 +1,6 @@
 from ..quantities import output as q
 from ..quantities import nanoAOD as nanoAOD
+from ..quantities import nanoAOD_v12 as nanoAOD_v12
 from code_generation.producer import Producer, ProducerGroup
 # write by botao
 
@@ -44,6 +45,21 @@ MetBasics = ProducerGroup(
         BuildMetVector,
         # BuildGenMetVector,
     ],
+)
+BuildPFMetVector_22_23 = Producer(
+    name="BuildPFMetVector_22_23",
+    call="lorentzvectors::buildMet({df}, {input}, {output})",
+    input=[nanoAOD_v12.PFMET_pt, nanoAOD_v12.PFMET_phi],
+    output=[q.pfmet_p4],
+    scopes=["global"],
+)
+MetBasics_22_23 = ProducerGroup(
+    name="MetBasics_22_23",
+    call=None,
+    input=None,
+    output=None,
+    scopes=["global"],
+    subproducers=[BuildPFMetVector_22_23, BuildMetVector],
 )
 #MetBasics_v15 = ProducerGroup(
 #    name="MetBasics",

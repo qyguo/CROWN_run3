@@ -354,6 +354,7 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
                                        const std::string &jet_muEF,
                                        const std::string &jet_chEmEF)
 {
+    // Define a new column in the dataset, "output_col", using the provided column names
     auto df1 = df.Define(
         output_col,
         [](const ROOT::RVec<float> &Jet_eta,
@@ -363,12 +364,15 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
            const ROOT::RVec<float> &Jet_muEF,
            const ROOT::RVec<float> &Jet_chEmEF)
         {
+            // The output will be a boolean vector, one entry per jet.
             ROOT::RVec<int> PassJetId_FailTightLepVeto(Jet_eta.size(), 0);
 
             for (size_t i = 0; i < Jet_eta.size(); ++i) {
+                // 1) Compute Jet_passJetIdTight
                 bool jet_passTight = false;
                 float absEta = std::abs(Jet_eta[i]);
 
+                // Check 2nd bit of jetId: (1 << 1) means bit index 1 (a value of 2)
                 if (absEta <= 2.7) {
                     jet_passTight = (Jet_jetId[i] & (1 << 1));
                 }
@@ -376,9 +380,11 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
                     jet_passTight = ((Jet_jetId[i] & (1 << 1)) && (Jet_neHEF[i] < 0.99));
                 }
                 else {
+                    // absEta > 3.0
                     jet_passTight = ((Jet_jetId[i] & (1 << 1)) && (Jet_neEmEF[i] < 0.4));
                 }
 
+                // 2) Compute Jet_passJetIdTightLepVeto
                 bool jet_passTightLepVeto = false;
                 if (absEta <= 2.7) {
                     jet_passTightLepVeto = jet_passTight &&
@@ -388,13 +394,17 @@ ROOT::RDF::RNode JetIdTightLepVeto_Cut(ROOT::RDF::RNode df,
                     jet_passTightLepVeto = jet_passTight;
                 }
 
+                //PassJetId_FailTightLepVeto[i] = (jet_passTight && (!jet_passTightLepVeto));
                 PassJetId_FailTightLepVeto[i] = jet_passTight;
             }
 
-            return PassJetId_FailTightLepVeto;
+            return PassJetId_FailTightLepVeto; // RVec<bool>
         },
+        // Columns that the lambda above depends on
         {jet_eta, jet_jetId, jet_neHEF, jet_neEmEF, jet_muEF, jet_chEmEF}
     );
+
+    // Return the updated RNode
     return df1;
 }
 ///// NanoAODv13, 14, 15 jet_ID
@@ -2299,8 +2309,9 @@ JetPtCorrection_data_2022(ROOT::RDF::RNode df, const std::string &corrected_jet_
     }
 }
 
+// jet hf veto: jiehan
 ROOT::RDF::RNode
-JetPtCorrection_data_2024(ROOT::RDF::RNode df,
+JetPtCorrection_data_2022(ROOT::RDF::RNode df,
                           const std::string &corrected_jet_pt,
                           const std::string &jet_pt,
                           const std::string &jet_eta,
@@ -2316,7 +2327,8 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
                           const std::string &jes_tag,
                           const std::string &jec_algo,
                           const std::string &jet_veto_map,
-                          const std::string &jet_veto_tag) {
+                          const std::string &jet_veto_tag,
+                          const bool &jet_hf_veto) {
   auto jet_veto_map_evaluator =
       correction::CorrectionSet::from_file(jet_veto_map)->at(jet_veto_tag);
 
@@ -2329,20 +2341,21 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
   const float jet_horn_eta_min = 2.5f;
   const float jet_horn_eta_max = 3.0f;
   const float jet_horn_veto_max_pt = 50.0f;
-  const bool is_2024 = jes_tag.find("Summer24") != std::string::npos;
-  const bool apply_hf_veto =
-      jes_tag.find("Summer22") != std::string::npos ||
-      jes_tag.find("Summer23") != std::string::npos;
 
   auto inJetHorn = [jet_horn_eta_min, jet_horn_eta_max](float eta) {
     const float aeta = std::abs(eta);
     return (aeta >= jet_horn_eta_min && aeta < jet_horn_eta_max);
   };
 
-  auto vetoDataJet = [inJetHorn, jet_horn_eta_max, jet_horn_veto_max_pt,
-                      apply_hf_veto](float eta, float pt) {
-    const bool in_hf = apply_hf_veto && std::abs(eta) > jet_horn_eta_max;
-    return pt < jet_horn_veto_max_pt && (inJetHorn(eta) || in_hf);
+  auto inHF = [](float eta) {
+    const float aeta = std::abs(eta);
+    return aeta >= 3.0f && aeta < 4.7f;
+  };
+
+  auto vetoDataJet = [inJetHorn, inHF, jet_horn_veto_max_pt,
+                      jet_hf_veto](float eta, float pt) {
+    return pt < jet_horn_veto_max_pt &&
+           (inJetHorn(eta) || (jet_hf_veto && inHF(eta)));
   };
 
   auto hasJetVeto = [jet_veto_SF](const ROOT::RVec<float> &pt,
@@ -2358,12 +2371,6 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
       }
     }
     return false;
-  };
-
-  auto clipPtForResidualAfterL2Rel = [](float pt_after_L2Rel, float eta) -> float {
-    const float aeta = std::abs(eta);
-    if (aeta > 2.0f && aeta < 2.5f && pt_after_L2Rel < 30.f) return 30.f;
-    return pt_after_L2Rel;
   };
 
   if (!jes_tag.empty()) {
@@ -2424,10 +2431,8 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
               const float cL3 = L3_eval->evaluate({eta, pt_L2});
               const float pt_L3 = pt_L2 * cL3;
 
-              const float pt_for_res =
-                  is_2024 ? clipPtForResidualAfterL2Rel(pt_L2, eta) : pt_L2;
               const float cRes =
-                  Res_eval->evaluate({float(run_value), eta, pt_for_res});
+                  Res_eval->evaluate({float(run_value), eta, pt_L2});
 
               corr_pt = pt_L3 * cRes;
             }
@@ -2468,6 +2473,177 @@ JetPtCorrection_data_2024(ROOT::RDF::RNode df,
         for (int i = 0; i < (int)pt_values.size(); ++i) {
           float corr_pt = pt_values[i];
           if (vetoDataJet(eta_values[i], corr_pt)) {
+            corr_pt = -999.f;
+          }
+          out.push_back(corr_pt);
+        }
+
+        return out;
+      };
+
+  return df.Define(corrected_jet_pt, JetVetoOnlyLambda,
+                   {jet_pt, jet_eta, jet_phi, jet_area, jet_rawFactor,
+                    jet_ID, jet_neEmEF, jet_chEmEF});
+}
+
+ROOT::RDF::RNode
+JetPtCorrection_data_2024(ROOT::RDF::RNode df,
+                          const std::string &corrected_jet_pt,
+                          const std::string &jet_pt,
+                          const std::string &jet_eta,
+                          const std::string &jet_phi,
+                          const std::string &jet_area,
+                          const std::string &jet_rawFactor,
+                          const std::string &jet_ID,
+                          const std::string &rho,
+                          const std::string &jet_neEmEF,
+                          const std::string &jet_chEmEF,
+                          const std::string &run,
+                          const std::string &jec_file,
+                          const std::string &jes_tag,
+                          const std::string &jec_algo,
+                          const std::string &jet_veto_map,
+                          const std::string &jet_veto_tag) {
+  auto jet_veto_map_evaluator =
+      correction::CorrectionSet::from_file(jet_veto_map)->at(jet_veto_tag);
+
+  auto jet_veto_SF = [jet_veto_map_evaluator](float eta, float phi) -> float {
+    if (std::abs(eta) < 5.19f && std::abs(phi) < 3.14159f)
+      return jet_veto_map_evaluator->evaluate({"jetvetomap", eta, phi});
+    return 0.0f;
+  };
+
+  const float jet_horn_eta_min = 2.5f;
+  const float jet_horn_eta_max = 3.0f;
+  const float jet_horn_veto_max_pt = 50.0f;
+
+  auto inJetHorn = [jet_horn_eta_min, jet_horn_eta_max](float eta) {
+    const float aeta = std::abs(eta);
+    return (aeta >= jet_horn_eta_min && aeta < jet_horn_eta_max);
+  };
+
+  auto vetoDataJetHorn = [inJetHorn, jet_horn_veto_max_pt](float eta, float pt) {
+    return inJetHorn(eta) && pt < jet_horn_veto_max_pt;
+  };
+
+  auto hasJetVeto = [jet_veto_SF](const ROOT::RVec<float> &pt,
+                                  const ROOT::RVec<float> &eta,
+                                  const ROOT::RVec<float> &phi,
+                                  const ROOT::RVec<UChar_t> &ID,
+                                  const ROOT::RVec<float> &neEmEF,
+                                  const ROOT::RVec<float> &chEmEF) -> bool {
+    for (int i = 0; i < (int)pt.size(); ++i) {
+      if (pt[i] > 15.f && ID[i] >= 6 && ((neEmEF[i] + chEmEF[i]) < 0.9f)) {
+        const float v = jet_veto_SF(eta[i], phi[i]);
+        if (v != 0.f) return true;
+      }
+    }
+    return false;
+  };
+
+  auto clipPtForResidualAfterL2Rel = [](float pt_after_L2Rel, float eta) -> float {
+    const float aeta = std::abs(eta);
+    if (aeta > 2.0f && aeta < 2.5f && pt_after_L2Rel < 30.f) return 30.f;
+    return pt_after_L2Rel;
+  };
+
+  if (!jes_tag.empty()) {
+    auto cset = correction::CorrectionSet::from_file(jec_file);
+
+    const std::string name_L1  = jes_tag + "_L1FastJet_"    + jec_algo;
+    const std::string name_L2  = jes_tag + "_L2Relative_"   + jec_algo;
+    const std::string name_L3  = jes_tag + "_L3Absolute_"   + jec_algo;
+    const std::string name_Res = jes_tag + "_L2L3Residual_" + jec_algo;
+
+    auto L1_eval  = cset->at(name_L1);
+    auto L2_eval  = cset->at(name_L2);
+    auto L3_eval  = cset->at(name_L3);
+    auto Res_eval = cset->at(name_Res);
+
+    auto JetEnergyCorrectionLambda =
+        [=](const ROOT::RVec<float> &pt_values,
+            const ROOT::RVec<float> &eta_values,
+            const ROOT::RVec<float> &phi_values,
+            const ROOT::RVec<float> &area_values,
+            const ROOT::RVec<float> &rawFactor_values,
+            const ROOT::RVec<UChar_t> &ID_values,
+            const float &rho_value,
+            const ROOT::RVec<float> &jet_neEmEF_values,
+            const ROOT::RVec<float> &jet_chEmEF_values,
+            const UInt_t run_value) {
+          ROOT::RVec<float> out;
+          out.reserve(pt_values.size());
+
+          if (hasJetVeto(pt_values, eta_values, phi_values,
+                         ID_values, jet_neEmEF_values, jet_chEmEF_values)) {
+            out.assign(pt_values.size(), -999.f);
+            return out;
+          }
+
+          for (int i = 0; i < (int)pt_values.size(); ++i) {
+            const float eta = eta_values[i];
+            const float phi = phi_values[i];
+            const float area = area_values[i];
+
+            const float raw_pt = pt_values[i] * (1.f - rawFactor_values[i]);
+            float corr_pt = raw_pt;
+
+            if (std::abs(eta) < 4.7f) {
+              const float cL1 = L1_eval->evaluate({area, eta, raw_pt, rho_value});
+              const float pt_L1 = raw_pt * cL1;
+
+              float cL2 = 1.0f;
+              if (std::abs(phi) < 3.1416f)
+                cL2 = L2_eval->evaluate({eta, phi, pt_L1});
+              const float pt_L2 = pt_L1 * cL2;
+
+              const float cL3 = L3_eval->evaluate({eta, pt_L2});
+              const float pt_L3 = pt_L2 * cL3;
+
+              const float pt_for_res = clipPtForResidualAfterL2Rel(pt_L2, eta);
+              float cRes = 1.0f;
+              if (float(run_value) >= 379412.0 && float(run_value) < 387121.0)
+                cRes = Res_eval->evaluate({float(run_value), eta, pt_for_res});
+
+              corr_pt = pt_L3 * cRes;
+            }
+
+            if (vetoDataJetHorn(eta, corr_pt)) {
+              corr_pt = -999.f;
+            }
+
+            out.push_back(corr_pt);
+          }
+
+          return out;
+        };
+
+    return df.Define(corrected_jet_pt, JetEnergyCorrectionLambda,
+                     {jet_pt, jet_eta, jet_phi, jet_area, jet_rawFactor,
+                      jet_ID, rho, jet_neEmEF, jet_chEmEF, run});
+  }
+
+  auto JetVetoOnlyLambda =
+      [=](const ROOT::RVec<float> &pt_values,
+          const ROOT::RVec<float> &eta_values,
+          const ROOT::RVec<float> &phi_values,
+          const ROOT::RVec<float> & /*area_values*/,
+          const ROOT::RVec<float> & /*rawFactor_values*/,
+          const ROOT::RVec<UChar_t> &ID_values,
+          const ROOT::RVec<float> &jet_neEmEF_values,
+          const ROOT::RVec<float> &jet_chEmEF_values) {
+        ROOT::RVec<float> out;
+        out.reserve(pt_values.size());
+
+        if (hasJetVeto(pt_values, eta_values, phi_values,
+                       ID_values, jet_neEmEF_values, jet_chEmEF_values)) {
+          out.assign(pt_values.size(), -999.f);
+          return out;
+        }
+
+        for (int i = 0; i < (int)pt_values.size(); ++i) {
+          float corr_pt = pt_values[i];
+          if (vetoDataJetHorn(eta_values[i], corr_pt)) {
             corr_pt = -999.f;
           }
           out.push_back(corr_pt);
@@ -3228,14 +3404,10 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
     return (float)L1_eval->evaluate({area, eta, pt, rho});
   };
 
-  const bool l2_uses_phi = L2_eval->inputs().size() == 3;
-  auto evalL2 = [L2_eval, l2_uses_phi](float eta, float phi, float pt) -> float {
+  auto evalL2 = [L2_eval](float eta, float phi, float pt) -> float {
     if (std::abs(eta) >= 4.7f) return 1.0f;
-    if (l2_uses_phi) {
-      if (std::abs(phi) >= 3.1416f) return 1.0f;
-      return (float)L2_eval->evaluate({eta, phi, pt});
-    }
-    return (float)L2_eval->evaluate({eta, pt});
+    if (std::abs(phi) >= 3.1416f) return 1.0f;
+    return (float)L2_eval->evaluate({eta, phi, pt});
   };
 
   auto evalL3 = [L3_eval](float eta, float pt) -> float {
@@ -3407,6 +3579,279 @@ JetPtCorrection_2022_v15_v3(ROOT::RDF::RNode df, const std::string &corrected_je
 
               float pt_unc_eval = pt_values_corrected.at(i);
               //if (inFreezeBand(eta_values.at(i))) pt_unc_eval = clamp30(pt_unc_eval);
+
+              if (JetEnergyScaleShifts.size() == 1) {
+                float sf = 1.0f;
+                if (std::abs(eta_values.at(i)) < 4.7f) {
+                  sf = (float)JetEnergyScaleShifts.at(0)->evaluate({eta_values.at(i), pt_unc_eval});
+                }
+                pt_scale_sf = 1.0f + (float)jes_shift * sf;
+              } else if (JetEnergyScaleShifts.size() > 1) {
+                float quad_sum = 0.0f;
+                for (const auto &eval : JetEnergyScaleShifts) {
+                  float sf = 1.0f;
+                  if (std::abs(eta_values.at(i)) < 4.7f) {
+                    sf = (float)eval->evaluate({eta_values.at(i), pt_unc_eval});
+                  }
+                  quad_sum += sf * sf;
+                }
+                pt_scale_sf = 1.0f + (float)jes_shift * std::sqrt(quad_sum);
+              }
+            }
+            // HEM issue (unchanged)
+            else if (!jes_shift_sources.empty() && jes_shift_sources.at(0) == "HEMIssue") {
+              if (jes_shift == (-1) && pt_values_corrected.at(i) > 15.f &&
+                  phi_values.at(i) > (-1.57f) && phi_values.at(i) < (-0.87f) && ID_values.at(i) == 2) {
+                if (eta_values.at(i) > (-2.5f) && eta_values.at(i) < (-1.3f)) pt_scale_sf = 0.8f;
+                else if (eta_values.at(i) > (-3.f) && eta_values.at(i) <= (-2.5f)) pt_scale_sf = 0.65f;
+              }
+            }
+          }
+
+          pt_values_corrected.at(i) *= pt_scale_sf;
+        }
+
+        return pt_values_corrected;
+      };
+
+  auto df1 = df.Define(corrected_jet_pt, JetEnergyCorrectionLambda,
+                       {jet_pt, jet_eta, jet_phi, jet_area, jet_rawFactor, jet_ID,
+                        jet_neEmEF, jet_chEmEF, gen_jet_pt, gen_jet_eta, gen_jet_phi, rho});
+  return df1;
+}
+
+ROOT::RDF::RNode
+JetPtCorrection_2022_v15_v3_22_23(ROOT::RDF::RNode df, const std::string &corrected_jet_pt,
+                         const std::string &jet_pt, const std::string &jet_eta,
+                         const std::string &jet_phi, const std::string &jet_area,
+                         const std::string &jet_rawFactor, const std::string &jet_ID,
+                         const std::string &jet_neEmEF, const std::string &jet_chEmEF,
+                         const std::string &gen_jet_pt, const std::string &gen_jet_eta,
+                         const std::string &gen_jet_phi, const std::string &rho,
+                         bool reapplyJES,
+                         const std::vector<std::string> &jes_shift_sources,
+                         const int &jes_shift, const std::string &jer_shift,
+                         const std::string &jec_file, const std::string &jer_tag,
+                         const std::string &jes_tag, const std::string &jec_algo,
+                         const std::string &jet_veto_map, const std::string &jet_veto_tag,
+                         const bool &jet_hf_veto) {
+  // ----------------------------------------------------------------------
+  // Jet radius from algorithm
+  // ----------------------------------------------------------------------
+  float jet_dR = 0.4f;
+  if (jec_algo.find("AK8") != std::string::npos) jet_dR = 0.8f;
+
+  const float jet_horn_eta_min = 2.5f;
+  const float jet_horn_eta_max = 3.0f;
+  const float jet_veto_max_pt = 50.0f;
+  const bool jet_horn_jer_genmatch_only = true;
+
+  auto inJetHorn = [jet_horn_eta_min, jet_horn_eta_max](float eta) {
+    const float aeta = std::abs(eta);
+    return aeta >= jet_horn_eta_min && aeta < jet_horn_eta_max;
+  };
+  auto inHF = [](float eta) {
+    const float aeta = std::abs(eta);
+    return aeta >= 3.0f && aeta < 4.7f;
+  };
+
+  // ----------------------------------------------------------------------
+  // Load correction set once
+  // ----------------------------------------------------------------------
+  auto cset = correction::CorrectionSet::from_file(jec_file);
+
+  // ----------------------------------------------------------------------
+  // JES uncertainty sources (unchanged)
+  // ----------------------------------------------------------------------
+  std::vector<std::shared_ptr<const correction::Correction>> JetEnergyScaleShifts;
+  JetEnergyScaleShifts.reserve(jes_shift_sources.size());
+  for (const auto &source : jes_shift_sources) {
+    if (source != "" && source != "HEMIssue") {
+      auto eval = cset->at(jes_tag + "_" + source + "_" + jec_algo);
+      JetEnergyScaleShifts.push_back(eval);
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // MC JEC pieces: L1FastJet, L2Relative, L3Absolute
+  // NOTE: For MC you should NOT apply residual. This code never does.
+  // ----------------------------------------------------------------------
+  auto L1_eval = cset->at(jes_tag + "_L1FastJet_" + jec_algo);
+  auto L2_eval = cset->at(jes_tag + "_L2Relative_" + jec_algo);
+  auto L3_eval = cset->at(jes_tag + "_L3Absolute_" + jec_algo);
+
+  auto evalL1 = [L1_eval](float area, float eta, float pt, float rho) -> float {
+    if (std::abs(eta) >= 4.7f) return 1.0f;
+    // L1FastJet is typically {area, eta, pt, rho}
+    return (float)L1_eval->evaluate({area, eta, pt, rho});
+  };
+
+  const bool l2_uses_phi = L2_eval->inputs().size() == 3;
+  auto evalL2 = [L2_eval, l2_uses_phi](float eta, float phi, float pt) -> float {
+    if (std::abs(eta) >= 4.7f) return 1.0f;
+    if (l2_uses_phi) {
+      if (std::abs(phi) >= 3.1416f) return 1.0f;
+      return (float)L2_eval->evaluate({eta, phi, pt});
+    }
+    return (float)L2_eval->evaluate({eta, pt});
+  };
+
+  auto evalL3 = [L3_eval](float eta, float pt) -> float {
+    if (std::abs(eta) >= 4.7f) return 1.0f;
+    return (float)L3_eval->evaluate({eta, pt});
+  };
+
+  // ----------------------------------------------------------------------
+  // JER (unchanged)
+  // ----------------------------------------------------------------------
+  auto JER_resolution_evaluator = cset->at(jer_tag + "_PtResolution_" + jec_algo);
+  auto JetEnergyResolution = [JER_resolution_evaluator](float eta, float pt, float rho) -> float {
+    if (std::abs(eta) < 4.7f) return (float)JER_resolution_evaluator->evaluate({eta, pt, rho});
+    return 1.0f;
+  };
+
+  auto JER_SF_evaluator = cset->at(jer_tag + "_ScaleFactor_" + jec_algo);
+  auto JER_SF_unc_evaluator = cset->at(jer_tag + "_SFUncertainty_" + jec_algo);
+
+  auto JetEnergyResolutionSF =
+      [JER_SF_evaluator, JER_SF_unc_evaluator](
+          float eta, float pt, const std::string &shift) -> float {
+        if (std::abs(eta) >= 5.191f) return 1.0f;
+
+        const float sf = (float)JER_SF_evaluator->evaluate({eta, pt});
+        const float unc = (float)JER_SF_unc_evaluator->evaluate({eta, pt});
+
+        if (shift == "up") {
+          return sf + unc;
+        }
+        if (shift == "down") {
+          return std::max(0.0f, sf - unc);
+        }
+
+        return sf;
+      };
+
+  // ----------------------------------------------------------------------
+  // Jet veto map (unchanged)
+  // ----------------------------------------------------------------------
+  auto jet_veto_map_evaluator = correction::CorrectionSet::from_file(jet_veto_map)->at(jet_veto_tag);
+  auto jet_veto_SF = [jet_veto_map_evaluator](float eta, float phi) -> float {
+    if (std::abs(eta) < 5.19f && std::abs(phi) < 3.14159f)
+      return (float)jet_veto_map_evaluator->evaluate({"jetvetomap", eta, phi});
+    return 0.0f;
+  };
+
+  // ----------------------------------------------------------------------
+  // Main lambda for RDataFrame
+  // ----------------------------------------------------------------------
+  auto JetEnergyCorrectionLambda =
+      [=](const ROOT::RVec<float> &pt_values, const ROOT::RVec<float> &eta_values,
+          const ROOT::RVec<float> &phi_values, const ROOT::RVec<float> &area_values,
+          const ROOT::RVec<float> &rawFactor_values, const ROOT::RVec<UChar_t> &ID_values,
+          const ROOT::RVec<float> &jet_neEmEF_values, const ROOT::RVec<float> &jet_chEmEF_values,
+          const ROOT::RVec<float> &gen_pt_values, const ROOT::RVec<float> &gen_eta_values,
+          const ROOT::RVec<float> &gen_phi_values, const float &rho_value) -> ROOT::RVec<float> {
+        TRandom3 randm(12345);
+
+        const float pt_veto = -999.0f;
+        ROOT::RVec<float> pt_values_corrected;
+        pt_values_corrected.reserve(pt_values.size());
+
+        // --- veto decision
+        bool non_zero_veto = false;
+        for (int i = 0; i < (int)pt_values.size(); i++) {
+          float veto_val = 0.0f;
+          if (pt_values.at(i) > 15.f && ID_values.at(i) >= 6 &&
+              ((jet_neEmEF_values.at(i) + jet_chEmEF_values.at(i)) < 0.9f)) {
+            veto_val = jet_veto_SF(eta_values.at(i), phi_values.at(i));
+          }
+          if (veto_val != 0.0f) { non_zero_veto = true; break; }
+        }
+        if (non_zero_veto) {
+          for (int i = 0; i < (int)pt_values.size(); i++) pt_values_corrected.push_back(pt_veto);
+          return pt_values_corrected;
+        }
+
+        // --- jet loop
+        for (int i = 0; i < (int)pt_values.size(); i++) {
+          float corr_pt = pt_values.at(i);
+
+          // Reapply MC JEC sequentially: raw -> L1 -> L2 -> L3.
+          if (reapplyJES) {
+            const float eta = eta_values.at(i);
+            const float phi = phi_values.at(i);
+            const float raw_pt = pt_values.at(i) * (1.0f - rawFactor_values.at(i));
+
+            // sequential nominal (use pt after previous step)
+            const float c1 = evalL1(area_values.at(i), eta, raw_pt, rho_value);
+            const float pt1 = raw_pt * c1;
+
+            //const float c2 = evalL2(eta, pt1, rho_value);
+            const float c2 = evalL2(eta, phi, pt1);
+            const float pt2 = pt1 * c2;
+
+            const float c3 = evalL3(eta, pt2);
+            float pt3 = pt2 * c3; // "MC-truth corrected pT" (MC JEC result)
+
+            corr_pt = pt3;
+          }
+
+          pt_values_corrected.push_back(corr_pt);
+
+          if (pt_values_corrected.at(i) < jet_veto_max_pt &&
+              (inJetHorn(eta_values.at(i)) ||
+               (jet_hf_veto && inHF(eta_values.at(i))))) {
+            pt_values_corrected.at(i) = pt_veto;
+            continue;
+          }
+
+          // ----------------------------------------------------------
+          // JER hybrid smearing (unchanged from your logic)
+          // ----------------------------------------------------------
+          float reso = JetEnergyResolution(eta_values.at(i), pt_values_corrected.at(i), rho_value);
+          float resoSF = JetEnergyResolutionSF(
+              eta_values.at(i),
+              pt_values_corrected.at(i),
+              jer_shift
+          );
+
+          ROOT::Math::RhoEtaPhiVectorF jet(pt_values_corrected.at(i), eta_values.at(i), phi_values.at(i));
+          float genjetpt = -1.0f;
+          double min_dR = std::numeric_limits<double>::infinity();
+
+          for (int j = 0; j < (int)gen_pt_values.size(); j++) {
+            ROOT::Math::RhoEtaPhiVectorF genjet(gen_pt_values.at(j), gen_eta_values.at(j), gen_phi_values.at(j));
+            auto dR = ROOT::Math::VectorUtil::DeltaR(jet, genjet);
+            if (dR > min_dR) continue;
+
+            if (dR < (jet_dR / 2.0) &&
+                std::abs(pt_values_corrected.at(i) - gen_pt_values.at(j)) <
+                    (3.0 * reso * pt_values_corrected.at(i))) {
+              min_dR = dR;
+              genjetpt = gen_pt_values.at(j);
+            }
+          }
+
+          if (genjetpt > 0.0f) {
+            double shift = (resoSF - 1.0) * (pt_values_corrected.at(i) - genjetpt) / pt_values_corrected.at(i);
+            pt_values_corrected.at(i) *= std::max(0.0, 1.0 + shift);
+          } else {
+            const bool skip_unmatched_jer =
+                jet_horn_jer_genmatch_only && inJetHorn(eta_values.at(i));
+            if (!skip_unmatched_jer) {
+              double shift = randm.Gaus(0, reso) * std::sqrt(std::max(resoSF * resoSF - 1.0, 0.0));
+              pt_values_corrected.at(i) *= std::max(0.0, 1.0 + shift);
+            }
+          }
+
+          // ----------------------------------------------------------
+          // JES uncertainty shifts
+          // ----------------------------------------------------------
+          float pt_scale_sf = 1.0f;
+          if (jes_shift != 0) {
+            if (!jes_shift_sources.empty() && jes_shift_sources.at(0) != "HEMIssue") {
+
+              const float pt_unc_eval = pt_values_corrected.at(i);
 
               if (JetEnergyScaleShifts.size() == 1) {
                 float sf = 1.0f;

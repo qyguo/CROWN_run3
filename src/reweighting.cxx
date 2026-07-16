@@ -493,5 +493,6 @@ ROOT::RDF::RNode LHEscaleWeights(
     return basefunctions::UnrollVectorQuantity<float>(
         df1, selected_weights, output_names);
 }
+
 } // namespace reweighting
 #endif /* GUARD_REWEIGHTING_H */
