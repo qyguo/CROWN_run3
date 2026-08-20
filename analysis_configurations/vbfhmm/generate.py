@@ -22,7 +22,7 @@ def run(args):
         "diboson",
     ]
     #available_eras = ["2016preVFP","2016postVFP","2017","2018","2022","2022EE","2023","2023BPix"]
-    available_eras = ["AAAA","2016preVFP","2016postVFP","2017","2018","2022","2022EE","2023","2023BPix","2024", "2025"]
+    available_eras = ["AAAA","2016preVFP","2016postVFP","2017","2018","2022","2022EE","2023","2023BPix","2024", "2025", "2026"]
     available_scopes = ["gghmm","vbfhmm","e2m","m2m","eemm","mmmm","nnmm","fjmm","nnmm_dycontrol","nnmm_topcontrol"]
 
     ## setup variables
